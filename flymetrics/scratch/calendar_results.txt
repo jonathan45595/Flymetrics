@@ -1,0 +1,44 @@
+=== Matches for 'calendar' ===
+  Line 38: .calendar-day-btn {
+  Line 52: .calendar-day-btn:hover:not(.cal-day-disabled) {
+  Line 1658: <div class="tech-calendar-container" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; paddi
+  Line 1659: <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+  Line 1684: <div class="calendar-weekdays" style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 0.65rem; color: v
+  Line 1687: <div id="calendarDaysGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center;">
+  Line 2293: showToast('? Selecciona una fecha y hora en el calendario');
+  Line 2566: // Dibujar calendario inicial
+  Line 2663: // Redibujar el calendario con los colores de ocupaci?n del t?cnico seleccionado
+  Line 2667: // Dibuja el calendario interactivo
+  Line 2679: const grid = document.getElementById('calendarDaysGrid');
+  Line 2694: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/calendario-ocupacion?anio=${year}&mes=${month+1}&id_finca=${idFinca}&id_servicio=${i
+  Line 2716: btn.className = 'calendar-day-btn';
+  Line 2781: // Seleccionar d?a del calendario
+  Line 2786: const buttons = document.querySelectorAll('.calendar-day-btn');
+  ... truncated ...
+=== Matches for 'calendario' ===
+  Line 2293: showToast('? Selecciona una fecha y hora en el calendario');
+  Line 2566: // Dibujar calendario inicial
+  Line 2663: // Redibujar el calendario con los colores de ocupaci?n del t?cnico seleccionado
+  Line 2667: // Dibuja el calendario interactivo
+  Line 2694: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/calendario-ocupacion?anio=${year}&mes=${month+1}&id_finca=${idFinca}&id_servicio=${i
+  Line 2781: // Seleccionar d?a del calendario
+=== Matches for 'renderCalendar' ===
+=== Matches for 'nextMonth' ===
+=== Matches for 'prevMonth' ===
+=== Matches for 'tecnico' ===
+  Line 2100: document.getElementById('nextSvcTecnico').textContent = nextSvc.tecnico || 'Piloto por asignar';
+  Line 2162: <td>${a.tecnico || '<span class="text-muted">Por asignar</span>'}</td>
+  Line 2307: id_tecnico: _selectedTecnicoId,
+  Line 2343: tecnico: selectedTec ? `${selectedTec.nombre} ${selectedTec.apellido || ''}` : 'Juan P?rez (Piloto Licenciado)',
+  Line 2541: const res = await fetch(`${API_BASE}/tecnicos`, {
+  Line 2555: console.error("Error fetching tecnicos:", err);
+  Line 2694: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/calendario-ocupacion?anio=${year}&mes=${month+1}&id_finca=${idFinca}&id_servicio=${i
+  Line 2829: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/disponibilidad?fecha=${_selectedDate}&id_finca=${idFinca}&id_servicio=${idSvc}`;
+  Line 3020: tecnico: 'Carlos M?ndez (Piloto Licenciado)',
+  Line 3033: tecnico: 'Por Asignar',
+  Line 3046: tecnico: 'Juan P?rez (Piloto Licenciado)',
+=== Matches for 'tecnicos' ===
+  Line 2541: const res = await fetch(`${API_BASE}/tecnicos`, {
+  Line 2555: console.error("Error fetching tecnicos:", err);
+  Line 2694: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/calendario-ocupacion?anio=${year}&mes=${month+1}&id_finca=${idFinca}&id_servicio=${i
+  Line 2829: const url = `${API_BASE}/tecnicos/${_selectedTecnicoId}/disponibilidad?fecha=${_selectedDate}&id_finca=${idFinca}&id_servicio=${idSvc}`;

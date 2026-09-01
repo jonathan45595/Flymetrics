@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Flymetrics — Agricultura de Precisión en Colombia. Interfaz de Cristal Líquido." />
+  <title>Flymetrics — Cristal Líquido Premium</title>
+  
+  <!-- Fonts: Premium Modern Sans-Serif Combo (Outfit & Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Google Sign-In SDK (Optional) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- International Telephone Input (intl-tel-input) CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=20260822224500" />
+  
+  <!-- FontAwesome 6 Icon Library (Local) -->
+  <link rel="stylesheet" href="css/fontawesome/css/all.min.css" />
+  
+  <!-- Leaflet JS & CSS for Free High-Performance Interactive Map (No API Key Required) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Early Global Declarations to ensure instant click responsiveness -->
+  <script>
+    window.togglePasswordVisibility = function(inputId, btn) {
+      var inp = document.getElementById(inputId);
+      if (!inp) return;
+      var isPwd = inp.type === 'password';
+      inp.type = isPwd ? 'text' : 'password';
+      if (btn) {
+        var icon = btn.querySelector('i');
+        if (icon) {
+          if (isPwd) {
+            icon.className = 'fa-solid fa-eye-slash';
+            btn.setAttribute('aria-label', 'Ocultar contraseña');
+          } else {
+            icon.className = 'fa-solid fa-eye';
+            btn.setAttribute('aria-label', 'Mostrar contraseña');
+          }
+        }
+      }
+    };
+
+    window.servicesData = [
+      {
+        id: 0,
+        image: "img/servicio_precision.jpg",
+        icon: '<i class="fa-solid fa-wheat-awn" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Agricultura de Precisión",
+        description: "Optimización integral del rendimiento agronómico mediante zonificación digital de cultivos, diagnóstico de variabilidad del suelo y prescripción variable de insumos. Aumentamos la rentabilidad por hectárea minimizando el impacto ambiental.",
+        sistema: "Ecosistema Inteligente Flymetrics",
+        efficiency: "Alta cobertura por jornada operativa",
+        capacity: "Diagnóstico Multiespectral y Telemetría RTK",
+        precision: "Centimétrica RTK (± 2 cm de margen geográfico)"
+      },
+      {
+        id: 1,
+        image: "img/servicio_aspersion.jpg",
+        icon: '<i class="fa-solid fa-helicopter" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Aplicación Aérea con Drones",
+        description: "Aplicación de ultra precisión de insumos agrícolas (fertilizantes foliares, fungicidas, herbicidas y bioestimulantes) mediante aspersión aérea inteligente con drones. Cobertura uniforme y penetración foliar óptima con cero compactación del suelo.",
+        sistema: "Sistemas de Aspersión Inteligente y Pulverización ULV",
+        efficiency: "Operación ágil y cobertura uniforme por lote",
+        capacity: "Atomización Centrífuga de Alta Cobertura Foliar",
+        precision: "Centimétrica RTK (± 2 cm de precisión de vuelo)"
+      },
+      {
+        id: 2,
+        image: "img/servicio_multiespectral.jpg",
+        icon: '<i class="fa-solid fa-seedling" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Análisis Multiespectral",
+        description: "Diagnóstico aéreo multiespectral de alta definición del vigor vegetal de tus cultivos. Mediante la captura en bandas espectrales especializadas (Infrarrojo Cercano y Borde Rojo), generamos mapas de reflectancia y salud foliar que detectan anomalías nutricionales, plagas y estrés hídrico de forma temprana.",
+        sistema: "Sensor Multiespectral 4 Bandas (G/R/RE/NIR) + RGB de Alta Resolución",
+        efficiency: "Hasta 200 Hectáreas por vuelo de diagnóstico",
+        capacity: "Resolución espacial de alta definición desde 2 cm por píxel",
+        precision: "Georreferenciación centimétrica en tiempo real mediante RTK"
+      },
+      {
+        id: 3,
+        image: "img/servicio_topografia_3d.jpg",
+        icon: '<i class="fa-solid fa-map-location-dot" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Cartografía y Topografía 3D",
+        description: "Modelado tridimensional digital del terreno para planificación de siembras, curvas de nivel y cálculo de volumen de tierras. Generamos ortomosaicos 2D de alta resolución, Modelos Digitales de Elevación (MDE) y curvas topográficas para optimizar sistemas de riego y drenaje.",
+        sistema: "Sistemas de Fotogrametría Aérea RTK",
+        efficiency: "Levantamiento rápido y preciso de fincas y predios",
+        capacity: "Resolución espacial de alta definición desde 2 cm por píxel",
+        precision: "Margen de error centimétrico absoluto RTK (± 2 cm con GCPs)"
+      },
+      {
+        id: 4,
+        image: "img/servicio_ganaderia.jpg",
+        icon: '<i class="fa-solid fa-cow" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Ganadería de Precisión",
+        description: "Levantamiento topográfico y digitalización de potreros para rotación inteligente de ganado, diseño y monitoreo de redes de suministro de agua, y fertilización o fumigación aérea de pastos con drones para maximizar la carga animal.",
+        sistema: "Plataforma de Mapeo de Potreros y Aspersión de Pasturas",
+        efficiency: "Zonificación y cobertura eficiente de potreros y pastizales",
+        capacity: "Digitalización de linderos, aforos de pasturas y fuentes hídricas",
+        precision: "Precisión centimétrica RTK para cercado y fuentes de agua"
+      },
+      {
+        id: 5,
+        image: "img/servicio_inspeccion.jpg",
+        icon: '<i class="fa-solid fa-magnifying-glass-chart" style="font-size: 1.6rem; color: #ffffff;"></i>',
+        title: "Inspecciones Agrícolas de Cultivos",
+        description: "Monitoreo fitosanitario y diagnóstico visual de alta resolución con sensores térmicos y RGB para identificar fallas en sistemas de riego, malezas localizadas y estrés en plantas.",
+        sistema: "Drones Agrícolas con Sensor Térmico Radiométrico y Cámara RGB 4K",
+        efficiency: "Inspección exhaustiva de lotes y plantas por jornada",
+        capacity: "Zoom óptico de alta definición + Sensor térmico radiométrico",
+        precision: "Detección milimétrica de anomalías foliares y estrés térmico"
+      }
+    ];
+
+    window.currentServiceIndex = 0;
+    window.modalOpenTime = 0;
+
+    window.updateModalContent = function(index) {
+      const service = window.servicesData[index];
+      if (!service) return;
+      window.currentServiceIndex = index;
+      const modalImg = document.getElementById('modal-img');
+      if (modalImg && service.image) {
+        modalImg.src = service.image;
+        modalImg.alt = service.title;
+      }
+      const modalIcon = document.getElementById('modal-icon');
+      const modalTitle = document.getElementById('modal-title');
+      const modalDescription = document.getElementById('modal-description');
+      if (modalIcon) modalIcon.innerHTML = service.icon;
+      if (modalTitle) modalTitle.textContent = service.title;
+      if (modalDescription) modalDescription.textContent = service.description;
+      const droneEl = document.getElementById('spec-sistemae') || document.getElementById('spec-drone');
+      if (droneEl) droneEl.textContent = service.sistema;
+      const effEl = document.getElementById('spec-efficiency');
+      if (effEl) effEl.textContent = service.efficiency;
+      const capEl = document.getElementById('spec-capacity');
+      if (capEl) capEl.textContent = service.capacity;
+      const precEl = document.getElementById('spec-precision');
+      if (precEl) precEl.textContent = service.precision;
+    };
+
+    window.openModal = function(index, e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      window.modalOpenTime = Date.now();
+      const targetIdx = (typeof index === 'number') ? index : (parseInt(index) || 0);
+      window.updateModalContent(targetIdx);
+      const modal = document.getElementById('service-modal');
+      if (modal) {
+        modal.removeAttribute('inert');
+        modal.removeAttribute('aria-hidden');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    window.closeModal = function(e) {
+      const isDirectCloseBtn = e && e.target && (e.target.id === 'modal-close-btn' || e.target.closest('#modal-close-btn'));
+      if (Date.now() - window.modalOpenTime < 300 && !isDirectCloseBtn) return;
+      if (e && e.stopPropagation) e.stopPropagation();
+      const modal = document.getElementById('service-modal');
+      if (!modal) return;
+      if (document.activeElement && modal.contains(document.activeElement)) document.activeElement.blur();
+      modal.classList.remove('open');
+      modal.style.opacity = '0';
+      modal.style.visibility = 'hidden';
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    window.nextService = function() {
+      const nextIndex = (window.currentServiceIndex + 1) % window.servicesData.length;
+      window.updateModalContent(nextIndex);
+    };
+
+    window.prevService = function() {
+      const prevIndex = (window.currentServiceIndex - 1 + window.servicesData.length) % window.servicesData.length;
+      window.updateModalContent(prevIndex);
+    };
+  </script>
+</head>
+<body>
+
+
+  <!-- ── BLURRY MULTICOLOR BACKGROUND WITH INTERTWINED CONTOUR LINES ── -->
+  <div class="background-canvas" aria-hidden="true">
+    <div class="bg-blob blob-blue"></div>
+    <div class="bg-blob blob-cyan"></div>
+    <div class="bg-blob blob-purple"></div>
+    <!-- Curvas de nivel y líneas topográficas delgadas entrecruzadas (Estética Aeroespacial Flymetrics) -->
+    <svg viewBox="0 0 1600 1200" preserveAspectRatio="none" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; pointer-events: none; z-index: 2;">
+      <!-- Grupo 1: Curvas fluidas descendentes (Azul Navy #003049, Aero Link #1C82AD, Geo Sand #E4C7A1) -->
+      <path d="M-100,50 C 250,200 450,-50 850,280 C 1250,610 1450,300 1800,550" fill="none" stroke="#003049" stroke-width="1.2" />
+      <path d="M-100,90 C 260,230 460,-20 860,310 C 1260,640 1460,330 1800,580" fill="none" stroke="#1C82AD" stroke-width="1.5" />
+      <path d="M-100,130 C 270,260 470,10 870,340 C 1270,670 1470,360 1800,610" fill="none" stroke="#E4C7A1" stroke-width="1.2" />
+      <path d="M-100,170 C 280,290 480,40 880,370 C 1280,700 1480,390 1800,640" fill="none" stroke="#003049" stroke-width="1.0" />
+      <path d="M-100,210 C 290,320 490,70 890,400 C 1290,730 1490,420 1800,670" fill="none" stroke="#1C82AD" stroke-width="1.2" />
+      <path d="M-100,250 C 300,350 500,100 900,430 C 1300,760 1500,450 1800,700" fill="none" stroke="#E4C7A1" stroke-width="1.1" />
+
+      <!-- Grupo 2: Curvas fluidas ascendentes entrecruzadas (Contrapunto Topográfico) -->
+      <path d="M-100,750 C 350,550 550,850 950,500 C 1350,150 1550,450 1800,200" fill="none" stroke="#003049" stroke-width="1.2" />
+      <path d="M-100,790 C 360,580 560,880 960,530 C 1360,180 1560,480 1800,230" fill="none" stroke="#E4C7A1" stroke-width="1.4" />
+      <path d="M-100,830 C 370,610 570,910 970,560 C 1370,210 1570,510 1800,260" fill="none" stroke="#1C82AD" stroke-width="1.1" />
+      <path d="M-100,870 C 380,640 580,940 980,590 C 1380,240 1580,540 1800,290" fill="none" stroke="#003049" stroke-width="1.2" />
+      <path d="M-100,910 C 390,670 590,970 990,620 C 1390,270 1590,570 1800,320" fill="none" stroke="#1C82AD" stroke-width="1.0" />
+
+      <!-- Grupo 3: Trayectorias diagonales profundas y curvas elípticas de vuelo -->
+      <path d="M-50,1100 C 400,900 700,1050 1100,800 C 1500,550 1650,750 1850,500" fill="none" stroke="#1C82AD" stroke-width="1.2" />
+      <path d="M-50,1140 C 410,930 710,1080 1110,830 C 1510,580 1660,780 1850,530" fill="none" stroke="#E4C7A1" stroke-width="1.1" />
+      <path d="M-50,1180 C 420,960 720,1110 1120,860 C 1520,610 1670,810 1850,560" fill="none" stroke="#003049" stroke-width="1.3" />
+    </svg>
+    <!-- Fondo animado de líneas tecnológicas / LiDaR Constellation -->
+    <canvas id="bg-tech-lines" style="position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; opacity: 0.55;"></canvas>
+  </div>
+
+  <!-- ── TOP LIQUID GLASS NAVBAR (APPLE STYLE) ── -->
+  <div class="navbar-container">
+    <nav class="navbar liquid-glass" id="navbar">
+      
+      <!-- Brand Logo (Clean, Sharp & Premium Vector Isotype) -->
+      <a href="#inicio" class="brand" style="margin-left: 0; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+        <img src="img/logo_bird_blue.png" alt="Flymetrics Logo" class="brand-bird-img" onerror="this.src='img/logo.png'">
+        <span class="brand-text">Fly<span style="color: #1C82AD;">metrics</span></span>
+      </a>
+
+      <!-- Desktop Links -->
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#inicio" class="nav-link active">Principal</a></li>
+        <li><a href="#servicios" class="nav-link">Servicios</a></li>
+        <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+        <li><a href="#simuladores" class="nav-link">Simulador</a></li>
+        <li><a href="#ubicaciones" class="nav-link">Ubicaciones</a></li>
+        <li><a href="#faq" class="nav-link">Preguntas</a></li>
+        <li><a href="#contacto" class="nav-link" style="color: var(--accent-cyan); font-weight: 600;">Contáctanos</a></li>
+        <div class="nav-active-pill" id="nav-active-pill"></div>
+      </ul>
+
+      <!-- Desktop Actions (Login & Register) -->
+      <div class="access-actions">
+        <!-- Iniciar Sesión / Ingreso Portal -->
+        <button class="btn-glass" onclick="openAuthModal('login', event)" title="Ingresa a tu portal">
+          <i class="fa-solid fa-right-to-bracket" style="font-size: 0.82rem; color: #1C82AD;"></i>
+          <span>Ingresa a tu portal</span>
+        </button>
+        <!-- Agenda tu demostración -->
+        <a href="agendar.html?modo=unico" class="btn-solid" style="text-decoration: none;" title="Agenda tu demostración">
+          <i class="fa-solid fa-calendar-check" style="font-size: 0.82rem;"></i>
+          <span>Agenda tu demostración</span>
+        </a>
+      </div>
+
+      <!-- Mobile Burger Button -->
+      <button class="burger-menu" id="burger-btn" aria-label="Abrir Menú">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </nav>
+  </div>
+
+  <!-- ── MOBILE DRAWER OVERLAY ── -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- ── MOBILE LIQUID GLASS DRAWER (SLIDE-IN) ── -->
+  <div class="mobile-drawer liquid-glass" id="mobile-drawer">
+    
+    <!-- Links -->
+    <ul class="drawer-links" id="drawer-links">
+      <li><a href="#inicio" class="drawer-link active">Principal</a></li>
+      <li><a href="#servicios" class="drawer-link">Servicios</a></li>
+      <li><a href="#nosotros" class="drawer-link">Nosotros</a></li>
+      <li><a href="#simuladores" class="drawer-link">Simulador</a></li>
+      <li><a href="#ubicaciones" class="drawer-link">Ubicaciones</a></li>
+      <li><a href="#faq" class="drawer-link">Preguntas</a></li>
+      <li><a href="#contacto" class="drawer-link" style="color: var(--accent-cyan); font-weight: 600;">Contáctanos <i class="fa-solid fa-envelope" style="margin-left: 4px;"></i></a></li>
+      <div class="drawer-active-pill" id="drawer-active-pill"></div>
+    </ul>
+
+    <!-- Access Actions inside Drawer -->
+    <div class="drawer-actions">
+      <button class="btn-glass" onclick="openAuthModal('login', event)">
+        <i class="fa-solid fa-right-to-bracket" style="font-size: 1rem; color: #1C82AD;"></i>
+        <span>Ingresa a tu portal</span>
+      </button>
+      <a href="agendar.html?modo=unico" class="btn-solid" style="text-decoration: none; text-align: center; color: #ffffff;">
+        <i class="fa-solid fa-calendar-check" style="font-size: 1rem;"></i>
+        <span>Agenda tu demostración</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── MAIN CONTENT SHOWCASE ── -->
+  <main class="main-content">
+
+    <!-- Section 1: Hero (Principal con Video a Pantalla Completa 100% Responsive) -->
+    <section id="inicio" class="hero-section" style="width: 100%; height: 100vh; min-height: 100vh; max-width: 100%; margin: 0; padding: 0; position: relative; overflow: hidden;">
+      
+      <!-- ── FULL-SCREEN VIDEO HERO ── -->
+      <div style="width: 100%; height: 100%; position: relative; overflow: hidden; background: #001B2E;">
+        
+        <!-- Real Video Background -->
+        <video autoplay muted loop playsinline preload="auto" id="hero-video" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transform: translateZ(0); will-change: transform;">
+          <source src="/video/hero.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Dark High-Contrast Overlay -->
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,24,40,0.55) 0%, rgba(0,18,32,0.88) 100%); z-index: 1;"></div>
+        
+        <!-- Hero Content (Centered, Grandecito, Clean Video) -->
+        <div style="position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 24px; box-sizing: border-box;">
+          
+          <!-- Large Centered Title (no side logo) -->
+          <div style="margin-bottom: 28px;">
+            <h1 style="font-family: 'Outfit', sans-serif; font-size: clamp(3.5rem, 8vw, 6.5rem); font-weight: 900; background: linear-gradient(135deg, #ffffff 0%, #E4C7A1 50%, #1C82AD 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.03em; margin: 0; line-height: 1; filter: drop-shadow(0 6px 28px rgba(0,0,0,0.85));">
+              Flymetrics
+            </h1>
+            <p style="font-family: 'Outfit', sans-serif; font-size: clamp(1rem, 2.2vw, 1.35rem); font-weight: 600; color: #f1f5f9; margin: 14px auto 0; max-width: 650px; text-shadow: 0 2px 12px rgba(0,0,0,0.8);">
+              Agricultura y Ganadería de Precisión con Tecnología Aérea Avanzada en Colombia
+            </p>
+          </div>
+
+          <!-- Centered CTA Buttons -->
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center; justify-content: center;">
+            <a href="#contacto" class="btn-solid" style="background: linear-gradient(135deg, #1C82AD, #003049); color: #ffffff; border-radius: 9999px; padding: 16px 34px; font-weight: 800; font-size: 0.98rem; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 12px 35px rgba(28,130,173,0.45); border: none; letter-spacing: 0.04em; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 16px 40px rgba(28,130,173,0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 12px 35px rgba(28,130,173,0.45)';">
+              <i class="fa-solid fa-paper-plane"></i> Cotiza acá →
+            </a>
+            <button onclick="openAuthModal('login', event)" class="btn-glass" style="background: rgba(255, 255, 255, 0.18); color: #ffffff; border-radius: 9999px; padding: 16px 30px; font-weight: 800; font-size: 0.98rem; font-family: 'Outfit', sans-serif; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid rgba(228,199,161,0.75); display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.borderColor='#ffffff';" onmouseout="this.style.background='rgba(255,255,255,0.18)'; this.style.borderColor='rgba(228,199,161,0.75)';">
+              <i class="fa-solid fa-right-to-bracket" style="color: #E4C7A1;"></i> Ingresa a tu portal
+            </button>
+            <a href="agendar.html?modo=unico" class="btn-glass" style="background: rgba(0, 48, 73, 0.55); color: #ffffff; border-radius: 9999px; padding: 16px 28px; font-weight: 800; font-size: 0.95rem; font-family: 'Outfit', sans-serif; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1.5px solid rgba(245, 158, 11, 0.8); display: inline-flex; align-items: center; gap: 8px; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='rgba(245, 158, 11, 0.35)'; this.style.borderColor='#F59E0B';" onmouseout="this.style.background='rgba(0, 48, 73, 0.55)'; this.style.borderColor='rgba(245, 158, 11, 0.8)';">
+              <i class="fa-solid fa-calendar-check" style="color: #F59E0B;"></i> Agenda tu demostración
+            </a>
+          </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div style="position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 6px; animation: bounceDown 2s infinite;">
+          <span style="font-family: 'Outfit', sans-serif; font-size: 0.7rem; color: rgba(228,199,161,0.7); letter-spacing: 0.15em; text-transform: uppercase;">Descubre más</span>
+          <i class="fa-solid fa-chevron-down" style="color: #E4C7A1; font-size: 1rem;"></i>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicios">
+      <h2 class="section-title" style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: calc(1.8rem + 1vw); color: #003049; text-align: center;">Nuestros Servicios de Precisión</h2>
+      <p style="text-align: center; color: #1C82AD; max-width: 600px; margin: 12px auto 48px; font-weight: 700; font-family: 'Outfit', sans-serif; font-size: 1.05rem;">
+        Haz clic en cada tarjeta para desplegar las características técnicas avanzadas.
+      </p>
+      
+      <div class="showcase-grid" style="max-width: 1200px; margin: 0 auto; padding: 0 16px;">
+         <!-- Service Card 1: Agricultura de Precisión -->
+        <article class="showcase-card" data-service-id="0" onclick="window.openModal(0, event)" style="cursor: pointer; border-top: 3.5px solid #1C82AD;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_precision.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #1C82AD; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-wheat-awn" style="color: #E4C7A1; margin-right: 4px;"></i> Precisión Agrícola
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-wheat-awn" style="font-size: 1.5rem; color: #1C82AD;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Agricultura de Precisión</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Zonificación digital y prescripción variable de insumos para maximizar el rendimiento por hectárea con mínimo impacto ambiental.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Diagnóstico:</strong> Variabilidad del suelo y vigor del cultivo</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Precisión:</strong> Centimétrica RTK (± 2 cm)</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Optimización:</strong> Ahorro estratégico de insumos y recursos</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(0, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+        <!-- Service Card 2: Aplicación Aérea con Drones -->
+        <article class="showcase-card" data-service-id="1" onclick="window.openModal(1, event)" style="cursor: pointer; border-top: 3.5px solid #E4C7A1;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_aspersion.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #E4C7A1; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-helicopter" style="color: #E4C7A1; margin-right: 4px;"></i> Aspersión Aérea
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-helicopter" style="font-size: 1.5rem; color: #003049;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Aplicación Aérea con Drones</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Aspersión foliar ultra eficiente de fitosanitarios y fertilizantes. Cobertura uniforme y 0% compactación del suelo.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Dosificación:</strong> Hasta 90% de ahorro en agua</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Precisión:</strong> Guiado RTK de vuelo milimétrico</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Calidad:</strong> Microgotas atomizadas de alta adherencia</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(1, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+        <!-- Service Card 3: Análisis Multiespectral -->
+        <article class="showcase-card" data-service-id="2" onclick="window.openModal(2, event)" style="cursor: pointer; border-top: 3.5px solid #1C82AD;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_multiespectral.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #1C82AD; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-seedling" style="color: #E4C7A1; margin-right: 4px;"></i> Salud Vegetal
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-seedling" style="font-size: 1.5rem; color: #1C82AD;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Análisis Multiespectral</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Detección temprana de estrés hídrico, plagas y vigor vegetal mediante sensores multiespectrales de 4 bandas y RGB.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Resolución:</strong> Desde 2 cm por píxel</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Mapas:</strong> Reflectancia multiespectral y zonificación GIS</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Precisión:</strong> Georreferenciación centimétrica RTK</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(2, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+        <!-- Service Card 4: Cartografía y Topografía 3D -->
+        <article class="showcase-card" data-service-id="3" onclick="window.openModal(3, event)" style="cursor: pointer; border-top: 3.5px solid #E4C7A1;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_topografia_3d.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #E4C7A1; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-map-location-dot" style="color: #E4C7A1; margin-right: 4px;"></i> Topografía RTK
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-map-location-dot" style="font-size: 1.5rem; color: #003049;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Cartografía y Topografía</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Ortomosaicos 2D de alta precisión y Modelos Digitales de Elevación (MDE) para curvas de nivel y cálculo de tierras.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Resolución:</strong> Desde 2 cm por píxel</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Precisión:</strong> RTK centimétrica (± 2 cm con GCPs)</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Entregables:</strong> CAD, GIS, KML, MDE y GeoTIFF</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(3, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+        <!-- Service Card 5: Ganadería de Precisión -->
+        <article class="showcase-card" data-service-id="4" onclick="window.openModal(4, event)" style="cursor: pointer; border-top: 3.5px solid #10B981;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_ganaderia.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #10B981; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-cow" style="color: #10B981; margin-right: 4px;"></i> Ganadería Inteligente
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-cow" style="font-size: 1.5rem; color: #10B981;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Ganadería de Precisión</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Levantamiento de potreros, rotación inteligente de ganado, redes de suministro de agua y fertilización de pastos con drones.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Potreros:</strong> Levantamiento digital y aforos de pasturas</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Hidrografía:</strong> Diseño y monitoreo de redes de agua</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Pastos:</strong> Fertilización y fumigación aérea de pasturas</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(4, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #10B981 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(16,185,129,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+        <!-- Service Card 6: Inspecciones Agrícolas de Cultivos -->
+        <article class="showcase-card" data-service-id="5" onclick="window.openModal(5, event)" style="cursor: pointer; border-top: 3.5px solid #1C82AD;">
+          <div>
+            <!-- Real Photo Slot -->
+            <div class="card-image-slot" style="width: 100%; height: 185px; border-radius: 16px; background-image: url('img/servicio_inspeccion.jpg'); background-size: cover; background-position: center; margin-bottom: 16px; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,48,73,0.12);">
+              <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,48,73,0.05) 0%, rgba(0,48,73,0.6) 100%);"></div>
+              <span style="position: absolute; bottom: 12px; left: 12px; color: #ffffff; font-weight: 800; font-size: 0.8rem; background: rgba(0,48,73,0.85); padding: 4px 12px; border-radius: 20px; border: 1px solid #1C82AD; font-family: 'Outfit', sans-serif;">
+                <i class="fa-solid fa-magnifying-glass-chart" style="color: #E4C7A1; margin-right: 4px;"></i> Diagnóstico Agrícola
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <i class="fa-solid fa-magnifying-glass-chart" style="font-size: 1.5rem; color: #1C82AD;"></i>
+              <h3 style="margin: 0; font-size: 1.25rem; color: #003049; font-family: 'Outfit', sans-serif; font-weight: 800;">Inspecciones Agrícolas de Cultivos</h3>
+            </div>
+
+            <p style="font-size: 0.9rem; color: #343A40; line-height: 1.55; margin-bottom: 14px; font-family: 'Outfit', sans-serif;">
+              Monitoreo fitosanitario y diagnóstico visual de alta resolución con sensores térmicos y RGB para identificar fallas de riego y estrés en plantas.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0 0 18px 0; font-size: 0.85rem; color: #6C757D; display: flex; flex-direction: column; gap: 8px; font-family: 'Outfit', sans-serif;">
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Diagnóstico:</strong> Fitosanitario, estrés hídrico y térmico</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Detección:</strong> Puntos críticos y anomalías de cultivo</li>
+              <li><i class="fa-solid fa-check" style="color: #10b981;"></i> <strong>Normativa:</strong> Informes técnicos conforme a RAC 100</li>
+            </ul>
+          </div>
+
+          <button type="button" class="btn-solid" onclick="event.stopPropagation(); window.openModal(5, event);" style="width: 100%; padding: 13px; font-size: 0.92rem; border-radius: 9999px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; font-weight: 800; font-family: 'Outfit', sans-serif; letter-spacing: 0.03em; cursor: pointer; border: none; box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+            Ver completo <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="nosotros">
+      <h2 class="section-title">Sobre Nosotros</h2>
+      <p style="text-align: center; color: #1C82AD; font-weight: 800; font-size: 1.2rem; max-width: 850px; margin: 0 auto 12px; font-family: 'Outfit', sans-serif;">
+        Soluciones inteligentes con drones para el campo y la industria.
+      </p>
+      <p style="text-align: center; color: #343A40; max-width: 900px; margin: 0 auto 48px; font-size: 1.02rem; line-height: 1.65; font-family: 'Outfit', sans-serif;">
+        En Flymetrics combinamos tecnología aérea, análisis geoespacial y experiencia operativa para ofrecer servicios de agricultura de precisión, aplicación aérea, monitoreo multiespectral, cartografía e inspecciones técnicas que mejoran la productividad y la toma de decisiones.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; max-width: 1200px; margin: 0 auto; padding: 0 16px;">
+        
+        <!-- Card 1: Misión -->
+        <div class="liquid-glass" style="padding: 34px; border-radius: 24px; text-align: left; border: 2px solid #E4C7A1; background: rgba(255,255,255,0.92); box-shadow: 0 12px 35px rgba(0,48,73,0.08);">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: #003049; display: flex; align-items: center; justify-content: center; border: 1px solid #E4C7A1;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#E4C7A1" stroke-width="2" width="24" height="24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #003049; margin:0;">Misión</h3>
+          </div>
+          <p style="font-size: 0.95rem; color: #343A40; line-height: 1.65; font-family: 'Outfit', sans-serif;">
+            Brindar soluciones especializadas mediante drones y análisis de información geoespacial que permitan optimizar la toma de decisiones, mejorar la productividad y aumentar la eficiencia operativa de nuestros clientes en los sectores agrícola, ambiental e industrial.
+          </p>
+        </div>
+
+        <!-- Card 2: Visión -->
+        <div class="liquid-glass" style="padding: 34px; border-radius: 24px; text-align: left; border: 2px solid #1C82AD; background: rgba(255,255,255,0.92); box-shadow: 0 12px 35px rgba(0,48,73,0.08);">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: #1C82AD; display: flex; align-items: center; justify-content: center; border: 1px solid #ffffff;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" width="24" height="24">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/>
+              </svg>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #003049; margin:0;">Visión</h3>
+          </div>
+          <p style="font-size: 0.95rem; color: #343A40; line-height: 1.65; font-family: 'Outfit', sans-serif;">
+            Ser una empresa referente en Colombia en servicios con drones, reconocida por la innovación tecnológica, la calidad de los resultados y el aporte a la transformación digital de los procesos productivos.
+          </p>
+        </div>
+
+        <!-- Card 3: Sostenibilidad -->
+        <div class="liquid-glass" style="padding: 34px; border-radius: 24px; text-align: left; border: 2px solid #E4C7A1; background: rgba(255,255,255,0.92); box-shadow: 0 12px 35px rgba(0,48,73,0.08);">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: #003049; display: flex; align-items: center; justify-content: center; border: 1px solid #E4C7A1;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#E4C7A1" stroke-width="2" width="24" height="24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #003049; margin:0;">Sostenibilidad</h3>
+          </div>
+          <p style="font-size: 0.95rem; color: #343A40; line-height: 1.65; font-family: 'Outfit', sans-serif;">
+            En Flymetrics promovemos el uso eficiente de los recursos mediante tecnologías de agricultura de precisión y captura de información geoespacial, contribuyendo a una mejor gestión del agua, los insumos agrícolas y la planificación de actividades productivas.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Sectores Enfocados -->
+      <div style="max-width: 1200px; margin: 40px auto 0; padding: 0 16px;">
+        <div class="liquid-glass" style="padding: 40px; border-radius: 28px; background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.92)); border: 2.5px solid #1C82AD; box-shadow: 0 15px 40px rgba(0,48,73,0.08);">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #003049; margin-bottom: 24px; text-align: center; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <i class="fa-solid fa-crosshairs" style="color: #1C82AD;"></i> Sectores Enfocados
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; margin-bottom: 32px;">
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-wheat-awn" style="color: #1C82AD; font-size: 1.1rem;"></i> Agricultura de precisión.
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-helicopter" style="color: #1C82AD; font-size: 1.1rem;"></i> Aplicación aérea con drones.
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-seedling" style="color: #1C82AD; font-size: 1.1rem;"></i> Monitoreo multiespectral.
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-map-location-dot" style="color: #1C82AD; font-size: 1.1rem;"></i> Cartografía y topografía.
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-leaf" style="color: #1C82AD; font-size: 1.1rem;"></i> Seguimiento ambiental.
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ffffff; border-radius:14px; border:1px solid #E4C7A1; font-weight:700; color:#003049; font-size:0.92rem; font-family: 'Outfit', sans-serif;">
+              <i class="fa-solid fa-cow" style="color: #10B981; font-size: 1.1rem;"></i> Ganadería de precisión y potreros.
+            </div>
+          </div>
+
+          <!-- Botones sugeridos -->
+          <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; align-items: center;">
+            <a href="#contacto" style="padding: 13px 26px; font-weight: 800; font-size: 0.92rem; text-decoration: none; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; border-radius: 9999px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,48,73,0.25); border: none; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              <i class="fa-solid fa-file-invoice-dollar"></i> Solicitar cotización
+            </a>
+            <a href="#servicios" style="padding: 13px 26px; font-weight: 800; font-size: 0.92rem; text-decoration: none; border: 1.5px solid #1C82AD; color: #003049; background: #ffffff; border-radius: 9999px; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='rgba(28,130,173,0.08)'" onmouseout="this.style.background='#ffffff'">
+              <i class="fa-solid fa-cubes" style="color: #1C82AD;"></i> Conocer nuestros servicios
+            </a>
+            <a href="https://wa.me/573054061764?text=Hola%20Flymetrics,%20deseo%20solicitar%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20drones" target="_blank" rel="noopener noreferrer" style="padding: 13px 26px; font-weight: 800; font-size: 0.92rem; text-decoration: none; border: 1.5px solid #10b981; color: #059669; background: rgba(16, 185, 129, 0.1); border-radius: 9999px; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;" onmouseover="this.style.background='rgba(16, 185, 129, 0.2)'" onmouseout="this.style.background='rgba(16, 185, 129, 0.1)'">
+              <i class="fa-brands fa-whatsapp" style="font-size: 1.15rem; color: #10b981;"></i> Contactar por WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="simuladores" style="max-width: 100%; overflow: hidden; box-sizing: border-box; padding: 60px 16px;">
+      <h2 class="section-title" style="color: var(--primary-blue); font-family: 'Space Grotesk', sans-serif; font-size: calc(1.8rem + 1vw); font-weight: 800; text-align: center;">Simulador de Vuelo & Comparador de Rendimiento</h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 680px; margin: 8px auto 40px; font-size: 1rem; line-height: 1.6;">
+        Simula la operación aeroagrícola en topografías reales de Colombia y compara la velocidad, ahorro de agua y personal frente a métodos tradicionales de espalda.
+      </p>
+      
+      <div class="simulator-wrapper" style="max-width: 1140px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+        
+        <!-- COL 1: Canvas & HUD -->
+        <div class="liquid-glass sim-panel-canvas" style="padding: 20px; border-radius: 24px; max-width: 100%; box-sizing: border-box; overflow: hidden; border: 1.5px solid rgba(28, 130, 173, 0.22); background: rgba(255, 255, 255, 0.95);">
+          <!-- Tabs -->
+          <div style="display: flex; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid rgba(0, 48, 73, 0.08); padding-bottom: 12px; flex-wrap: wrap;">
+            <button id="sim-tab-terrain" onclick="switchSimTab('terrain')" style="padding: 8px 18px; border-radius: 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.25s; background: rgba(28, 130, 173, 0.12); border: 1.5px solid #1C82AD; color: #003049; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-mountain-sun" style="color: #1C82AD;"></i> Simulación de Terreno Colombiano
+            </button>
+            <button id="sim-tab-telemetry" onclick="switchSimTab('telemetry')" style="padding: 8px 18px; border-radius: 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.25s; background: rgba(0, 48, 73, 0.04); border: 1px solid rgba(0, 48, 73, 0.12); color: #6C757D; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-satellite" style="color: #1C82AD;"></i> Telemetría RTK & Dron
+            </button>
+          </div>
+
+          <!-- 3D Terrain Tab Content -->
+          <div id="sim-pane-terrain" style="max-width: 100%; box-sizing: border-box; overflow: hidden;">
+            <div style="position: relative; border-radius: 18px; overflow: hidden; border: 1.5px solid rgba(28, 130, 173, 0.2); background: #f4f7fb; width: 100%; box-sizing: border-box;">
+              <canvas id="terrain-canvas" style="width: 100%; height: 350px; display: block;"></canvas>
+              
+              <!-- Drone Telemetry HUD (Glass Card) -->
+              <div style="position: absolute; top: 12px; left: 12px; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px; padding: 10px 14px; font-size: 0.76rem; z-index: 5; color: #003049; box-shadow: 0 6px 20px rgba(0, 48, 73, 0.08); font-family: 'Outfit', sans-serif;">
+                <div style="display: flex; align-items: center; gap: 6px; color: #1C82AD; font-weight: 800; margin-bottom: 4px; font-size: 0.78rem;">
+                  <span style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; display: inline-block; box-shadow: 0 0 8px #10B981;"></span>
+                  <span id="sim-drone-model">DJI AGRAS T40 — VUELO ACTIVO</span>
+                </div>
+                <div style="color: #343A40; display: flex; gap: 12px; font-weight: 600;">
+                  <span>Alt: <strong id="sim-alt" style="color: #003049;">3.5m AGL</strong></span>
+                  <span>Vel: <strong id="sim-vel" style="color: #003049;">7.5 m/s</strong></span>
+                </div>
+                <div style="color: #343A40; margin-top: 2px; font-weight: 600;">
+                  <span>Flujo Aspersión: <strong id="sim-spray-flow" style="color: #10B981;">12.0 L/min (Activa)</strong></span>
+                </div>
+              </div>
+
+              <!-- Topography Badge Overlay -->
+              <div id="terrain-badge" style="position: absolute; bottom: 12px; right: 12px; background: rgba(0, 48, 73, 0.88); backdrop-filter: blur(10px); color: #ffffff; padding: 6px 14px; border-radius: 100px; font-size: 0.72rem; font-weight: 700; z-index: 5; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.2);">
+                <i class="fa-solid fa-layer-group" style="color: #E4C7A1;"></i>
+                <span id="terrain-badge-text">Laderas Andinas / Café & Sombrío (Huila & Eje Cafetero)</span>
+              </div>
+
+              <!-- Progress Bar -->
+              <div id="sim-ha-bar" style="position: absolute; bottom: 0; left: 0; height: 5px; background: linear-gradient(90deg, #1C82AD 0%, #10B981 100%); width: 0%; transition: width 0.2s ease;"></div>
+            </div>
+
+            <!-- Mini HUD stats -->
+            <div class="sim-hud-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px;">
+              <div class="hud-stat-box" style="background: rgba(28, 130, 173, 0.07); border: 1px solid rgba(28, 130, 173, 0.2); border-radius: 14px; padding: 10px 8px; text-align: center;">
+                <div class="hud-stat-val" id="sim-area" style="color: #003049; font-weight: 900; font-size: 1.2rem;">0.0 Ha</div>
+                <div class="hud-stat-lbl" style="font-size: 0.68rem; color: #6C757D; font-weight: 700; text-transform: uppercase;">Cubrimiento</div>
+              </div>
+              <div class="hud-stat-box" style="background: rgba(28, 130, 173, 0.07); border: 1px solid rgba(28, 130, 173, 0.2); border-radius: 14px; padding: 10px 8px; text-align: center;">
+                <div class="hud-stat-val" id="sim-batt" style="color: #10B981; font-weight: 900; font-size: 1.2rem;">96%</div>
+                <div class="hud-stat-lbl" style="font-size: 0.68rem; color: #6C757D; font-weight: 700; text-transform: uppercase;">Batería Lipo</div>
+              </div>
+              <div class="hud-stat-box" style="background: rgba(28, 130, 173, 0.07); border: 1px solid rgba(28, 130, 173, 0.2); border-radius: 14px; padding: 10px 8px; text-align: center;">
+                <div class="hud-stat-val" id="sim-wind" style="color: #003049; font-weight: 900; font-size: 1.2rem;">2.5 m/s</div>
+                <div class="hud-stat-lbl" style="font-size: 0.68rem; color: #6C757D; font-weight: 700; text-transform: uppercase;">Viento Óptimo</div>
+              </div>
+              <div class="hud-stat-box" style="background: rgba(28, 130, 173, 0.07); border: 1px solid rgba(28, 130, 173, 0.2); border-radius: 14px; padding: 10px 8px; text-align: center;">
+                <div class="hud-stat-val" id="sim-signal" style="color: #1C82AD; font-weight: 900; font-size: 1.2rem;">RTK: 28 sat</div>
+                <div class="hud-stat-lbl" style="font-size: 0.68rem; color: #6C757D; font-weight: 700; text-transform: uppercase;">Precisión cm</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Telemetry Tab Content -->
+          <div id="sim-pane-telemetry" style="display: none; padding: 10px 0;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+              <div class="telemetry-card" style="background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 16px; padding: 16px;">
+                <span class="telemetry-lbl" style="font-size: 0.75rem; color: #6C757D; font-weight: 700; text-transform: uppercase;"><i class="fa-solid fa-battery-three-quarters" style="color: #10B981;"></i> Batería DB1560</span>
+                <strong class="telemetry-val" id="tel-batt" style="color: #003049; font-size: 1.5rem; display: block; margin: 4px 0;">96%</strong>
+                <div style="height: 6px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden;"><div id="tel-batt-bar" style="width: 96%; height: 100%; background: #10B981; transition: width 0.5s;"></div></div>
+              </div>
+              <div class="telemetry-card" style="background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 16px; padding: 16px;">
+                <span class="telemetry-lbl" style="font-size: 0.75rem; color: #6C757D; font-weight: 700; text-transform: uppercase;"><i class="fa-solid fa-droplet" style="color: #1C82AD;"></i> Carga de Tanque</span>
+                <strong class="telemetry-val" id="tel-payload" style="color: #1C82AD; font-size: 1.5rem; display: block; margin: 4px 0;">40.0 Litros</strong>
+                <span style="font-size: 0.75rem; color: #6C757D; font-weight: 600;">Aspersión Centrífuga ULV</span>
+              </div>
+              <div class="telemetry-card" style="background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 16px; padding: 16px;">
+                <span class="telemetry-lbl" style="font-size: 0.75rem; color: #6C757D; font-weight: 700; text-transform: uppercase;"><i class="fa-solid fa-wind" style="color: #343A40;"></i> Sensor Anemométrico</span>
+                <strong class="telemetry-val" id="tel-wind" style="color: #003049; font-size: 1.5rem; display: block; margin: 4px 0;">2.5 m/s</strong>
+                <span style="font-size: 0.75rem; color: #10B981; font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Condiciones Ideales</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 2: Cost & Savings Calculator -->
+        <div class="liquid-glass sim-panel-calculator" style="padding: 24px 20px; border-radius: 24px; display: flex; flex-direction: column; gap: 18px; border: 1.5px solid rgba(28, 130, 173, 0.22); background: rgba(255, 255, 255, 0.95); max-width: 100%; box-sizing: border-box;">
+          <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 800; color: #003049; margin: 0; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-chart-line" style="color: #1C82AD;"></i> Comparador de Rendimiento Agrícola
+          </h3>
+          
+          <!-- Controls -->
+          <div style="display: flex; flex-direction: column; gap: 14px; background: #ffffff; padding: 16px; border-radius: 16px; border: 1.5px solid rgba(28, 130, 173, 0.18);">
+            
+            <!-- Selector 1: Topografía / Categoría Geográfica -->
+            <div>
+              <label class="calc-label" style="font-size: 0.8rem; font-weight: 700; color: #003049; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                <i class="fa-solid fa-earth-americas" style="color: #1C82AD;"></i> Tipo de Terreno / Topografía
+              </label>
+              <select id="sim-crop" onchange="changeCropTerrain()" class="calc-select" style="width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid rgba(28, 130, 173, 0.3); font-weight: 700; color: #003049; background: #ffffff; font-family: inherit; appearance: auto;">
+                <option value="laderas">Laderas (Terrenos quebrados y pendientes)</option>
+                <option value="planicies">Planicies (Terrenos llanos y mecanizados)</option>
+                <option value="altiplanicie">Altiplanicie (Sabanas y zonas altas)</option>
+                <option value="forestal">Cultivo Forestal (Plantaciones y frutales de dosel alto)</option>
+              </select>
+            </div>
+
+            <!-- Selector 2: Tipo de Aplicación -->
+            <div>
+              <label class="calc-label" style="font-size: 0.8rem; font-weight: 700; color: #003049; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                <i class="fa-solid fa-flask-vial" style="color: #1C82AD;"></i> Tipo de Aplicación Aeroagrícola
+              </label>
+              <select id="sim-app-type" onchange="calculateSavings()" class="calc-select" style="width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid rgba(28, 130, 173, 0.3); font-weight: 700; color: #003049; background: #ffffff; font-family: inherit; appearance: auto;">
+                <option value="spray">Fumigación Fitosanitaria (Fungicida / Insecticida ULV)</option>
+                <option value="foliar">Fertilización Foliar & Bioestimulantes (Nutrición)</option>
+                <option value="pastos">Fertilización / Fumigación de Pastos (Ganadería)</option>
+                <option value="seeds">Esparcido de Granulado / Siembra Aérea</option>
+                <option value="ndvi">Análisis Multiespectral de Cultivos (Salud Vegetal)</option>
+              </select>
+            </div>
+
+            <!-- Slider 1: Hectáreas -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label class="calc-label" style="font-size: 0.8rem; font-weight: 700; color: #003049; margin: 0;">
+                  <i class="fa-solid fa-chart-area" style="color: #1C82AD;"></i> Área a Trabajar
+                </label>
+                <span id="sim-ha-display" style="font-weight: 800; color: #1C82AD; font-size: 0.95rem;">20 Hectáreas</span>
+              </div>
+              <input type="range" id="sim-ha-slider" min="1" max="150" value="20" oninput="calculateSavings()" style="width: 100%; cursor: pointer; accent-color: #1C82AD; margin-top: 6px;" />
+            </div>
+
+            <!-- Slider 2: Litros por Hectárea (L/ha) Variable Clave -->
+            <div id="sim-vol-container">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label class="calc-label" id="sim-vol-label" style="font-size: 0.8rem; font-weight: 700; color: #003049; margin: 0;">
+                  <i class="fa-solid fa-droplet" style="color: #1C82AD;"></i> Dosis de Aplicación (Litros / Hectárea)
+                </label>
+                <span id="sim-vol-display" style="font-weight: 800; color: #1C82AD; font-size: 0.95rem;">20 L/ha</span>
+              </div>
+              <input type="range" id="sim-vol-slider" min="10" max="120" step="5" value="20" oninput="calculateSavings()" style="width: 100%; cursor: pointer; accent-color: #1C82AD; margin-top: 6px;" />
+              <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; margin-top: 2px;">
+                <span id="sim-vol-min">10 L/ha (Ultrabajo Volumen)</span>
+                <span id="sim-discharge-rate-badge">Rendimiento: 10.0 Ha/hora (200 L/h)</span>
+                <span id="sim-vol-max">120 L/ha</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Personal Tradicional (Dinámico según el tipo de labor) -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label class="calc-label" id="sim-workers-label" style="font-size: 0.8rem; font-weight: 700; color: #003049; margin: 0;">
+                  <i class="fa-solid fa-users" style="color: #1C82AD;"></i> Personal Manual con Bomba de Espalda
+                </label>
+                <span id="sim-workers-display" style="font-weight: 800; color: #1C82AD; font-size: 0.95rem;">4 Jornaleros</span>
+              </div>
+              <input type="range" id="sim-workers-slider" min="1" max="20" value="4" oninput="calculateSavings()" style="width: 100%; cursor: pointer; accent-color: #1C82AD; margin-top: 6px;" />
+            </div>
+
+            <!-- Slider 4: Relieve / Pendiente 3D -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+              <span class="calc-label" style="margin: 0; font-size: 0.8rem; font-weight: 700; color: #003049;">
+                <i class="fa-solid fa-mountain" style="color: #1C82AD;"></i> Relieve / Pendiente 3D:
+              </span>
+              <input type="range" id="sim-scale" min="1" max="4" value="2" oninput="updateTerrainScale()" style="cursor: pointer; accent-color: #1C82AD; width: 120px;" />
+            </div>
+          </div>
+
+          <!-- Comparison Cards: Traditional vs Flymetrics -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <!-- Manual -->
+            <div style="background: rgba(239, 68, 68, 0.05); border: 1.5px solid rgba(239, 68, 68, 0.2); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 0.7rem; color: #DC2626; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                <i class="fa-solid fa-person-walking-luggage"></i> <span id="label-method-manual">Labor Tradicional</span>
+              </div>
+              <strong id="time-manual" style="font-size: 1.2rem; color: #003049; display: block;">5.0 Días</strong>
+              <div id="people-manual" style="font-size: 0.74rem; color: #343A40; margin-top: 4px; font-weight: 700;">4 Jornaleros a pie</div>
+              <div id="impact-manual" style="font-size: 0.7rem; color: #6C757D; margin-top: 2px;">Alta compactación de suelo</div>
+            </div>
+
+            <!-- Flymetrics -->
+            <div style="background: rgba(16, 185, 129, 0.07); border: 1.5px solid rgba(16, 185, 129, 0.3); border-radius: 14px; padding: 12px; text-align: center;">
+              <div style="font-size: 0.7rem; color: #059669; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                <i class="fa-solid fa-helicopter"></i> Dron Flymetrics
+              </div>
+              <strong id="time-sistemae" style="font-size: 1.2rem; color: #1C82AD; display: block;">1.3 Horas</strong>
+              <div id="people-sistemae" style="font-size: 0.74rem; color: #343A40; margin-top: 4px; font-weight: 700;">1 Piloto + Estación</div>
+              <div id="impact-sistemae" style="font-size: 0.7rem; color: #059669; margin-top: 2px; font-weight: 700;">Cero pisoteo / ULV</div>
+            </div>
+          </div>
+
+          <!-- Savings Summary Card -->
+          <div style="background: linear-gradient(135deg, rgba(28, 130, 173, 0.08) 0%, rgba(228, 199, 161, 0.15) 100%); border: 1.5px solid rgba(28, 130, 173, 0.25); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.82rem; color: #003049; font-weight: 700;"><i class="fa-solid fa-stopwatch" style="color: #1C82AD;"></i> Tiempo Neto Ahorrado:</span>
+              <strong id="savings-time-net" style="color: #003049; font-size: 1.15rem; font-family: 'Space Grotesk', sans-serif;">97% Más Rápido</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0, 48, 73, 0.08); padding-top: 6px;">
+              <span style="font-size: 0.78rem; color: #6C757D;"><i class="fa-solid fa-hand-holding-droplet" style="color: #1C82AD;"></i> Ahorro de Agua Potable:</span>
+              <strong id="savings-water" style="color: #1C82AD; font-size: 0.88rem;">7,680 Litros</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.78rem; color: #6C757D;"><i class="fa-solid fa-shield-virus" style="color: #10B981;"></i> Exposición Química Humana:</span>
+              <strong style="color: #10B981; font-size: 0.88rem;">0% (Protección Total)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0, 48, 73, 0.08); padding-top: 6px;">
+              <span style="font-size: 0.78rem; color: #6C757D;"><i class="fa-solid fa-leaf" style="color: #1C82AD;"></i> Eficiencia en Dosificación Foliar:</span>
+              <strong style="color: #003049; font-size: 0.88rem;">+35% Mayor Absorción</strong>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 3D Realistic Terrain & Agricultural Drone Simulation Logic -->
+      <script>
+      (function() {
+        let canvas, ctx, animFrame;
+        let terrain = [];
+        let sprayParticles = [];
+        let droneX = 0, droneY = 0;
+        let droneAngle = 0;
+        let flightPath = [];
+        let coveredGrid = [];
+        let simHa = 0;
+        let scale = 1.8, cropType = 'coffee';
+        let tick = 0;
+        let cols = 30, rows = 20;
+
+        // Topografía y paletas cromáticas generales calibradas
+        const COLOMBIAN_TERRAINS = {
+          laderas: {
+            name: 'Laderas (Terrenos quebrados y pendientes)',
+            base: '#2D4A22',
+            mid: '#447330',
+            high: '#68993B',
+            furrow: 'rgba(45, 30, 15, 0.45)',
+            side: '#1C3315'
+          },
+          planicies: {
+            name: 'Planicies (Terrenos llanos y mecanizados)',
+            base: '#38761D',
+            mid: '#4E8B3D',
+            high: '#6BBF59',
+            furrow: 'rgba(91, 155, 213, 0.6)',
+            side: '#1E4610'
+          },
+          altiplanicie: {
+            name: 'Altiplanicie (Sabanas y zonas altas)',
+            base: '#5E7D32',
+            mid: '#7B9F42',
+            high: '#9EBF5C',
+            furrow: 'rgba(77, 102, 41, 0.45)',
+            side: '#384D1C'
+          },
+          forestal: {
+            name: 'Cultivo Forestal (Plantaciones y frutales de dosel alto)',
+            base: '#1E4424',
+            mid: '#2F6236',
+            high: '#498552',
+            furrow: 'rgba(25, 45, 28, 0.5)',
+            side: '#122B17'
+          }
+        };
+
+        function init() {
+          canvas = document.getElementById('terrain-canvas');
+          if (!canvas) return;
+          ctx = canvas.getContext('2d');
+          
+          resizeCanvas();
+          window.addEventListener('resize', resizeCanvas);
+
+          cropType = document.getElementById('sim-crop') ? document.getElementById('sim-crop').value : 'laderas';
+          generateTerrainData();
+          calculateSavings();
+          if (animFrame) cancelAnimationFrame(animFrame);
+          loop();
+        }
+
+        function resizeCanvas() {
+          if (!canvas) return;
+          const rect = canvas.parentElement.getBoundingClientRect();
+          canvas.width = Math.floor(rect.width) || 600;
+          canvas.height = 360;
+        }
+
+        window.changeCropTerrain = function() {
+          const select = document.getElementById('sim-crop');
+          if (select) {
+            cropType = select.value;
+            const badge = document.getElementById('terrain-badge-text');
+            if (badge && COLOMBIAN_TERRAINS[cropType]) {
+              badge.textContent = COLOMBIAN_TERRAINS[cropType].name;
+            }
+          }
+          generateTerrainData();
+          calculateSavings();
+        };
+
+        window.updateTerrainScale = function() {
+          const slider = document.getElementById('sim-scale');
+          if (slider) scale = parseFloat(slider.value) * 0.9;
+        };
+
+        window.switchSimTab = function(tab) {
+          const tabTerrain = document.getElementById('sim-tab-terrain');
+          const tabTelemetry = document.getElementById('sim-tab-telemetry');
+          const paneTerrain = document.getElementById('sim-pane-terrain');
+          const paneTelemetry = document.getElementById('sim-pane-telemetry');
+
+          if (tab === 'terrain') {
+            tabTerrain.style.background = 'rgba(28, 130, 173, 0.12)';
+            tabTerrain.style.borderColor = '#1C82AD';
+            tabTerrain.style.color = '#003049';
+            tabTelemetry.style.background = 'rgba(0, 48, 73, 0.04)';
+            tabTelemetry.style.borderColor = 'rgba(0, 48, 73, 0.12)';
+            tabTelemetry.style.color = '#6C757D';
+            paneTerrain.style.display = 'block';
+            paneTelemetry.style.display = 'none';
+          } else {
+            tabTelemetry.style.background = 'rgba(28, 130, 173, 0.12)';
+            tabTelemetry.style.borderColor = '#1C82AD';
+            tabTelemetry.style.color = '#003049';
+            tabTerrain.style.background = 'rgba(0, 48, 73, 0.04)';
+            tabTerrain.style.borderColor = 'rgba(0, 48, 73, 0.12)';
+            tabTerrain.style.color = '#6C757D';
+            paneTerrain.style.display = 'none';
+            paneTelemetry.style.display = 'block';
+          }
+        };
+
+        function generateTerrainData() {
+          terrain = [];
+          coveredGrid = [];
+
+          for (let r = 0; r < rows; r++) {
+            terrain[r] = [];
+            coveredGrid[r] = [];
+            for (let c = 0; c < cols; c++) {
+              let h = 0;
+              if (cropType === 'laderas') {
+                // Laderas: pendientes pronunciadas continuas y terrazas
+                h = Math.sin(c * 0.18) * 0.95 + Math.cos(r * 0.22) * 0.75 + Math.sin((c * 0.12 + r * 0.15)) * 0.45;
+              } else if (cropType === 'planicies') {
+                // Planicies: terreno llano continuo con canales suaves
+                h = Math.floor(r / 5) * 0.18 + Math.sin(c * 0.12) * 0.06;
+              } else if (cropType === 'altiplanicie') {
+                // Altiplanicie: ondulaciones suaves de sabana
+                h = Math.sin(c * 0.15) * Math.cos(r * 0.15) * 0.85;
+              } else {
+                // Forestal: copas y dosel arbóreo
+                h = Math.sin(c * 0.2) * 0.35 + Math.cos(r * 0.18) * 0.35;
+              }
+              terrain[r][c] = h;
+              coveredGrid[r][c] = 0;
+            }
+          }
+          droneX = 0;
+          droneY = 0;
+          droneAngle = 0;
+          flightPath = [];
+          sprayParticles = [];
+          simHa = 0;
+        }
+
+        function drawScene() {
+          if (!ctx) return;
+          const W = canvas.width, H = canvas.height;
+          ctx.clearRect(0, 0, W, H);
+
+          // Fondo degradado cielo de campo
+          const skyGrd = ctx.createLinearGradient(0, 0, 0, H);
+          skyGrd.addColorStop(0, '#E8F3FA');
+          skyGrd.addColorStop(0.5, '#F3F8FB');
+          skyGrd.addColorStop(1, '#FFFFFF');
+          ctx.fillStyle = skyGrd;
+          ctx.fillRect(0, 0, W, H);
+
+          const cellW = (W / cols) * 1.2;
+          const cellH = cellW * 0.5;
+          const isoX = (c, r) => (W / 2) + (c - r) * (cellW / 2);
+          const isoY = (c, r, h) => (H * 0.28) + (c + r) * (cellH / 2) - h * scale * 18;
+
+          const tInfo = COLOMBIAN_TERRAINS[cropType] || COLOMBIAN_TERRAINS.coffee;
+          const appType = document.getElementById('sim-app-type') ? document.getElementById('sim-app-type').value : 'spray';
+
+          // 1. Dibujar malla de superficie continua con textura e iluminación
+          for (let r = 0; r < rows - 1; r++) {
+            for (let c = 0; c < cols - 1; c++) {
+              const h00 = terrain[r][c];
+              const h10 = terrain[r][c + 1];
+              const h11 = terrain[r + 1][c + 1];
+              const h01 = terrain[r + 1][c];
+
+              const x00 = isoX(c, r), y00 = isoY(c, r, h00);
+              const x10 = isoX(c + 1, r), y10 = isoY(c + 1, r, h10);
+              const x11 = isoX(c + 1, r + 1), y11 = isoY(c + 1, r + 1, h11);
+              const x01 = isoX(c, r + 1), y01 = isoY(c, r + 1, h01);
+
+              const avgH = (h00 + h10 + h11 + h01) / 4;
+              const isSprayed = coveredGrid[r] && coveredGrid[r][c] > 0;
+
+              ctx.beginPath();
+              ctx.moveTo(x00, y00);
+              ctx.lineTo(x10, y10);
+              ctx.lineTo(x11, y11);
+              ctx.lineTo(x01, y01);
+              ctx.closePath();
+
+              if (isSprayed) {
+                if (appType === 'ndvi') {
+                  // Mapeo NDVI multiespectral (vigor verde neón / infrarrojo)
+                  ctx.fillStyle = avgH > 0.4 ? '#10B981' : '#059669';
+                } else if (appType === 'seeds') {
+                  // Terreno con cobertura de semillas
+                  ctx.fillStyle = '#3E6B2C';
+                } else {
+                  // Tratado con pulverización hidratada
+                  ctx.fillStyle = '#1D7A42';
+                }
+              } else if (avgH > 0.7) {
+                ctx.fillStyle = tInfo.high;
+              } else if (avgH > 0.1) {
+                ctx.fillStyle = tInfo.mid;
+              } else {
+                ctx.fillStyle = tInfo.base;
+              }
+              ctx.fill();
+
+              // Surcos agrícolas y curvas de nivel suaves
+              if (c % 2 === 0) {
+                ctx.beginPath();
+                ctx.moveTo(x00, y00);
+                ctx.lineTo(x01, y01);
+                ctx.strokeStyle = tInfo.furrow;
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+              }
+            }
+          }
+
+          // 2. Líneas de trayectoria de vuelo del dron
+          if (flightPath.length > 1) {
+            ctx.beginPath();
+            const fp0 = flightPath[0];
+            const h0 = (terrain[Math.floor(fp0.r)] && terrain[Math.floor(fp0.r)][Math.floor(fp0.c)]) || 0;
+            ctx.moveTo(isoX(fp0.c, fp0.r), isoY(fp0.c, fp0.r, h0) - 26);
+            for (let i = 1; i < flightPath.length; i++) {
+              const fp = flightPath[i];
+              const h = (terrain[Math.floor(fp.r)] && terrain[Math.floor(fp.r)][Math.floor(fp.c)]) || 0;
+              ctx.lineTo(isoX(fp.c, fp.r), isoY(fp.c, fp.r, h) - 26);
+            }
+            ctx.strokeStyle = appType === 'ndvi' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(28, 130, 173, 0.55)';
+            ctx.lineWidth = 1.8;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // 3. Posición 3D del Dron en el espacio
+          const dc = Math.min(cols - 1, Math.max(0, droneX));
+          const dr = Math.min(rows - 1, Math.max(0, droneY));
+          const dh = (terrain[Math.floor(dr)] && terrain[Math.floor(dr)][Math.floor(dc)]) || 0;
+          const groundX = isoX(dc, dr), groundY = isoY(dc, dr, dh);
+          const dronePxX = groundX, dronePxY = groundY - 30;
+
+          // Sombra proyectada en el suelo
+          ctx.beginPath();
+          ctx.ellipse(groundX, groundY, 18, 7, 0, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0, 30, 50, 0.25)';
+          ctx.fill();
+
+          // Marcador láser altímetro AGL
+          ctx.beginPath();
+          ctx.moveTo(groundX, groundY);
+          ctx.lineTo(dronePxX, dronePxY);
+          ctx.strokeStyle = appType === 'ndvi' ? 'rgba(16, 185, 129, 0.7)' : 'rgba(28, 130, 173, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([2, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // 4. Haz Multiespectral o Partículas de Aspersión según Servicio
+          if (appType === 'ndvi') {
+            // Escáner láser cónico multiespectral (RGB + NIR 4 Bandas)
+            ctx.save();
+            const scanGrd = ctx.createRadialGradient(groundX, groundY, 2, groundX, groundY, 28);
+            scanGrd.addColorStop(0, 'rgba(16, 185, 129, 0.45)');
+            scanGrd.addColorStop(0.7, 'rgba(16, 185, 129, 0.15)');
+            scanGrd.addColorStop(1, 'rgba(16, 185, 129, 0)');
+            
+            ctx.beginPath();
+            ctx.moveTo(dronePxX, dronePxY);
+            ctx.lineTo(groundX - 26, groundY);
+            ctx.lineTo(groundX + 26, groundY);
+            ctx.closePath();
+            ctx.fillStyle = scanGrd;
+            ctx.fill();
+
+            // Radar Scan Ring
+            ctx.beginPath();
+            ctx.ellipse(groundX, groundY, 24 + Math.sin(tick * 0.2) * 4, 10, 0, 0, Math.PI * 2);
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+            ctx.restore();
+          } else {
+            // Partículas de pulverización / semillas
+            sprayParticles.forEach(p => {
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              ctx.fillStyle = p.color;
+              ctx.fill();
+            });
+          }
+
+          // 5. RENDERIZADO DEL DRON ESPECÍFICO SEGÚN SERVICIO
+          ctx.save();
+          ctx.translate(dronePxX, dronePxY);
+          ctx.rotate(droneAngle);
+
+          if (appType === 'spray') {
+            // ── MODELO 1: DJI AGRAS T40 (Octocóptero pesado con brazos coaxiales)
+            const armLen = 17;
+            const arms = [[-armLen, -armLen*0.7], [armLen, -armLen*0.7], [-armLen, armLen*0.7], [armLen, armLen*0.7]];
+            arms.forEach(([ax, ay], idx) => {
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(ax, ay);
+              ctx.strokeStyle = '#1E293B';
+              ctx.lineWidth = 3.5;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.arc(ax, ay, 4, 0, Math.PI * 2);
+              ctx.fillStyle = '#003049';
+              ctx.fill();
+
+              // Hélices coaxiales dobles
+              const propRadius = 14;
+              ctx.beginPath();
+              ctx.ellipse(ax, ay, propRadius, propRadius * 0.45, (tick * 0.6) + idx, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(28, 130, 173, 0.35)';
+              ctx.fill();
+
+              // LEDs estroboscópicos
+              if (tick % 12 < 6) {
+                ctx.beginPath();
+                ctx.arc(ax, ay, 2, 0, Math.PI * 2);
+                ctx.fillStyle = idx < 2 ? '#EF4444' : '#10B981';
+                ctx.fill();
+              }
+            });
+
+            // Cúpula Central y Batería Inteligente
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 11, 7.5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+            ctx.strokeStyle = '#1C82AD';
+            ctx.lineWidth = 1.6;
+            ctx.stroke();
+
+            // Antena RTK
+            ctx.beginPath();
+            ctx.arc(0, -1, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#003049';
+            ctx.fill();
+
+          } else if (appType === 'foliar') {
+            // ── MODELO 2: DJI AGRAS T25 / T30 (Hexacóptero estilizado)
+            for (let i = 0; i < 6; i++) {
+              const ang = (i * Math.PI / 3);
+              const ax = Math.cos(ang) * 15, ay = Math.sin(ang) * 10;
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(ax, ay);
+              ctx.strokeStyle = '#334155';
+              ctx.lineWidth = 3;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.arc(ax, ay, 3.5, 0, Math.PI * 2);
+              ctx.fillStyle = '#0F766E';
+              ctx.fill();
+
+              ctx.beginPath();
+              ctx.ellipse(ax, ay, 12, 5, (tick * 0.7) + i, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+              ctx.fill();
+            }
+
+            // Tanque traslúcido verde bioestimulante
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 9, 6.5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.85)';
+            ctx.fill();
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+          } else if (appType === 'seeds') {
+            // ── MODELO 3: DJI AGRAS SPREADER (Tolva de sólidos 50kg)
+            const armLen = 16;
+            const arms = [[-armLen, -armLen*0.7], [armLen, -armLen*0.7], [-armLen, armLen*0.7], [armLen, armLen*0.7]];
+            arms.forEach(([ax, ay], idx) => {
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(ax, ay);
+              ctx.strokeStyle = '#1E293B';
+              ctx.lineWidth = 3.5;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.ellipse(ax, ay, 13, 5, (tick * 0.6) + idx, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(228, 199, 161, 0.45)';
+              ctx.fill();
+            });
+
+            // Tolva cónica blanca con tapa amarilla
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 10, 8, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
+            ctx.strokeStyle = '#E4C7A1';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Tapa de carga de semilla
+            ctx.beginPath();
+            ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#F59E0B';
+            ctx.fill();
+
+          } else {
+            // ── MODELO 4: DJI MAVIC 3 MULTISPECTRAL (Cuadricóptero compacto con sensor)
+            const armLen = 13;
+            const arms = [[-armLen, -armLen*0.65], [armLen, -armLen*0.65], [-armLen, armLen*0.65], [armLen, armLen*0.65]];
+            arms.forEach(([ax, ay], idx) => {
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(ax, ay);
+              ctx.strokeStyle = '#475569';
+              ctx.lineWidth = 2.5;
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.ellipse(ax, ay, 10, 4, (tick * 0.8) + idx, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(16, 185, 129, 0.35)';
+              ctx.fill();
+            });
+
+            // Fuselaje aerodinámico compacto
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 8, 5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#1E293B';
+            ctx.fill();
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Lente Multiespectral 4 Bandas
+            ctx.beginPath();
+            ctx.arc(0, 2, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#10B981';
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+
+        function loop() {
+          animFrame = requestAnimationFrame(loop);
+          tick++;
+
+          // Movimiento en serpentina agronómica suave
+          const speed = 0.038;
+          const row = Math.floor(droneY);
+          if (row % 2 === 0) {
+            droneX += speed;
+            droneAngle = 0.04;
+          } else {
+            droneX -= speed;
+            droneAngle = -0.04;
+          }
+
+          if (droneX >= cols - 1) {
+            droneY += 0.5;
+            droneX = cols - 1;
+            droneAngle = 0.1;
+          }
+          if (droneX <= 0) {
+            droneY += 0.5;
+            droneX = 0;
+            droneAngle = -0.1;
+          }
+          if (droneY >= rows - 1) {
+            droneX = 0;
+            droneY = 0;
+            for (let r = 0; r < rows; r++) {
+              for (let c = 0; c < cols; c++) coveredGrid[r][c] = 0;
+            }
+          }
+
+          // Marcar terreno asperjado
+          const currR = Math.min(rows - 1, Math.max(0, Math.floor(droneY)));
+          const currC = Math.min(cols - 1, Math.max(0, Math.floor(droneX)));
+          if (coveredGrid[currR] && coveredGrid[currR][currC] !== undefined) {
+            coveredGrid[currR][currC] = 1;
+            if (coveredGrid[currR][currC - 1] !== undefined) coveredGrid[currR][currC - 1] = 1;
+            if (coveredGrid[currR][currC + 1] !== undefined) coveredGrid[currR][currC + 1] = 1;
+          }
+
+          flightPath.push({ c: droneX, r: droneY });
+          if (flightPath.length > 220) flightPath.shift();
+
+          const appType = document.getElementById('sim-app-type') ? document.getElementById('sim-app-type').value : 'spray';
+
+          // Generar partículas de químico o semillas
+          if (appType !== 'ndvi' && tick % 2 === 0 && canvas) {
+            const cellW = (canvas.width / cols) * 1.2;
+            const cellH = cellW * 0.5;
+            const dh = (terrain[currR] && terrain[currR][currC]) || 0;
+            const gx = (canvas.width / 2) + (droneX - droneY) * (cellW / 2);
+            const gy = (canvas.height * 0.28) + (droneX + droneY) * (cellH / 2) - dh * scale * 18;
+
+            let pColor = 'rgba(160, 230, 255, 0.85)';
+            let pSize = Math.random() * 2 + 1;
+            if (appType === 'foliar') {
+              pColor = 'rgba(110, 231, 183, 0.85)';
+            } else if (appType === 'seeds') {
+              pColor = 'rgba(245, 158, 11, 0.9)';
+              pSize = Math.random() * 2.5 + 1.2;
+            }
+
+            sprayParticles.push({
+              x: gx + (Math.random() - 0.5) * 16,
+              y: gy - 24,
+              targetY: gy,
+              size: pSize,
+              alpha: 0.85,
+              vy: Math.random() * 2.2 + 1.4,
+              vx: (Math.random() - 0.5) * 1.0,
+              color: pColor
+            });
+          }
+
+          sprayParticles.forEach(p => {
+            p.y += p.vy;
+            p.x += p.vx;
+            p.alpha -= 0.038;
+          });
+          sprayParticles = sprayParticles.filter(p => p.alpha > 0 && p.y < p.targetY + 4);
+
+          // ACTUALIZACIÓN DE TODAS LAS VARIABLES EN TIEMPO REAL (100% DINÁMICAS)
+          const maxHa = parseFloat(document.getElementById('sim-ha-slider') ? document.getElementById('sim-ha-slider').value : 20);
+          simHa = (droneY / (rows - 1)) * maxHa;
+
+          // 1. Cubrimiento Hectáreas
+          const areaEl = document.getElementById('sim-area');
+          const haBar = document.getElementById('sim-ha-bar');
+          if (areaEl) areaEl.textContent = simHa.toFixed(1) + ' Ha';
+          if (haBar) haBar.style.width = ((simHa / maxHa) * 100) + '%';
+
+          // 2. Batería Lipo Dinámica
+          const battLevel = Math.max(12, Math.round(98 - (simHa / maxHa) * 32));
+          const battEl = document.getElementById('sim-batt');
+          const telBatt = document.getElementById('tel-batt');
+          const telBattBar = document.getElementById('tel-batt-bar');
+          if (battEl) battEl.textContent = battLevel + '%';
+          if (telBatt) telBatt.textContent = battLevel + '%';
+          if (telBattBar) telBattBar.style.width = battLevel + '%';
+
+          // 3. Altitud AGL en vivo
+          const altVal = (3.2 + Math.sin(tick * 0.08) * 0.35).toFixed(1);
+          const altEl = document.getElementById('sim-alt');
+          if (altEl) altEl.textContent = altVal + 'm AGL';
+
+          // 4. Velocidad en vivo
+          const velVal = (7.4 + Math.cos(tick * 0.06) * 0.4).toFixed(1);
+          const velEl = document.getElementById('sim-vel');
+          if (velEl) velEl.textContent = velVal + ' m/s';
+
+          // 5. Flujo de Aspersión según tipo
+          const sprayEl = document.getElementById('sim-spray-flow');
+          if (sprayEl) {
+            if (appType === 'spray') {
+              sprayEl.innerHTML = `<span style="color:#1C82AD;">${(12.0 + Math.sin(tick * 0.12) * 0.7).toFixed(1)} L/min (Activa)</span>`;
+            } else if (appType === 'foliar') {
+              sprayEl.innerHTML = `<span style="color:#10B981;">${(14.2 + Math.sin(tick * 0.12) * 0.5).toFixed(1)} L/min (Nutrición)</span>`;
+            } else if (appType === 'seeds') {
+              sprayEl.innerHTML = `<span style="color:#F59E0B;">${(42.0 + Math.sin(tick * 0.15) * 1.8).toFixed(1)} Kg/min (Esparcido)</span>`;
+            } else {
+              sprayEl.innerHTML = `<span style="color:#10B981;">Sensor Óptico 4 Bandas Activo</span>`;
+            }
+          }
+
+          // 6. Modelo de Dron en HUD
+          const modelEl = document.getElementById('sim-drone-model');
+          if (modelEl) {
+            if (appType === 'spray') modelEl.textContent = 'DJI AGRAS T40 — ASPERSIÓN ULV';
+            else if (appType === 'foliar') modelEl.textContent = 'DJI AGRAS T25 — NUTRICIÓN FOLIAR';
+            else if (appType === 'seeds') modelEl.textContent = 'DJI AGRAS SPREADER — SIEMBRA SÓLIDOS';
+            else modelEl.textContent = 'DJI MAVIC 3 MULTISPECTRAL — ESCANEO MULTIESPECTRAL';
+          }
+
+          // 7. Sensor de Viento Dinámico
+          const windVal = (2.3 + Math.sin(tick * 0.04) * 0.5).toFixed(1);
+          const windEl = document.getElementById('sim-wind');
+          const telWind = document.getElementById('tel-wind');
+          if (windEl) windEl.textContent = windVal + ' m/s';
+          if (telWind) telWind.textContent = windVal + ' m/s';
+
+          // 8. RTK Satélites Fix
+          const satCount = 27 + (tick % 5);
+          const rtkEl = document.getElementById('sim-signal');
+          if (rtkEl) rtkEl.textContent = `RTK: ${satCount} sat`;
+
+          // 9. Carga de Tanque en Telemetría
+          const maxPayload = appType === 'seeds' ? 50 : (appType === 'foliar' ? 25 : 40);
+          const unit = appType === 'seeds' ? ' Kg' : ' Litros';
+          const remainingPayload = Math.max(1.5, maxPayload - (simHa / maxHa) * (maxPayload * 0.85)).toFixed(1);
+          const telPayload = document.getElementById('tel-payload');
+          if (telPayload) telPayload.textContent = remainingPayload + ' ' + unit;
+
+          drawScene();
+        }
+
+        window.calculateSavings = function() {
+          const haSlider = document.getElementById('sim-ha-slider');
+          const workersSlider = document.getElementById('sim-workers-slider');
+          const volSlider = document.getElementById('sim-vol-slider');
+          if (!haSlider || !workersSlider) return;
+
+          const ha = parseFloat(haSlider.value);
+          const workers = parseInt(workersSlider.value, 10);
+          const litersPerHa = parseFloat(volSlider ? volSlider.value : 20);
+
+          const haDisp = document.getElementById('sim-ha-display');
+          const workersDisp = document.getElementById('sim-workers-display');
+          const volDisp = document.getElementById('sim-vol-display');
+          const badgeRate = document.getElementById('sim-discharge-rate-badge');
+          const workersLabel = document.getElementById('sim-workers-label');
+          const volContainer = document.getElementById('sim-vol-container');
+          const methodManualLabel = document.getElementById('label-method-manual');
+          const impactManual = document.getElementById('impact-manual');
+          const impactSis = document.getElementById('impact-sistemae');
+
+          // Rendimiento de campo en Colombia según cultivo y terreno:
+          const crop = document.getElementById('sim-crop') ? document.getElementById('sim-crop').value : 'laderas';
+          const appType = document.getElementById('sim-app-type') ? document.getElementById('sim-app-type').value : 'spray';
+
+          if (haDisp) haDisp.textContent = ha + (ha === 1 ? ' Hectárea' : ' Hectáreas');
+          if (volDisp) volDisp.textContent = litersPerHa + ' L/ha';
+
+          if (appType === 'ndvi') {
+            if (workersLabel) workersLabel.innerHTML = '<i class="fa-solid fa-users" style="color: #1C82AD;"></i> Evaluadores / Cuadrilla de Muestreo Manual';
+            if (workersDisp) workersDisp.textContent = workers + (workers === 1 ? ' Evaluador de campo' : ' Evaluadores de campo');
+            if (volContainer) volContainer.style.display = 'none';
+            if (methodManualLabel) methodManualLabel.textContent = 'Muestreo Visual a Pie';
+            if (impactManual) impactManual.textContent = 'Muestreo parcial (<5% del lote)';
+            if (impactSis) impactSis.textContent = '100% Cobertura NDVI / RTK';
+          } else {
+            if (workersLabel) workersLabel.innerHTML = '<i class="fa-solid fa-users" style="color: #1C82AD;"></i> Personal Manual con Bomba de Espalda';
+            if (workersDisp) workersDisp.textContent = workers + (workers === 1 ? ' Jornalero' : ' Jornaleros');
+            if (volContainer) volContainer.style.display = 'block';
+            if (methodManualLabel) methodManualLabel.textContent = 'Labor Tradicional';
+            if (impactManual) impactManual.textContent = 'Alta compactación de suelo';
+            if (impactSis) impactSis.textContent = 'Cero pisoteo / ULV';
+          }
+
+          // Rendimiento manual tradicional (Ha/día por operario):
+          // En NDVI (muestreo a pie): 2.5 Ha/día por evaluador
+          const dailyRatePerWorker = appType === 'ndvi' 
+            ? (crop === 'laderas' ? 1.5 : 3.0)
+            : (crop === 'laderas' ? 0.5 : (crop === 'planicies' ? 1.2 : (crop === 'altiplanicie' ? 0.85 : 0.65)));
+          const totalDaysManual = Math.max(0.2, (ha / (workers * dailyRatePerWorker))).toFixed(1);
+
+          // Rendimiento del Dron con base en descarga de 200 L/hora o escaneo multiespectral:
+          const DISCHARGE_RATE_L_HOUR = 200;
+          let droneHaPerHour = (DISCHARGE_RATE_L_HOUR / litersPerHa);
+          if (appType === 'ndvi') droneHaPerHour = 25.0; // Diagnóstico óptico no consume líquido
+          if (appType === 'seeds') droneHaPerHour = 16.0; // Esparcido de sólidos
+
+          if (badgeRate) {
+            if (appType === 'ndvi') {
+              badgeRate.textContent = 'Rendimiento: 25.0 Ha/hora (Escaneo Óptico)';
+            } else if (appType === 'seeds') {
+              badgeRate.textContent = 'Rendimiento: 16.0 Ha/hora (Esparcidor)';
+            } else {
+              badgeRate.textContent = `Rendimiento: ${droneHaPerHour.toFixed(1)} Ha/hora (200 L/h)`;
+            }
+          }
+
+          const totalHoursDrone = Math.max(0.1, (ha / droneHaPerHour)).toFixed(1);
+
+          const tManual = document.getElementById('time-manual');
+          const pManual = document.getElementById('people-manual');
+          if (tManual) tManual.textContent = totalDaysManual + ' Días';
+          if (pManual) {
+            pManual.textContent = appType === 'ndvi' 
+              ? workers + (workers === 1 ? ' Evaluador a pie' : ' Evaluadores a pie')
+              : workers + (workers === 1 ? ' Jornalero a pie' : ' Jornaleros a pie');
+          }
+
+          const tSis = document.getElementById('time-sistemae');
+          const pSis = document.getElementById('people-sistemae');
+          if (tSis) tSis.textContent = totalHoursDrone + ' Horas';
+          if (pSis) pSis.textContent = appType === 'ndvi' ? '1 Piloto + Sensor 4K/NDVI' : '1 Piloto Flymetrics';
+
+          // Ahorro de agua: 400 L/Ha tradicional vs dosis calibrada con Dron ULV
+          const waterSaved = appType === 'ndvi' ? 0 : Math.round(ha * (400 - litersPerHa));
+          const wSaved = document.getElementById('savings-water');
+          if (wSaved) {
+            wSaved.textContent = appType === 'ndvi' ? 'Operación 100% en Seco (Óptica)' : ((waterSaved > 0 ? waterSaved.toLocaleString('es-CO') : 0) + ' Litros');
+          }
+
+          const pctFaster = Math.round((1 - (parseFloat(totalHoursDrone) / (parseFloat(totalDaysManual) * 8))) * 100);
+          const sTime = document.getElementById('savings-time-net');
+          if (sTime) sTime.textContent = Math.min(99, Math.max(80, pctFaster)) + '% Más Rápido';
+        };
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', init);
+        } else {
+          init();
+        }
+      })();
+      </script>
+    </section>
+
+    <section id="ubicaciones">
+      <h2 class="section-title">Zonas de Mayor Presencia</h2>
+      <p style="text-align: center; color: #4a5c6a; max-width: 600px; margin: 0 auto 48px; font-weight: 500; font-size: 0.95rem;">
+        Despliegue operativo continuo en las principales regiones productivas agrícolas y ganaderas de Colombia.
+      </p>
+
+      <div class="map-layout-wrapper">
+        <!-- Left Panel: Coverage Info -->
+        <div class="liquid-glass map-info-panel" style="padding: 32px 28px; border-radius: 28px; display: flex; flex-direction: column; gap: 16px; justify-content: center; background: rgba(255, 255, 255, 0.95); border: 1.5px solid rgba(28, 130, 173, 0.25); box-shadow: 0 20px 50px rgba(0, 48, 73, 0.08);">
+          <span style="font-size: 0.75rem; color: #1c82ad; text-transform: uppercase; font-weight: 800; letter-spacing: 0.06em;">Cobertura Estratégica</span>
+          <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 800; margin: 0; line-height: 1.2; color: #003049;">Zonas de Mayor Presencia</h3>
+          <p style="color: #4a5c6a; font-size: 0.84rem; line-height: 1.5; margin: 0; font-weight: 500;">
+            Selecciona un departamento para ubicar en el mapa interactivo las bases y áreas de vuelo activo:
+          </p>
+          <div style="border-top: 1px solid rgba(28, 130, 173, 0.15); padding-top: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <!-- Cundinamarca -->
+              <div class="map-zone-item" onclick="flyToLocation(4.7110, -74.0721, 'Cundinamarca')" style="cursor: pointer; padding: 12px 16px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 14px; transition: all 0.25s; box-shadow: 0 4px 12px rgba(0,48,73,0.04);" onmouseover="this.style.borderColor='#1C82AD'; this.style.background='rgba(28, 130, 173, 0.06)'" onmouseout="this.style.borderColor='rgba(28, 130, 173, 0.2)'; this.style.background='#ffffff'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 0.88rem; color: #003049; font-weight: 800;"><i class="fa-solid fa-location-dot" style="color: #1C82AD; margin-right: 4px;"></i> Cundinamarca</strong>
+                  <span style="font-size: 0.68rem; background: rgba(28,130,173,0.12); color: #1C82AD; padding: 3px 8px; border-radius: 8px; font-weight:800; border: 1px solid rgba(28,130,173,0.3);">Base Central</span>
+                </div>
+                <span style="font-size: 0.76rem; color: #4a5c6a; display: block; margin-top: 4px; font-weight: 500;">Sabana de Bogotá, Facatativá, Chía, Madrid — Flores, Papa y Hortalizas</span>
+              </div>
+              
+              <!-- Meta -->
+              <div class="map-zone-item" onclick="flyToLocation(4.1420, -73.6266, 'Meta')" style="cursor: pointer; padding: 12px 16px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 14px; transition: all 0.25s; box-shadow: 0 4px 12px rgba(0,48,73,0.04);" onmouseover="this.style.borderColor='#1C82AD'; this.style.background='rgba(28, 130, 173, 0.06)'" onmouseout="this.style.borderColor='rgba(28, 130, 173, 0.2)'; this.style.background='#ffffff'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 0.88rem; color: #003049; font-weight: 800;"><i class="fa-solid fa-location-dot" style="color: #1C82AD; margin-right: 4px;"></i> Meta (Llanos Orientales)</strong>
+                  <span style="font-size: 0.68rem; background: rgba(28,130,173,0.12); color: #1C82AD; padding: 3px 8px; border-radius: 8px; font-weight:800; border: 1px solid rgba(28,130,173,0.3);">Operación Continua</span>
+                </div>
+                <span style="font-size: 0.76rem; color: #4a5c6a; display: block; margin-top: 4px; font-weight: 500;">Villavicencio, Puerto López, Granada — Palma, Soya, Maíz y Ganadería</span>
+              </div>
+
+              <!-- Huila -->
+              <div class="map-zone-item" onclick="flyToLocation(2.9273, -75.2819, 'Huila')" style="cursor: pointer; padding: 12px 16px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 14px; transition: all 0.25s; box-shadow: 0 4px 12px rgba(0,48,73,0.04);" onmouseover="this.style.borderColor='#1C82AD'; this.style.background='rgba(28, 130, 173, 0.06)'" onmouseout="this.style.borderColor='rgba(28, 130, 173, 0.2)'; this.style.background='#ffffff'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 0.88rem; color: #003049; font-weight: 800;"><i class="fa-solid fa-location-dot" style="color: #1C82AD; margin-right: 4px;"></i> Huila</strong>
+                  <span style="font-size: 0.68rem; background: rgba(28,130,173,0.12); color: #1C82AD; padding: 3px 8px; border-radius: 8px; font-weight:800; border: 1px solid rgba(28,130,173,0.3);">Laderas y Valles</span>
+                </div>
+                <span style="font-size: 0.76rem; color: #4a5c6a; display: block; margin-top: 4px; font-weight: 500;">Neiva, Campoalegre, Pitalito — Café de Especialidad, Arroz y Frutales</span>
+              </div>
+
+              <!-- Tolima -->
+              <div class="map-zone-item" onclick="flyToLocation(4.1420, -74.8880, 'Tolima')" style="cursor: pointer; padding: 12px 16px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); border-radius: 14px; transition: all 0.25s; box-shadow: 0 4px 12px rgba(0,48,73,0.04);" onmouseover="this.style.borderColor='#1C82AD'; this.style.background='rgba(28, 130, 173, 0.06)'" onmouseout="this.style.borderColor='rgba(28, 130, 173, 0.2)'; this.style.background='#ffffff'">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 0.88rem; color: #003049; font-weight: 800;"><i class="fa-solid fa-location-dot" style="color: #1C82AD; margin-right: 4px;"></i> Tolima</strong>
+                  <span style="font-size: 0.68rem; background: rgba(28,130,173,0.12); color: #1C82AD; padding: 3px 8px; border-radius: 8px; font-weight:800; border: 1px solid rgba(28,130,173,0.3);">Planicies de Riego</span>
+                </div>
+                <span style="font-size: 0.76rem; color: #4a5c6a; display: block; margin-top: 4px; font-weight: 500;">Espinal, Ibagué, Saldaña — Arroz, Maíz, Algodón y Pasturas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Leaflet Map -->
+        <div class="liquid-glass map-display-panel" style="border-radius: 28px; overflow: hidden; display: flex; flex-direction: column; border: 1.5px solid rgba(28, 130, 173, 0.25);">
+          <div style="padding: 16px 20px; background: rgba(0, 48, 73, 0.05); border-bottom: 1px solid rgba(28, 130, 173, 0.15); display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; background:#1C82AD; border-radius:50%; box-shadow:0 0 8px #1C82AD; animation: pulseGlow 1.5s infinite;"></span>
+            <span style="font-size:0.82rem; font-weight:700; color:#003049; font-family: 'Space Grotesk', sans-serif;">MAPA DE COBERTURA OPERATIVA FLYMETRICS</span>
+          </div>
+          <!-- Contenedor del Mapa Real -->
+          <div id="Flymetrics-mapbox-container" style="width:100%; height:480px; position: relative; border-radius: 0 0 28px 28px; overflow: hidden; background: #f8fafc;">
+            <div id="Flymetrics-real-map" style="width:100%; height:100%;"></div>
+            
+            <!-- Caja de Información Emergente (Tooltip flotante) -->
+            <div id="map-tooltip" class="liquid-glass" style="position: absolute; bottom: 20px; left: 20px; right: 20px; padding: 14px 20px; border-radius: 16px; border: 1.5px solid rgba(28, 130, 173, 0.4); display: flex; flex-direction: column; gap: 4px; pointer-events: none; z-index: 999; background: rgba(255, 255, 255, 0.95); box-shadow: 0 8px 30px rgba(0,48,73,0.15);">
+              <strong id="tooltip-title" style="color: #003049; font-size: 0.95rem;">Cundinamarca</strong>
+              <span id="tooltip-service" style="color: #343A40; font-size: 0.82rem;"><b>Servicio:</b> Monitoreo Multiespectral, Cartografía y Aspersión</span>
+              <span id="tooltip-demand" style="color: #1C82AD; font-size: 0.76rem; font-weight: 700;">Cobertura: Base Central y Operaciones Sabana</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaflet Lógica del Mapa Real Satelital e Interactivo de Colombia -->
+      <script>
+        (function() {
+          let map = null;
+
+          const mapData = {
+            'Cundinamarca': { title: 'Cundinamarca (Sabana de Bogotá)', service: 'Monitoreo Multiespectral, Cartografía y Aspersión', demand: 'Base Central y Sabana', color: '#1C82AD', coords: [4.7110, -74.0721] },
+            'Meta': { title: 'Meta (Villavicencio / Puerto López)', service: 'Fumigación de Palma, Soya, Maíz y Ganadería', demand: 'Operación Continua Llanos', color: '#1C82AD', coords: [4.1420, -73.6266] },
+            'Huila': { title: 'Huila (Neiva / Campoalegre / Pitalito)', service: 'Aspersión en Café de Especialidad, Arroz y Frutales', demand: 'Laderas y Valles Andinos', color: '#1C82AD', coords: [2.9273, -75.2819] },
+            'Tolima': { title: 'Tolima (Espinal / Ibagué / Saldaña)', service: 'Fumigación y Fertilización de Arroz, Maíz y Pastos', demand: 'Planicies de Riego', color: '#1C82AD', coords: [4.1420, -74.8880] }
+          };
+
+          function initLeafletMap() {
+            if (map) return;
+            const container = document.getElementById('Flymetrics-real-map');
+            if (!container || typeof L === 'undefined') return;
+
+            // Instanciar mapa centrado en Colombia
+            map = L.map('Flymetrics-real-map', {
+              center: [4.5709, -74.2973],
+              zoom: 6,
+              zoomControl: true
+            });
+
+            // Usar capas de mosaico oscuras/satelitales públicas de CartoDB / Esri (Sin necesidad de token)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+              attribution: '&copy; OpenStreetMap, &copy; CARTO',
+              subdomains: 'abcd',
+              maxZoom: 19
+            }).addTo(map);
+
+            // Añadir marcadores personalizados con pulso para cada región
+            Object.keys(mapData).forEach(key => {
+              const zone = mapData[key];
+              
+              const customIcon = L.divIcon({
+                className: 'custom-leaflet-marker',
+                html: `<div style="
+                  width: 20px; height: 20px; background: ${zone.color}; border-radius: 50%;
+                  border: 2px solid #ffffff; box-shadow: 0 0 12px ${zone.color}, 0 0 24px ${zone.color};
+                  cursor: pointer; animation: pulseGlow 1.8s infinite alternate;
+                "></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+              });
+
+              const updateTooltip = () => {
+                const titleEl = document.getElementById('tooltip-title');
+                const svcEl = document.getElementById('tooltip-service');
+                const demEl = document.getElementById('tooltip-demand');
+                
+                if (titleEl) { titleEl.textContent = zone.title; titleEl.style.color = zone.color; }
+                if (svcEl) svcEl.innerHTML = `<b>Servicio:</b> ${zone.service}`;
+                if (demEl) demEl.innerHTML = `<b>Demanda:</b> ${zone.demand}`;
+              };
+
+              const marker = L.marker(zone.coords, { icon: customIcon }).addTo(map);
+              marker.on('click', () => {
+                updateTooltip();
+                map.flyTo(zone.coords, 9, { animate: true, duration: 1.5 });
+              });
+              marker.on('mouseover', updateTooltip);
+            });
+
+            // Función global vinculada a los clics del panel lateral izquierdo
+            window.flyToLocation = function(lat, lng, zoneName) {
+              const zone = mapData[zoneName];
+              if (map) {
+                const targetCoords = (zone && zone.coords) ? zone.coords : [lat, lng];
+                if (zone) {
+                  const titleEl = document.getElementById('tooltip-title');
+                  const svcEl = document.getElementById('tooltip-service');
+                  const demEl = document.getElementById('tooltip-demand');
+                  if (titleEl) { titleEl.textContent = zone.title; titleEl.style.color = zone.color; }
+                  if (svcEl) svcEl.innerHTML = `<b>Servicio:</b> ${zone.service}`;
+                  if (demEl) demEl.innerHTML = `<b>Demanda:</b> ${zone.demand}`;
+                }
+                map.flyTo(targetCoords, 9.2, { animate: true, duration: 1.5 });
+              }
+            };
+          }
+
+          if (document.getElementById('Flymetrics-real-map')) {
+            if (typeof L !== 'undefined') {
+              initLeafletMap();
+            } else {
+              window.addEventListener('load', initLeafletMap);
+            }
+          }
+        })();
+      </script>
+    </section>
+
+    <section id="faq">
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 2.2rem; text-align: center; margin-bottom: 12px;">Preguntas Frecuentes</h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 500px; margin: 0 auto 48px;">
+        Resolvemos tus principales dudas sobre la operación aérea en predios agrícolas colombianos.
+      </p>
+
+      <div style="max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item liquid-glass">
+          <button class="faq-trigger">
+            <span>¿Los sistemaes de Flymetrics reemplazan la mano de obra tradicional?</span>
+            <span class="faq-icon-arrow">+</span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <p>
+                No la reemplazan, la tecnifican. Nuestros técnicos operan de la mano de los agrónomos locales. El uso de sistemaes reduce la exposición humana directa a agroquímicos nocivos en un 100% y permite cubrir terrenos difíciles o encharcados donde la maquinaria tradicional no puede ingresar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item liquid-glass">
+          <button class="faq-trigger">
+            <span>¿Cuánto tiempo tardan en entregar los mapas de análisis multiespectral?</span>
+            <span class="faq-icon-arrow">+</span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <p>
+                Los reportes preliminares se generan directamente en campo tras el aterrizaje de la aeronave de diagnóstico. Los mapas ortomosaicos ortorrectificados finales de salud y vigor del cultivo se cargan procesados en tu portal en menos de 24 horas hábiles.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item liquid-glass">
+          <button class="faq-trigger">
+            <span>¿Los pilotos de Flymetrics cuentan con certificaciones oficiales?</span>
+            <span class="faq-icon-arrow">+</span>
+          </button>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              <p>
+                Sí, absolutamente. Toda nuestra flota cuenta con pólizas de responsabilidad civil extracontractual y está registrada ante la Aeronáutica Civil (Aerocivil) de Colombia. Nuestros pilotos son operadores certificados bajo la norma aeronáutica RAC 100 y cuentan con licencias y bitácoras vigentes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" style="max-width: 100%; overflow: hidden; box-sizing: border-box; padding: 60px 16px;">
+      <h2 class="section-title" style="color: #003049; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: calc(1.8rem + 1vw); text-align: center;">Escribe tus datos y te contactamos en 24 horas</h2>
+      <p class="section-subtitle" style="text-align:center; color: #1C82AD; max-width: 650px; margin: 12px auto 40px; font-size:1.05rem; line-height:1.6; font-weight: 700; font-family: 'Outfit', sans-serif;">
+        Un asesor especializado de Flymetrics responderá tu consulta sin ningún compromiso.
+      </p>
+
+      <div style="max-width: 680px; width: 100%; margin: 0 auto; padding: 0; box-sizing: border-box;">
+        <!-- Contact card with liquid glass effect -->
+        <div class="liquid-glass" style="
+          background: rgba(255, 255, 255, 0.96);
+          border: 1.5px solid rgba(28, 130, 173, 0.25);
+          border-radius: 24px;
+          padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 36px);
+          box-shadow: 0 20px 50px rgba(0, 48, 73, 0.08);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          position: relative;
+          overflow: hidden;
+          width: 100%;
+          box-sizing: border-box;
+        ">
+          <!-- Decorative top accent -->
+          <div style="position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, #003049, #1c82ad, #e4c7a1); border-radius:24px 24px 0 0;"></div>
+
+          <!-- Success message (hidden by default) -->
+          <div id="contact-success" style="display:none; text-align:center; padding: 24px 0;">
+            <div style="font-size: 2.8rem; color: #10B981; margin-bottom: 12px;"><i class="fa-solid fa-circle-check"></i></div>
+            <h3 style="color:#003049; font-family: 'Space Grotesk', sans-serif; font-size:1.4rem; margin-bottom:8px; font-weight:800;">¡Mensaje Recibido!</h3>
+            <p style="color: #6C757D; font-size:0.92rem; line-height: 1.5;">
+              Un asesor de Flymetrics revisará tu solicitud y te contactará muy pronto a través del correo o WhatsApp que nos dejaste.
+            </p>
+            <button onclick="resetContactForm()" style="
+              margin-top: 20px; padding: 10px 24px; border-radius: 50px; border: 1.5px solid #1c82ad;
+              background: rgba(28,130,173,0.1); color: #1c82ad; cursor: pointer; font-family: inherit; font-size:0.88rem; font-weight:700;
+            "><i class="fa-solid fa-rotate-right"></i> Enviar otra solicitud</button>
+          </div>
+
+          <!-- Contact form -->
+          <form id="contact-form" onsubmit="submitContactForm(event)" style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; width: 100%; box-sizing: border-box;">
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-solid fa-user" style="color: #1C82AD; margin-right: 4px;"></i> Nombre Completo *
+                </label>
+                <input type="text" id="contact-name" required placeholder="Tu nombre y apellido" style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-brands fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i> Teléfono / WhatsApp *
+                </label>
+                <input type="tel" id="contact-tel" required placeholder="Ej. 3001234567" oninput="this.value = this.value.replace(/[^0-9+\s-]/g, '')" style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; width: 100%; box-sizing: border-box;">
+              <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-solid fa-envelope" style="color: #1C82AD; margin-right: 4px;"></i> Correo Electrónico *
+                </label>
+                <input type="email" id="contact-email" required placeholder="tu@correo.com" style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-solid fa-vector-square" style="color: #1C82AD; margin-right: 4px;"></i> Hectáreas (Ha) Aprox.
+                </label>
+                <input type="number" step="0.5" min="1" id="contact-ha" placeholder="Ej: 20 ha" style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; width: 100%; box-sizing: border-box;">
+              <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-solid fa-wheat-awn" style="color: #1C82AD; margin-right: 4px;"></i> Tipo de Cultivo
+                </label>
+                <input type="text" id="contact-cultivo" placeholder="Ej: Arroz, Palma, Caña, Café, Maíz..." style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+                <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                  <i class="fa-solid fa-location-dot" style="color: #1C82AD; margin-right: 4px;"></i> Ubicación / Municipio *
+                </label>
+                <input type="text" id="contact-ubicacion" required list="municipios-colombia" placeholder="Ej: Villavicencio (Meta), Espinal (Tolima)..." style="
+                  background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                  padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                  transition: all 0.2s; width: 100%; box-sizing: border-box;
+                " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'" />
+                <datalist id="municipios-colombia">
+                  <option value="Espinal, Tolima">
+                  <option value="Ibagué, Tolima">
+                  <option value="Saldaña, Tolima">
+                  <option value="Villavicencio, Meta">
+                  <option value="Puerto López, Meta">
+                  <option value="Granada, Meta">
+                  <option value="Acacías, Meta">
+                  <option value="Apartadó, Antioquia">
+                  <option value="Carepa, Antioquia">
+                  <option value="Turbo, Antioquia">
+                  <option value="Chigorodó, Antioquia">
+                  <option value="Montería, Córdoba">
+                  <option value="Cereté, Córdoba">
+                  <option value="Valledupar, Cesar">
+                  <option value="Aguachica, Cesar">
+                  <option value="Yopal, Casanare">
+                  <option value="Aguazul, Casanare">
+                  <option value="Villanueva, Casanare">
+                  <option value="Palmira, Valle del Cauca">
+                  <option value="Buga, Valle del Cauca">
+                  <option value="Tuluá, Valle del Cauca">
+                  <option value="Cartago, Valle del Cauca">
+                  <option value="Neiva, Huila">
+                  <option value="Campoalegre, Huila">
+                  <option value="Pitalito, Huila">
+                  <option value="Pereira, Risaralda">
+                  <option value="Armenia, Quindío">
+                  <option value="Manizales, Caldas">
+                  <option value="Facatativá, Cundinamarca">
+                  <option value="Fusagasugá, Cundinamarca">
+                  <option value="Girardot, Cundinamarca">
+                  <option value="Chía, Cundinamarca">
+                  <option value="Madrid, Cundinamarca">
+                  <option value="Mosquera, Cundinamarca">
+                  <option value="Sogamoso, Boyacá">
+                  <option value="Duitama, Boyacá">
+                  <option value="Tunja, Boyacá">
+                  <option value="Cúcuta, Norte de Santander">
+                  <option value="Ocaña, Norte de Santander">
+                  <option value="Bucaramanga, Santander">
+                  <option value="San Gil, Santander">
+                  <option value="Santa Marta, Magdalena">
+                  <option value="Fundación, Magdalena">
+                  <option value="Ciénaga, Magdalena">
+                  <option value="Sincelejo, Sucre">
+                  <option value="San Marcos, Sucre">
+                </datalist>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+              <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                <i class="fa-solid fa-list-check" style="color: #1C82AD; margin-right: 4px;"></i> ¿Qué servicio requieres?
+              </label>
+              <select id="contact-tipo" style="
+                background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                transition: all 0.2s; cursor: pointer; font-weight:600; width: 100%; box-sizing: border-box; appearance: auto;
+              " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'">
+                <option value="Cotización de Fumigación y Aspersión">Fumigación y Aspersión de Precisión con Dron</option>
+                <option value="Análisis Multiespectral">Análisis Multiespectral de Cultivo</option>
+                <option value="Cartografía y Topografía 3D">Cartografía, Curvas de Nivel y Topografía 3D</option>
+                <option value="Consulta Técnica Agronómica">Consulta Técnica Agronómica</option>
+                <option value="Alianza Comercial">Alianza Comercial / Distribución</option>
+              </select>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px; width: 100%; box-sizing: border-box;">
+              <label style="color: #003049; font-size:0.8rem; font-weight:800; letter-spacing:0.4px; text-transform: uppercase;">
+                <i class="fa-solid fa-comment-dots" style="color: #1C82AD; margin-right: 4px;"></i> Mensaje o Requerimientos Especiales
+              </label>
+              <textarea id="contact-msg" rows="3" placeholder="Cuéntanos más sobre las necesidades de tu finca o cultivo..." style="
+                background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.3); border-radius: 12px;
+                padding: 12px 14px; color: #003049; font-family: inherit; font-size: 0.92rem; outline: none;
+                transition: all 0.2s; resize: vertical; min-height: 80px; width: 100%; box-sizing: border-box;
+              " onfocus="this.style.borderColor='#1c82ad'; this.style.boxShadow='0 0 0 3px rgba(28,130,173,0.15)'" onblur="this.style.borderColor='rgba(28, 130, 173, 0.3)'"></textarea>
+            </div>
+
+            <!-- Error message -->
+            <div id="contact-error" style="display:none; padding: 10px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius:10px; color:#DC2626; font-size:0.85rem; font-weight:700;"></div>
+
+            <!-- Submit button -->
+            <button type="submit" id="contact-btn" style="
+              background: linear-gradient(135deg, #1C82AD 0%, #003049 100%);
+              border: none; border-radius: 14px; padding: 14px 28px; color: #ffffff; font-family: 'Outfit', sans-serif;
+              font-size: 0.96rem; font-weight: 800; cursor: pointer; letter-spacing: 0.02em;
+              transition: all 0.25s ease; width: 100%; box-sizing: border-box;
+              box-shadow: 0 8px 24px rgba(28,130,173,0.3); display: flex; align-items: center; justify-content: center; gap: 8px;
+            ">
+              <i class="fa-solid fa-paper-plane"></i> <span id="contact-btn-text">Enviar Solicitud de Cotización 24h</span>
+            </button>
+
+            <!-- Privacy note -->
+            <p style="text-align:center; color: #6C757D; font-size:0.78rem; margin: 0; font-weight:600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <i class="fa-solid fa-lock" style="color: #1C82AD;"></i> Tu información es 100% confidencial y protegida por la ley de datos.
+            </p>
+          </form>
+        </div>
+
+        <!-- Contact info badges below the form -->
+        <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center; width: 100%; box-sizing: border-box;">
+          <div style="display:flex; align-items:center; gap:8px; background: #ffffff; border:1.5px solid rgba(28, 130, 173, 0.25); border-radius:50px; padding:8px 18px; box-shadow:0 4px 12px rgba(0, 48, 73, 0.05);">
+            <i class="fa-solid fa-phone" style="color: #1C82AD; font-size: 0.9rem;"></i>
+            <span data-sync-tel style="color: #003049; font-size:0.86rem; font-weight:800;">+57 305 406 1764</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; background: #ffffff; border:1.5px solid rgba(28, 130, 173, 0.25); border-radius:50px; padding:8px 18px; box-shadow:0 4px 12px rgba(0, 48, 73, 0.05);">
+            <i class="fa-solid fa-envelope" style="color: #1C82AD; font-size: 0.9rem;"></i>
+            <span data-sync-email style="color: #003049; font-size:0.86rem; font-weight:800;">comercial@flymetrix.com.co</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; background: #ffffff; border:1.5px solid rgba(28, 130, 173, 0.25); border-radius:50px; padding:8px 18px; box-shadow:0 4px 12px rgba(0, 48, 73, 0.05);">
+            <i class="fa-solid fa-clock" style="color: #1C82AD; font-size: 0.9rem;"></i>
+            <span style="color: #003049; font-size:0.86rem; font-weight:800;">Atención 24 Horas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact form JS logic -->
+      <script>
+        const _contactAPI = (window.location.protocol === 'file:'
+          ? 'http://localhost:3000'
+          : (window.location.origin || 'http://localhost:3000')) + '/api/v1';
+
+        let _itiContact = null;
+        document.addEventListener('DOMContentLoaded', async () => {
+          const contactInput = document.getElementById('contact-tel');
+          if (contactInput && typeof window.intlTelInput !== 'undefined') {
+            _itiContact = window.intlTelInput(contactInput, {
+              initialCountry: 'co',
+              preferredCountries: ['co', 'mx', 'us', 'es', 'pe', 'ec', 'ar', 'cl', 'pa', 'cr'],
+              utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js',
+              separateDialCode: true,
+              autoPlaceholder: 'polite'
+            });
+          }
+
+          // Cargar servicios reales y sincronizados de la base de datos (solo activos)
+          try {
+            const res = await fetch(`${_contactAPI}/servicios`);
+            if (res.ok) {
+              const body = await res.json();
+              const services = Array.isArray(body) ? body : (body.data || []);
+              const sel = document.getElementById('contact-tipo');
+              if (sel && services.length > 0) {
+                sel.innerHTML = services.map(s => {
+                  const sName = s.nombre_servicio || s.nombre || 'Servicio Dron';
+                  return `<option value="${sName}">${sName}</option>`;
+                }).join('');
+              }
+            }
+          } catch (e) {
+            console.log('Servicios DB load info:', e);
+          }
+        });
+
+        async function submitContactForm(e) {
+          e.preventDefault();
+          const btn = document.getElementById('contact-btn');
+          const btnText = document.getElementById('contact-btn-text');
+          const errEl = document.getElementById('contact-error');
+          errEl.style.display = 'none';
+
+          const nombre = document.getElementById('contact-name')?.value.trim();
+          const contactInput = document.getElementById('contact-tel');
+          const rawTel = contactInput?.value.trim();
+          const email = document.getElementById('contact-email')?.value.trim();
+          const tipo = document.getElementById('contact-tipo')?.value || 'Cotización de servicio';
+          const haVal = document.getElementById('contact-ha')?.value;
+          const hectareas = haVal ? parseFloat(haVal) : null;
+          const cultivo = document.getElementById('contact-cultivo')?.value.trim() || '';
+          const ubicacion = document.getElementById('contact-ubicacion')?.value.trim() || '';
+          const msg = document.getElementById('contact-msg')?.value.trim() || '';
+
+          if (!nombre || !rawTel || !email || !ubicacion) {
+            errEl.textContent = 'Por favor completa todos los campos obligatorios (*).';
+            errEl.style.display = 'block';
+            return;
+          }
+
+          // Validación de Nombre Completo (Máximo 4 palabras: 2 nombres y 2 apellidos)
+          const nameWords = nombre.split(/\s+/).filter(Boolean);
+          if (nameWords.length < 2) {
+            errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Por favor ingresa al menos un nombre y un apellido.';
+            errEl.style.display = 'block';
+            document.getElementById('contact-name')?.focus();
+            return;
+          }
+          if (nameWords.length > 4) {
+            errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> El nombre completo no puede tener más de 4 palabras (máximo 2 nombres y 2 apellidos).';
+            errEl.style.display = 'block';
+            document.getElementById('contact-name')?.focus();
+            return;
+          }
+
+          // Validación de Ubicación / Municipio (Evitar texto basura como "hfruhygturyhgu")
+          if (ubicacion.length < 3 || !/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,().-]+$/.test(ubicacion) || !/[a-zA-Z]/.test(ubicacion)) {
+            errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Por favor ingresa un municipio o departamento válido (ej. <b>Villavicencio</b>, <b>Espinal</b>, <b>Montería</b>).';
+            errEl.style.display = 'block';
+            document.getElementById('contact-ubicacion')?.focus();
+            return;
+          }
+
+          // Detección de repetición de consonantes/letras aleatorias sin vocales (spam/gibberish)
+          const cleanUbic = ubicacion.replace(/[^a-zA-Z]/g, '');
+          if (cleanUbic.length >= 7 && !/[aeiouáéíóúüAEIOUÁÉÍÓÚÜ]{2,}/i.test(cleanUbic) && (cleanUbic.match(/[^aeiouáéíóúüAEIOUÁÉÍÓÚÜ]/gi) || []).length / cleanUbic.length > 0.75) {
+            errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> El municipio ingresado parece inválido. Selecciona o escribe una ubicación real.';
+            errEl.style.display = 'block';
+            document.getElementById('contact-ubicacion')?.focus();
+            return;
+          }
+
+          let formattedPhone = rawTel;
+          if (_itiContact) {
+            if (!_itiContact.isValidNumber()) {
+              errEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Por favor ingresa un número de teléfono o celular válido para el país seleccionado.';
+              errEl.style.display = 'block';
+              contactInput.focus();
+              return;
+            }
+            formattedPhone = _itiContact.getNumber();
+          }
+
+          btn.disabled = true;
+          btnText.textContent = 'Enviando tu solicitud a los asesores...';
+
+          try {
+            const payload = {
+              nombre,
+              telefono: formattedPhone,
+              email,
+              tipo,
+              hectareas,
+              cultivo,
+              ubicacion,
+              mensaje: msg
+            };
+
+            const res = await fetch(`${_contactAPI}/contacto`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (res.ok || res.status === 201) {
+              document.getElementById('contact-form').style.display = 'none';
+              document.getElementById('contact-success').style.display = 'block';
+            } else {
+              const errData = await res.json().catch(() => ({}));
+              throw new Error(errData.message || 'Error al enviar la solicitud');
+            }
+          } catch (err) {
+            console.error('Contact form error:', err);
+            document.getElementById('contact-form').style.display = 'none';
+            document.getElementById('contact-success').style.display = 'block';
+          }
+        }
+
+        function resetContactForm() {
+          document.getElementById('contact-form').reset();
+          document.getElementById('contact-form').style.display = 'flex';
+          document.getElementById('contact-success').style.display = 'none';
+          document.getElementById('contact-btn').disabled = false;
+          document.getElementById('contact-btn-text').textContent = 'Enviar Solicitud de Cotización 24h';
+        }
+      </script>
+    </section>
+
+    </main>
+
+  <!-- ── FOOTER (CORPORATE NAVY PILOT SYSTEM) ── -->
+  <footer style="border-top: 3px solid #E4C7A1; padding: 60px 0 40px; position: relative; z-index: 10; margin-top: 80px; background: #003049; color: #ffffff; box-shadow: 0 -10px 40px rgba(0, 48, 73, 0.25);">
+    <div style="max-width: 1140px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px;">
+      
+      <!-- Brand & Info -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <a href="#inicio" class="brand" style="transform: none; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+          <div class="brand-logo-container" style="width: 36px; height: 36px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <img src="img/logo.png" alt="Logo Flymetrics" class="brand-logo" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='img/logo_bird_blue.png'">
+          </div>
+          <span class="brand-text" style="font-size: 1.2rem; font-family: 'Outfit', sans-serif; font-weight: 800; color: #ffffff; letter-spacing: -0.02em;">Flymetrics</span>
+        </a>
+        <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.6; margin: 0; font-family: 'Outfit', sans-serif;">
+          Agricultura de precisión aéro-agrícola. Optimizamos cultivos y aumentamos rendimientos mediante vuelos automatizados e inteligencia espacial en Colombia.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 style="font-family: 'JetBrains Mono', 'Space Grotesk', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 20px; font-weight: 800; color: #E4C7A1; margin-top: 0;">Accesos Rápidos</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; padding: 0; margin: 0;">
+          <li><a href="#inicio" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Principal</a></li>
+          <li><a href="#servicios" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Servicios</a></li>
+          <li><a href="#simuladores" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Simuladores</a></li>
+          <li><a href="#contacto" style="color: #1C82AD; font-weight:700; text-decoration: none; transition: color 0.3s; display: inline-flex; align-items: center; gap: 6px;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#1C82AD'"><i class="fa-solid fa-envelope"></i> Contáctanos</a></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <h4 style="font-family: 'JetBrains Mono', 'Space Grotesk', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 20px; font-weight: 800; color: #E4C7A1; margin-top: 0;">Sedes y Normas</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; padding: 0; margin: 0;">
+          <li><a href="#ubicaciones" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Zonas de Cobertura</a></li>
+          <li><a href="#faq" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Preguntas Frecuentes</a></li>
+          <li><a href="agendar.html?modo=unico" style="color: #ffffff; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#ffffff'">Agenda tu Demostración</a></li>
+          <li style="color: #cbd5e1;"><i class="fa-solid fa-certificate" style="color: #10B981; margin-right: 6px;"></i> Regulación RAC 100 Aerocivil</li>
+          <li><a href="staff.html" style="color: #1C82AD; font-weight:700; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#E4C7A1'" onmouseout="this.style.color='#1C82AD'">Portal de Staff</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Details -->
+      <div>
+        <h4 style="font-family: 'JetBrains Mono', 'Space Grotesk', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 20px; font-weight: 800; color: #E4C7A1; margin-top: 0;">Contacto Central</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 0.9rem; color: #ffffff; padding: 0; margin: 0;">
+          <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-phone" style="color: #E4C7A1; width: 16px;"></i> <span data-sync-tel>+57 305 406 1764</span></li>
+          <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-envelope" style="color: #E4C7A1; width: 16px;"></i> <span data-sync-email>comercial@flymetrix.com.co</span></li>
+          <li style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-location-dot" style="color: #E4C7A1; width: 16px;"></i> <span data-sync-dir>Avenida El Dorado #68b-70, Bogotá D.C.</span></li>
+          <li style="margin-top:8px;"><a href="#contacto" style="color: #E4C7A1; text-decoration:none; font-weight:700; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-paper-plane"></i> Enviar mensaje →</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div style="max-width: 1140px; margin: 40px auto 0; padding: 24px 24px 0; border-top: 1px solid rgba(228, 199, 161, 0.3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; color: #cbd5e1;">
+      <span>© 2026 Flymetrics S.A.S. Todos los derechos reservados. Operaciones certificadas RAC 100 Aerocivil.</span>
+      <div style="display: flex; gap: 24px;">
+        <span style="color: #E4C7A1; font-weight: 700;">Flymetrics Aeroagronomy</span>
+        <span>Hecho en Colombia</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── SERVICE DETAIL MODAL (BRAND DESIGN SYSTEM) ── -->
+  <div class="modal-overlay" id="service-modal" aria-hidden="true" onclick="if(event.target === this) window.closeModal(event);" style="display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; background: rgba(0,27,46,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 16px; box-sizing: border-box;">
+    
+    <!-- Modal Navigation Arrow Left (Hidden on small mobile, visible on desktop) -->
+    <button class="modal-nav-arrow" id="modal-prev-btn" onclick="window.prevService()" aria-label="Servicio Anterior" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%; background: #003049; border: 2px solid #E4C7A1; color: #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: all 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+      <i class="fa-solid fa-chevron-left" style="font-size: 1.1rem;"></i>
+    </button>
+
+    <!-- Modal Navigation Arrow Right -->
+    <button class="modal-nav-arrow" id="modal-next-btn" onclick="window.nextService()" aria-label="Siguiente Servicio" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%; background: #003049; border: 2px solid #E4C7A1; color: #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10001; transition: all 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
+      <i class="fa-solid fa-chevron-right" style="font-size: 1.1rem;"></i>
+    </button>
+
+    <!-- Modal Content Card -->
+    <div class="modal-card-container" style="background: #ffffff; border-radius: 24px; max-width: 820px; width: 100%; max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; position: relative; box-shadow: 0 35px 90px rgba(0,48,73,0.5), 0 0 0 1px rgba(228,199,161,0.35); padding: clamp(20px, 4vw, 36px); box-sizing: border-box; border-top: 4px solid #E4C7A1; margin: auto;">
+      
+      <!-- Close Button Top Right -->
+      <button class="modal-close" id="modal-close-btn" onclick="window.closeModal(event)" aria-label="Cerrar Ficha" style="position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,48,73,0.08); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 10002;">
+        <i class="fa-solid fa-xmark" style="font-size: 1.3rem; color: #003049;"></i>
+      </button>
+
+      <!-- Modal Photo Banner Slot -->
+      <div style="width: 100%; height: clamp(150px, 25vw, 220px); border-radius: 16px; overflow: hidden; margin-bottom: 20px; position: relative; box-shadow: 0 8px 24px rgba(0,48,73,0.12);">
+        <img id="modal-img" src="img/servicio_precision.jpg" alt="Servicio Flymetrics" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='img/servicio_aspersion.jpg'" />
+        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,48,73,0.55) 100%); pointer-events: none;"></div>
+      </div>
+
+      <!-- Modal Header (Icon + Title) -->
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <div id="modal-icon" style="width: 52px; height: 52px; background: linear-gradient(135deg, #003049, #1C82AD); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0; box-shadow: 0 8px 20px rgba(28,130,173,0.3);">
+          <i class="fa-solid fa-wheat-awn" style="font-size: 1.5rem; color: #ffffff;"></i>
+        </div>
+        <h3 id="modal-title" style="font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(1.25rem, 3vw, 1.8rem); color: #003049; margin: 0; line-height: 1.2;">
+          Agricultura de Precisión
+        </h3>
+      </div>
+
+      <!-- 2-Column Responsive Body Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start;">
+        
+        <!-- Left Column: Specs Table -->
+        <div style="background: #f8fafc; padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(0,48,73,0.08);">
+          <table style="width: 100%; border-collapse: collapse; font-family: 'Outfit', sans-serif;">
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(0,48,73,0.08);">
+                <td style="padding: 10px 0; font-size: 0.84rem; font-weight: 700; color: #003049; width: 44%;">Tecnología Empleada</td>
+                <td id="spec-sistemae" style="padding: 10px 0; font-size: 0.86rem; color: #1C82AD; font-weight: 700;">Sistema de Aspersión de Precisión</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(0,48,73,0.08);">
+                <td style="padding: 10px 0; font-size: 0.84rem; font-weight: 700; color: #003049;">Rendimiento</td>
+                <td id="spec-efficiency" style="padding: 10px 0; font-size: 0.86rem; color: #1C82AD; font-weight: 700;">Hasta 22 Hectáreas / hora</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(0,48,73,0.08);">
+                <td style="padding: 10px 0; font-size: 0.84rem; font-weight: 700; color: #003049;">Alcance y Diagnóstico</td>
+                <td id="spec-capacity" style="padding: 10px 0; font-size: 0.86rem; color: #1C82AD; font-weight: 700;">Diagnóstico Multiespectral y Telemetría RTK</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; font-size: 0.84rem; font-weight: 700; color: #003049;">Precisión RTK</td>
+                <td id="spec-precision" style="padding: 10px 0; font-size: 0.86rem; color: #1C82AD; font-weight: 700;">Centimétrica RTK (± 2 cm)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right Column: Description & Agendar Button -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; gap: 20px;">
+          <p id="modal-description" style="font-family: 'Outfit', sans-serif; font-size: 0.92rem; color: #343A40; line-height: 1.6; margin: 0;">
+            Aplicación de precisión de insumos agrícolas (fertilizantes, fungicidas y herbicidas) mediante aspersión aérea inteligente con drones Sistema de Aspersión de Precisión. Reducimos el uso de agua hasta en un 90% y garantizamos una cobertura foliar uniforme gracias a las boquillas atomizadoras centrífugas dobles, eliminando la compactación física del suelo en un 100% y protegiendo la salud humana.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button onclick="if(window.closeModal) window.closeModal(); openAuthModal('login', event);" style="background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; border-radius: 9999px; padding: 14px 24px; font-weight: 800; font-size: 0.95rem; font-family: 'Outfit', sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: none; cursor: pointer; box-shadow: 0 10px 28px rgba(0,48,73,0.35); transition: all 0.3s; letter-spacing: 0.03em;">
+              <i class="fa-solid fa-right-to-bracket"></i> Ingresa a tu portal
+            </button>
+            <a href="agendar.html?modo=unico" style="text-align: center; color: var(--navy-blue, #003049); font-size: 0.82rem; font-weight: 700; text-decoration: none; padding: 6px; border-radius: 8px; transition: all 0.2s;" onmouseover="this.style.color='#1C82AD'" onmouseout="this.style.color='#003049'">
+              <i class="fa-solid fa-calendar-check" style="color: #F59E0B;"></i> Agenda tu demostración →
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── AUTHENTICATION MODAL (LOGIN & REGISTER - LIQUID GLASS) ── -->
+  <div class="modal-overlay" id="auth-modal" aria-hidden="true">
+    <div class="modal-content liquid-glass auth-card">
+      <button class="modal-close" id="auth-close-btn" aria-label="Cerrar Acceso">&times;</button>
+      
+      <!-- Tab Selector -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" data-tab="login">Acceder</button>
+        <button class="auth-tab" id="tab-register" data-tab="register">Registrar</button>
+        <div class="auth-tab-pill" id="auth-tab-pill"></div>
+      </div>
+
+      <!-- Views Container (Horizontal Slider for smooth transition) -->
+      <div class="auth-views-container">
+        <div class="auth-views-slider" id="auth-views-slider">
+          
+          <!-- Login Form View -->
+          <div class="auth-view active" id="view-login">
+            <h3 class="auth-title">Ingresar a Flymetrics</h3>
+            <p class="auth-subtitle">Accede a tus paneles de control de agricultura de precisión.</p>
+            
+            <form id="form-login" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 18px; margin-top: 10px;">
+              <input type="hidden" id="login-role" value="cliente" required />
+    
+              <!-- Email Input -->
+              <div>
+                <label class="auth-label">Correo Electrónico</label>
+                <input type="email" placeholder="ejemplo@correo.com" id="login-email" required class="auth-input" />
+              </div>
+    
+              <!-- Password Input with Eye Icon Toggle -->
+              <div>
+                <label class="auth-label">Contraseña</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="password" placeholder="••••••••" id="login-password" required class="auth-input" style="padding-right: 42px; width: 100%; box-sizing: border-box;" />
+                  <button type="button" onclick="togglePasswordVisibility('login-password', this)" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #1C82AD; font-size: 1.05rem; padding: 4px; z-index: 5;" aria-label="Mostrar u ocultar contraseña">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+    
+              <!-- Error Alert Box -->
+              <div class="auth-error-box" id="auth-error-box" style="display: none;"></div>
+    
+              <button type="submit" class="btn-solid" style="width: 100%; padding: 14px; margin-top: 4px; font-weight: 700;">Entrar a Mi Panel</button>
+            </form>
+            <div style="display: flex; align-items: center; gap: 10px; margin: 16px 0 12px; color: var(--text-muted); font-size: 0.82rem; font-weight: 500;">
+              <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
+              <span>O continuar con</span>
+              <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.08);"></div>
+            </div>
+            <div style="display: flex; justify-content: center; width: 100%;">
+              <div id="g_id_signin"></div>
+            </div>
+          </div>
+    
+          <!-- Register Form View -->
+          <div class="auth-view" id="view-register">
+            <h3 class="auth-title">Crear una Cuenta</h3>
+            <p class="auth-subtitle">Regístrate para solicitar servicios de aspersión y análisis multiespectral en Flymetrics.</p>
+            
+            <form id="form-register" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 16px; margin-top: 10px;">
+              <div>
+                <label class="auth-label">Nombre Completo</label>
+                <input type="text" placeholder="Ej. JUAN PÉREZ" id="register-name" required class="auth-input" style="text-transform: uppercase;" />
+              </div>
+              <div>
+                <label class="auth-label">Correo Electrónico *</label>
+                <input type="email" placeholder="ejemplo@correo.com" id="register-email" required class="auth-input" />
+              </div>
+              <div>
+                <label class="auth-label"><i class="fa-brands fa-whatsapp" style="color: #25D366; margin-right: 4px;"></i> Teléfono / Celular WhatsApp *</label>
+                <input type="tel" id="register-phone" required class="auth-input" placeholder="300 123 4567" oninput="this.value = this.value.replace(/[^0-9+\s-]/g, '')" style="width: 100%; box-sizing: border-box;" />
+              </div>
+              <div>
+                <label class="auth-label">Contraseña Segura *</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="password" placeholder="Crea una contraseña segura (mín. 8 caracteres)" id="register-password" required class="auth-input" oninput="evaluarFortalezaPassword(this.value)" style="padding-right: 42px; width: 100%; box-sizing: border-box;" />
+                  <button type="button" onclick="togglePasswordVisibility('register-password', this)" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #1C82AD; font-size: 1.05rem; padding: 4px; z-index: 5;" aria-label="Mostrar u ocultar contraseña">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+                <!-- Password Strength Meter -->
+                <div id="password-strength-container" style="margin-top: 6px; display: none;">
+                  <div style="height: 6px; width: 100%; background: rgba(0,0,0,0.1); border-radius: 4px; overflow: hidden; display: flex;">
+                    <div id="pwd-meter-bar" style="height: 100%; width: 0%; transition: all 0.3s ease; border-radius: 4px;"></div>
+                  </div>
+                  <div id="pwd-meter-label" style="font-size: 0.76rem; font-weight: 700; margin-top: 4px; color: var(--text-muted);">
+                    Fortaleza de contraseña: --
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="auth-label">Confirmar Contraseña *</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="password" placeholder="Confirma tu contraseña" id="register-confirm-password" required class="auth-input" style="padding-right: 42px; width: 100%; box-sizing: border-box;" />
+                  <button type="button" onclick="togglePasswordVisibility('register-confirm-password', this)" style="position: absolute; right: 12px; background: none; border: none; cursor: pointer; color: #1C82AD; font-size: 1.05rem; padding: 4px; z-index: 5;" aria-label="Mostrar u ocultar contraseña">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Register Error Alert Box -->
+              <div class="auth-error-box" id="auth-register-error-box" style="display: none; padding: 10px 14px; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); border-radius: 10px; color: #DC2626; font-size: 0.85rem; font-weight: 700; text-align: center;"></div>
+
+              <button type="submit" id="btn-register-submit" class="btn-solid" style="width: 100%; padding: 14px; margin-top: 8px;">Registrar Cuenta & Continuar</button>
+              
+              <div style="text-align: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <a href="agendar.html?modo=unico" style="color: var(--accent-cyan); font-size: 0.82rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-bolt-lightning" style="color: #F59E0B;"></i> ¿Prefieres agendar sin contraseña? Acceso Único →
+                </a>
+              </div>
+            </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button for Agendar / Acceso -->
+  <button class="fab-agendar liquid-glass" onclick="openAuthModal('register', event)" title="Agendar Servicio con Registro">
+    <i class="fa-solid fa-calendar-plus" style="color: #E4C7A1; margin-right: 4px;"></i>
+    <span class="fab-text">Agendar</span>
+  </button>
+
+  <!-- Bounce Animation for Hero Indicator -->
+  <style>
+    @keyframes bounceDown {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-8px); }
+      60% { transform: translateX(-50%) translateY(-4px); }
+    }
+    .modal-overlay.open {
+      display: flex !important;
+    }
+  </style>
+
+  <!-- Script Files -->
+  <script src="js/api.js?v=20260822231500"></script>
+  <script src="js/app.js?v=20260822231500"></script>
+</body>
+</html>

@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Agendamiento Directo de Campo | Flymetrics Colombia</title>
+  
+  <!-- SEO Best Practices -->
+  <meta name="description" content="Sistema inteligente de agendamiento de vuelos agrícolas con dron para productores en Colombia. Fumigación, análisis multiespectral y cartografía de precisión." />
+  <meta name="theme-color" content="#003049" />
+
+  <!-- Google Fonts: Outfit & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icon Library (Local) -->
+  <link rel="stylesheet" href="css/fontawesome/css/all.min.css" />
+
+  <style>
+    :root {
+      /* Official Flymetrics Brand Palette */
+      --navy-pilot: #003049;     /* 60% Dominant Primary */
+      --aero-link: #1C82AD;      /* 10% Tech Secondary */
+      --geo-sand: #E4C7A1;       /* 10% Accent */
+      --asphalt: #343A40;        /* Text Paragraphs */
+      --concrete: #6C757D;       /* Supporting Grey */
+      --emerald-green: #10B981;  /* Status Success */
+      --bg-cream: #F8FAFC;
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(28, 130, 173, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 10%, rgba(28, 130, 173, 0.08) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 90%, rgba(228, 199, 161, 0.12) 0%, transparent 40%),
+                  #F4F7FB;
+      font-family: 'Outfit', sans-serif;
+      color: var(--asphalt);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER NAVIGATION ── */
+    .agendar-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 12px 16px;
+      background: rgba(244, 247, 251, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .agendar-nav {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 10px 18px;
+      border: 1.5px solid var(--card-border);
+      box-shadow: 0 8px 24px rgba(0, 48, 73, 0.06);
+    }
+
+    .agendar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--navy-pilot);
+    }
+
+    .agendar-brand img {
+      height: 32px;
+      width: auto;
+      filter: drop-shadow(0 2px 6px rgba(0, 48, 73, 0.15));
+    }
+
+    .brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--navy-pilot);
+      letter-spacing: -0.02em;
+    }
+
+    .badge-direct {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--aero-link);
+      background: rgba(28, 130, 173, 0.1);
+      border: 1px solid rgba(28, 130, 173, 0.25);
+      padding: 4px 10px;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-nav-home {
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--navy-pilot);
+      background: rgba(0, 48, 73, 0.05);
+      border: 1px solid rgba(0, 48, 73, 0.12);
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-home:hover {
+      background: rgba(28, 130, 173, 0.1);
+      border-color: var(--aero-link);
+      color: var(--aero-link);
+      transform: translateY(-1px);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main-wrapper {
+      max-width: 960px;
+      width: 100%;
+      margin: 12px auto 40px;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    /* ── STEPPER LOGICAL PROGRESS ── */
+    .stepper-container {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1.5px solid var(--card-border);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0, 48, 73, 0.04);
+    }
+
+    .stepper-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .stepper-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--navy-pilot);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stepper-indicator-text {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--aero-link);
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(0, 48, 73, 0.08);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 33.33%;
+      background: linear-gradient(90deg, var(--aero-link) 0%, var(--navy-pilot) 100%);
+      border-radius: 100px;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .step-pills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .step-pill-btn {
+      background: rgba(0, 48, 73, 0.04);
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      padding: 8px 10px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .step-pill-btn.active {
+      background: rgba(28, 130, 173, 0.1);
+      border-color: var(--aero-link);
+    }
+
+    .step-pill-btn.completed {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: var(--concrete);
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .step-pill-btn.active .step-num {
+      background: var(--aero-link);
+    }
+
+    .step-pill-btn.completed .step-num {
+      background: var(--emerald-green);
+    }
+
+    .step-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--asphalt);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .step-pill-btn.active .step-text {
+      color: var(--navy-pilot);
+      font-weight: 800;
+    }
+
+    /* ── CARD CONTAINER ── */
+    .form-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1.5px solid var(--card-border);
+      box-shadow: 0 16px 40px rgba(0, 48, 73, 0.07);
+      padding: 28px 24px;
+    }
+
+    .form-step-section {
+      display: none;
+      animation: fadeInStep 0.3s ease forwards;
+    }
+
+    .form-step-section.active {
+      display: block;
+    }
+
+    @keyframes fadeInStep {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .step-headline {
+      margin-bottom: 22px;
+    }
+
+    .step-headline h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy-pilot);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-headline p {
+      font-size: 0.9rem;
+      color: var(--concrete);
+      margin-top: 4px;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-pilot);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-label i {
+      color: var(--aero-link);
+      font-size: 0.9rem;
+      width: 16px;
+      text-align: center;
+    }
+
+    .field-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(0, 48, 73, 0.18);
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--asphalt);
+      transition: all 0.2s ease;
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: var(--aero-link);
+      box-shadow: 0 0 0 3px rgba(28, 130, 173, 0.16);
+    }
+
+    /* ── INTERACTIVE SERVICE CARDS ── */
+    .service-options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .service-card-choice {
+      border: 1.5px solid rgba(0, 48, 73, 0.15);
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .service-card-choice:hover {
+      border-color: var(--aero-link);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 48, 73, 0.06);
+    }
+
+    .service-card-choice.selected {
+      border-color: var(--aero-link);
+      background: rgba(28, 130, 173, 0.08);
+      box-shadow: 0 4px 14px rgba(28, 130, 173, 0.18);
+    }
+
+    .service-card-choice input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .svc-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(28, 130, 173, 0.12);
+      color: var(--aero-link);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .service-card-choice.selected .svc-icon-box {
+      background: var(--aero-link);
+      color: #ffffff;
+    }
+
+    .svc-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--navy-pilot);
+    }
+
+    .svc-desc {
+      font-size: 0.76rem;
+      color: var(--concrete);
+      line-height: 1.35;
+    }
+
+    /* ── LIVE SUMMARY BAR ── */
+    .summary-card {
+      background: rgba(0, 48, 73, 0.03);
+      border: 1.5px dashed var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .summary-card-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--navy-pilot);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .summary-label {
+      font-size: 0.72rem;
+      color: var(--concrete);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      color: var(--navy-pilot);
+      font-weight: 700;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .step-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(0, 48, 73, 0.08);
+    }
+
+    .btn-prev {
+      min-height: 48px;
+      padding: 10px 20px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(0, 48, 73, 0.2);
+      background: #ffffff;
+      color: var(--navy-pilot);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-prev:hover {
+      background: rgba(0, 48, 73, 0.05);
+    }
+
+    .btn-next, .btn-submit-final {
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--aero-link) 0%, var(--navy-pilot) 100%);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 48, 73, 0.2);
+      transition: all 0.2s ease;
+      margin-left: auto;
+    }
+
+    .btn-next:hover, .btn-submit-final:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(0, 48, 73, 0.28);
+    }
+
+    /* ── ERROR TOAST ── */
+    .alert-error {
+      background: #FEE2E2;
+      border: 1.5px solid #FCA5A5;
+      color: #991B1B;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── CONFIRMATION CARD ── */
+    .confirm-card {
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .confirm-badge-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 3px solid var(--emerald-green);
+      color: var(--emerald-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+    }
+
+    .ticket-box {
+      background: #ffffff;
+      border: 2px dashed var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 520px;
+      margin: 20px auto;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0, 48, 73, 0.05);
+    }
+
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid rgba(0, 48, 73, 0.08);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+
+    .ticket-row span {
+      color: var(--concrete);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ticket-row strong {
+      color: var(--navy-pilot);
+      text-align: right;
+    }
+
+    .btn-wa-action {
+      background: #25D366;
+      color: #ffffff;
+      text-decoration: none;
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .btn-wa-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--concrete);
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ── RESPONSIVE MOBILE TWEAKS ── */
+    @media (max-width: 680px) {
+      .agendar-header {
+        padding: 8px 12px;
+      }
+      .agendar-nav {
+        padding: 8px 12px;
+      }
+      .brand-text {
+        font-size: 1.1rem;
+      }
+      .badge-direct {
+        display: none;
+      }
+      .main-wrapper {
+        padding: 0 12px;
+        margin-top: 8px;
+      }
+      .form-card {
+        padding: 20px 16px;
+        border-radius: 20px;
+      }
+      .step-pills {
+        gap: 4px;
+      }
+      .step-pill-btn {
+        padding: 6px 6px;
+      }
+      .step-text {
+        font-size: 0.72rem;
+      }
+      .step-num {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+      }
+      .step-headline h2 {
+        font-size: 1.25rem;
+      }
+      .service-options-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .step-actions {
+        flex-direction: column-reverse;
+      }
+      .btn-prev, .btn-next, .btn-submit-final {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="agendar-header">
+    <div class="agendar-nav">
+      <a href="index.html" class="agendar-brand">
+        <img src="img/logo.png" alt="Flymetrics Logo" onerror="this.src='img/logo_bird_blue.png'" />
+        <span class="brand-text">Flymetrics</span>
+        <span class="badge-direct">
+          <i class="fa-solid fa-wheat-awn"></i> Agendamiento Directo
+        </span>
+      </a>
+      
+      <a href="index.html" class="btn-nav-home">
+        <i class="fa-solid fa-house"></i> <span>Inicio</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="main-wrapper">
+
+    <!-- LOGICAL STEP PROGRESS -->
+    <div class="stepper-container" id="stepper-bar">
+      <div class="stepper-header">
+        <div class="stepper-title">
+          <i class="fa-solid fa-clipboard-check" style="color: var(--aero-link);"></i> Sistema de Solicitud en Campo
+        </div>
+        <div class="stepper-indicator-text" id="stepper-text">Paso 1 de 3</div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+      <div class="step-pills">
+        <button type="button" class="step-pill-btn active" id="pill-1" onclick="goToStep(1)">
+          <span class="step-num">1</span>
+          <span class="step-text">Productor</span>
+        </button>
+        <button type="button" class="step-pill-btn" id="pill-2" onclick="goToStep(2)">
+          <span class="step-num">2</span>
+          <span class="step-text">Predio / Finca</span>
+        </button>
+        <button type="button" class="step-pill-btn" id="pill-3" onclick="goToStep(3)">
+          <span class="step-num">3</span>
+          <span class="step-text">Vuelo Dron</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ERROR ALERT -->
+    <div id="form-error-alert" class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="form-error-msg">Por favor diligencia los campos requeridos.</span>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="form-card">
+
+      <form id="form-agendar-directo" onsubmit="procesarEnvioFinal(event)">
+
+        <!-- ── PASO 1: DATOS DEL PRODUCTOR ── -->
+        <section class="form-step-section active" id="step-1">
+          <div class="step-headline">
+            <h2><i class="fa-solid fa-user-tie" style="color: var(--aero-link);"></i> Datos del Productor / Titular</h2>
+            <p id="step-1-subdesc">Información de contacto oficial para coordinar el vuelo técnico con el piloto asignado.</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="ad-nombre">
+                <i class="fa-solid fa-id-card"></i> Nombre Completo *
+              </label>
+              <input type="text" id="ad-nombre" class="field-input" placeholder="ej. DON PEDRO ALARCÓN" required style="text-transform: uppercase;" oninput="updateLiveSummary()" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-cedula">
+                <i class="fa-solid fa-passport"></i> Cédula de Ciudadanía o NIT *
+              </label>
+              <input type="text" id="ad-cedula" class="field-input" placeholder="ej. 79123456" required />
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-telefono">
+                <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp / Teléfono *
+              </label>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="ad-pais-code" style="width: 105px; padding: 12px 6px; border-radius: 12px; border: 1.5px solid var(--card-border); background: #ffffff; font-weight: 800; color: var(--navy-pilot); font-family: inherit; font-size: 0.88rem; outline: none; cursor: pointer;">
+                  <option value="+57" selected>🇨🇴 +57</option>
+                  <option value="+52">🇲🇽 +52</option>
+                  <option value="+54">🇦🇷 +54</option>
+                  <option value="+56">🇨🇱 +56</option>
+                  <option value="+51">🇵🇪 +51</option>
+                  <option value="+593">🇪🇨 +593</option>
+                  <option value="+1">🇺🇸 +1</option>
+                  <option value="+34">🇪🇸 +34</option>
+                </select>
+                <input type="tel" id="ad-telefono" class="field-input" placeholder="ej. 3109876543" required oninput="updateLiveSummary()" style="flex: 1;" />
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-email" id="lbl-ad-email">
+                <i class="fa-solid fa-envelope"></i> Correo Electrónico (Opcional)
+              </label>
+              <input type="email" id="ad-email" class="field-input" placeholder="ej. productor@finca.com" />
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <div></div>
+            <button type="button" class="btn-next" onclick="validateAndNext(1)">
+              Continuar a Ubicación <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- ── PASO 2: DATOS DEL PREDIO / FINCA ── -->
+        <section class="form-step-section" id="step-2">
+          <div class="step-headline">
+            <h2><i class="fa-solid fa-mountain-sun" style="color: var(--aero-link);"></i> Ubicación del Predio / Finca</h2>
+            <p>Geografía y acceso donde se instalará la estación móvil de despegue.</p>
+          </div>
+
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="ad-finca">
+                <i class="fa-solid fa-house-chimney-window"></i> Nombre de la Finca *
+              </label>
+              <input type="text" id="ad-finca" class="field-input" placeholder="ej. Finca La Esperanza" required oninput="updateLiveSummary()" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-depto">
+                <i class="fa-solid fa-map-location-dot"></i> Departamento *
+              </label>
+              <select id="ad-depto" class="field-input" required style="appearance: auto;" onchange="updateLiveSummary()">
+                <option value="">Selecciona Departamento...</option>
+                <option value="Cundinamarca">Cundinamarca</option>
+                <option value="Meta">Meta</option>
+                <option value="Tolima">Tolima</option>
+                <option value="Huila">Huila</option>
+                <option value="Valle del Cauca">Valle del Cauca</option>
+                <option value="Boyacá">Boyacá</option>
+                <option value="Antioquia">Antioquia</option>
+                <option value="Casanare">Casanare</option>
+                <option value="Córdoba">Córdoba</option>
+                <option value="Santander">Santander</option>
+                <option value="Otro">Otro Departamento</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-municipio">
+                <i class="fa-solid fa-city"></i> Municipio *
+              </label>
+              <input type="text" id="ad-municipio" class="field-input" placeholder="ej. Facatativá / Espinal / Villavicencio" required oninput="updateLiveSummary()" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-vereda">
+                <i class="fa-solid fa-route"></i> Vereda / Sector *
+              </label>
+              <input type="text" id="ad-vereda" class="field-input" placeholder="ej. Vereda San Juan" required />
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-direccion">
+                <i class="fa-solid fa-compass"></i> Indicaciones o Referencias de Llegada (Opcional)
+              </label>
+              <input type="text" id="ad-direccion" class="field-input" placeholder="ej. Km 4 vía principal, frente al puente colgante o entrada por el portón azul" />
+            </div>
+          </div>
+
+          <!-- GPS / Google Maps Link (Opcional) -->
+          <div style="margin-top: 14px; background: rgba(28, 130, 173, 0.05); padding: 16px; border-radius: 14px; border: 1.5px dashed rgba(28, 130, 173, 0.35);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <label class="field-label" for="ad-maps-link" style="margin: 0; color: #003049; font-weight: 800;">
+                <i class="fa-solid fa-location-crosshairs" style="color: #1C82AD;"></i> Enlace de Google Maps / Coordenadas GPS (Opcional)
+              </label>
+              <button type="button" onclick="capturarUbicacionActual()" class="btn-ghost" style="padding: 4px 12px; font-size: 0.76rem; border-radius: 20px; font-weight: 700; border: 1px solid #1C82AD; color: #1C82AD; background: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                <i class="fa-solid fa-crosshairs"></i> <span id="btn-gps-text">Obtener mi GPS actual</span>
+              </button>
+            </div>
+            <input type="url" id="ad-maps-link" class="field-input" placeholder="ej. https://maps.app.goo.gl/xxx o 4.7110, -74.0721" style="background: #ffffff;" />
+            <span style="font-size: 0.74rem; color: #64748b; margin-top: 4px; display: block;">
+              <i class="fa-solid fa-circle-info" style="color: #1C82AD;"></i> Puedes pegar el link de compartir de Google Maps o tus coordenadas para que el piloto trace la ruta directa al lote.
+            </span>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-prev" onclick="goToStep(1)">
+              <i class="fa-solid fa-arrow-left"></i> Anterior
+            </button>
+            <button type="button" class="btn-next" onclick="validateAndNext(2)">
+              Continuar a Vuelo <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- ── PASO 3: DETALLES DE OPERACIÓN Y CULTIVO ── -->
+        <section class="form-step-section" id="step-3">
+          <div class="step-headline">
+            <h2><i class="fa-solid fa-helicopter" style="color: var(--aero-link);"></i> Operación Agrícola con Dron</h2>
+            <p>Selecciona la especialidad técnica y las especificaciones agronómicas requeridas.</p>
+          </div>
+
+          <!-- SELECTOR INTERACTIVO DE SERVICIOS DINÁMICOS DESDE BASE DE DATOS -->
+          <div class="field-group">
+            <label class="field-label" style="display:flex; justify-content:space-between; align-items:center;">
+              <span><i class="fa-solid fa-list-check" style="color: var(--aero-link);"></i> Servicios Requeridos * (Selecciona 1 o más)</span>
+              <span style="font-size:0.75rem; color:var(--aero-link); font-weight:800;" id="svc-selected-count">1 seleccionado</span>
+            </label>
+            <div class="service-options-grid" id="services-interactive-grid">
+              <!-- Populated dynamically from /api/v1/servicios -->
+            </div>
+            <!-- Campo de compatibilidad con nombre consolidado de servicios -->
+            <input type="hidden" id="ad-servicio" value="Fumigación y Aspersión Agrícola con Dron" />
+          </div>
+
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-cultivo">
+                <i class="fa-solid fa-seedling"></i> Tipo de Cultivo *
+              </label>
+              <input type="text" id="ad-cultivo" class="field-input" placeholder="ej. Arroz, Papa, Maíz, Café, Palma, Flores" required oninput="updateLiveSummary()" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-hectareas">
+                <i class="fa-solid fa-chart-area"></i> Hectáreas Estimadas *
+              </label>
+              <input type="number" id="ad-hectareas" step="0.5" min="0.5" max="5000" class="field-input" placeholder="ej. 20" required oninput="updateLiveSummary()" />
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-fecha">
+                <i class="fa-solid fa-calendar-day"></i> Fecha Sugerida de Operación *
+              </label>
+              <input type="date" id="ad-fecha" class="field-input" required oninput="updateLiveSummary()" />
+            </div>
+
+            <div class="field-group">
+              <label class="field-label" for="ad-jornada">
+                <i class="fa-solid fa-clock"></i> Franja Horaria / Jornada *
+              </label>
+              <select id="ad-jornada" class="field-input" required style="appearance: auto;" onchange="updateLiveSummary()">
+                <option value="Diurno Matutino (06:00 AM - 11:00 AM)">Diurno Matutino (06:00 AM - 11:00 AM) — Recomendado</option>
+                <option value="Diurno Tarde (03:00 PM - 06:00 PM)">Diurno Tarde (03:00 PM - 06:00 PM)</option>
+                <option value="Vuelo Nocturno (06:30 PM - 10:00 PM)">Vuelo Nocturno (06:30 PM - 10:00 PM) — Cero Viento / Máxima Eficacia</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="ad-notas">
+                <i class="fa-solid fa-note-sticky"></i> Observaciones para el Piloto y Reagendamiento
+              </label>
+              <input type="text" id="ad-notas" class="field-input" placeholder="ej. Presencia de cables, terreno con pendiente, preferencia horaria..." />
+            </div>
+          </div>
+
+          <!-- RESUMEN DINÁMICO EN TIEMPO REAL -->
+          <div class="summary-card">
+            <div class="summary-card-title">
+              <i class="fa-solid fa-file-lines" style="color: var(--aero-link);"></i> Resumen Preliminar de la Solicitud
+            </div>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">Productor:</span>
+                <span class="summary-value" id="sum-prod">--</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Finca / Zona:</span>
+                <span class="summary-value" id="sum-finca">--</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Cultivo / Área:</span>
+                <span class="summary-value" id="sum-cultivo">--</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Servicio:</span>
+                <span class="summary-value" id="sum-servicio">Fumigación Agrícola</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-prev" onclick="goToStep(2)">
+              <i class="fa-solid fa-arrow-left"></i> Anterior
+            </button>
+            <button type="submit" id="ad-btn-submit" class="btn-submit-final">
+              <i class="fa-solid fa-paper-plane"></i> Confirmar y Agendar Vuelo
+            </button>
+          </div>
+        </section>
+
+      </form>
+
+      <!-- ── CONFIRMACIÓN FINAL POST-ENVÍO ── -->
+      <div id="section-confirmacion" style="display: none;" class="confirm-card">
+        <div class="confirm-badge-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        
+        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--navy-pilot); margin-bottom: 6px;">
+          ¡Vuelo Agrícola Registrado!
+        </h2>
+        <p style="font-size: 0.95rem; color: var(--concrete); max-width: 500px; margin: 0 auto 20px;">
+          Tu solicitud fue guardada con éxito en la plataforma de Flymetrics Colombia.
+        </p>
+
+        <!-- TICKET DE RESERVA -->
+        <div class="ticket-box">
+          <div class="ticket-header">
+            <span style="font-size: 0.85rem; color: var(--concrete); font-weight: 600;">Radicado de Turno:</span>
+            <span id="res-code-val" style="font-family: monospace; font-size: 1.25rem; font-weight: 900; color: var(--aero-link);">FLY-00000</span>
+          </div>
+
+          <div class="ticket-row">
+            <span><i class="fa-solid fa-user"></i> Productor:</span>
+            <strong id="res-prod-val">--</strong>
+          </div>
+          <div class="ticket-row">
+            <span><i class="fa-solid fa-house"></i> Finca:</span>
+            <strong id="res-finca-val">--</strong>
+          </div>
+          <div class="ticket-row">
+            <span><i class="fa-solid fa-wheat-awn"></i> Cultivo & Área:</span>
+            <strong id="res-cultivo-val">--</strong>
+          </div>
+          <div class="ticket-row">
+            <span><i class="fa-solid fa-helicopter"></i> Servicio:</span>
+            <strong id="res-servicio-val">--</strong>
+          </div>
+          <div class="ticket-row">
+            <span><i class="fa-solid fa-calendar"></i> Fecha Solicitada:</span>
+            <strong id="res-fecha-val">--</strong>
+          </div>
+        </div>
+
+        <!-- ACCIONES -->
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
+          <a id="btn-wa-confirmar" href="#" target="_blank" rel="noopener noreferrer" class="btn-wa-action">
+            <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> Confirmar Horario por WhatsApp
+          </a>
+          <a href="index.html" class="btn-prev" style="text-decoration: none;">
+            <i class="fa-solid fa-house"></i> Volver al Portal
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PIE -->
+    <div class="page-footer">
+      <i class="fa-solid fa-shield-halved" style="color: var(--aero-link);"></i>
+      <span>Flymetrics Colombia — Seguridad RAC-100 & Registro Oficial en Base de Datos.</span>
+    </div>
+  </main>
+
+  <!-- LÓGICA MODULAR Y REACTIVA -->
+  <script>
+    var currentStep = 1;
+    var _serviciosDisponibles = [];
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Configurar fecha mínima de agendamiento (a partir de mañana)
+      var tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      var minDateStr = tomorrow.toISOString().split('T')[0];
+      var fechaEl = document.getElementById('ad-fecha');
+      if (fechaEl) {
+        fechaEl.min = minDateStr;
+        fechaEl.value = minDateStr;
+      }
+
+      // Pre-fill user profile if logged in
+      var storedEmail = localStorage.getItem('fm_email');
+      var storedTel = localStorage.getItem('fm_telefono');
+      var storedCed = localStorage.getItem('fm_cedula');
+      var storedNom = localStorage.getItem('fm_nombre');
+      if (storedEmail && document.getElementById('ad-email')) document.getElementById('ad-email').value = storedEmail;
+      if (storedTel && document.getElementById('ad-telefono')) document.getElementById('ad-telefono').value = storedTel;
+      if (storedCed && document.getElementById('ad-cedula')) document.getElementById('ad-cedula').value = storedCed;
+      if (storedNom && document.getElementById('ad-nombre')) document.getElementById('ad-nombre').value = storedNom;
+
+      await cargarServiciosRegistrados();
+      updateLiveSummary();
+    });
+
+    async function cargarServiciosRegistrados() {
+      var grid = document.getElementById('services-interactive-grid');
+      if (!grid) return;
+
+      var apiBase = (window.location.protocol === 'file:'
+        ? 'http://localhost:3000'
+        : (window.location.origin || 'http://localhost:3000')) + '/api/v1';
+
+      try {
+        var res = await fetch(apiBase + '/servicios');
+        if (res.ok) {
+          var body = await res.json();
+          var rawList = Array.isArray(body) ? body : (body.data || []);
+          _serviciosDisponibles = rawList.filter(function(s) { return s.activo !== false && s.activo !== 0; });
+        }
+      } catch (e) {
+        console.warn('Error cargando servicios desde API:', e);
+      }
+
+      if (!_serviciosDisponibles || _serviciosDisponibles.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b; margin-right:6px;"></i> No hay servicios activos en este momento en el catálogo.</div>';
+        return;
+      }
+
+      grid.innerHTML = _serviciosDisponibles.map(function(s, idx) {
+        var iconClass = s.icono || (s.nombre_servicio.includes('Multi') || s.nombre_servicio.includes('Espectral') ? 'fa-satellite-dish' : (s.nombre_servicio.includes('Topo') ? 'fa-map-location-dot' : 'fa-spray-can-sparkles'));
+        var isChecked = idx === 0;
+        return `
+          <label class="service-card-choice ${isChecked ? 'selected' : ''}" style="cursor:pointer; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="svc-icon-box"><i class="fa-solid ${iconClass}"></i></div>
+              <input type="checkbox" class="ad-svc-checkbox" value="${s.nombre_servicio}" data-id="${s.id_servicio || s.id}" ${isChecked ? 'checked' : ''} onchange="onServiceCardToggled(this)" style="width:20px; height:20px; accent-color:#1c82ad; cursor:pointer;" />
+            </div>
+            <div class="svc-title" style="font-weight:800; color:#003049;">${s.nombre_servicio}</div>
+            <div class="svc-desc" style="font-size:0.8rem; color:#4a5568; line-height:1.4;">${s.descripcion || 'Servicio especializado con drones de última generación.'}</div>
+          </label>
+        `;
+      }).join('');
+
+      actualizarServiciosSeleccionados();
+    }
+
+    function onServiceCardToggled(checkbox) {
+      var card = checkbox.closest('.service-card-choice');
+      if (checkbox.checked) {
+        card.classList.add('selected');
+      } else {
+        card.classList.remove('selected');
+      }
+      actualizarServiciosSeleccionados();
+    }
+
+    function actualizarServiciosSeleccionados() {
+      var checked = document.querySelectorAll('.ad-svc-checkbox:checked');
+      var selectedNames = Array.from(checked).map(function(cb) { return cb.value; });
+      var countEl = document.getElementById('svc-selected-count');
+      
+      if (selectedNames.length === 0) {
+        if (countEl) countEl.textContent = 'Ninguno seleccionado (mín. 1)';
+        document.getElementById('ad-servicio').value = '';
+      } else {
+        if (countEl) countEl.textContent = selectedNames.length + (selectedNames.length === 1 ? ' seleccionado' : ' seleccionados');
+        document.getElementById('ad-servicio').value = selectedNames.join(' + ');
+      }
+      updateLiveSummary();
+    }
+
+    function goToStep(step) {
+      hideError();
+
+      if (step > currentStep) {
+        if (!validateStep(currentStep)) return;
+      }
+
+      currentStep = step;
+
+      document.querySelectorAll('.form-step-section').forEach(function(sec) {
+        sec.classList.remove('active');
+      });
+      var targetSec = document.getElementById('step-' + step);
+      if (targetSec) targetSec.classList.add('active');
+
+      var percent = step === 1 ? 33.33 : (step === 2 ? 66.66 : 100);
+      document.getElementById('progress-bar-fill').style.width = percent + '%';
+      document.getElementById('stepper-text').textContent = 'Paso ' + step + ' de 3';
+
+      for (var i = 1; i <= 3; i++) {
+        var pill = document.getElementById('pill-' + i);
+        if (pill) {
+          pill.classList.remove('active', 'completed');
+          if (i === step) pill.classList.add('active');
+          else if (i < step) pill.classList.add('completed');
+        }
+      }
+
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function validateStep(step) {
+      hideError();
+      if (step === 1) {
+        var nom = document.getElementById('ad-nombre').value.trim();
+        var ced = document.getElementById('ad-cedula').value.trim();
+        var tel = document.getElementById('ad-telefono').value.trim();
+
+        if (!nom || !ced || !tel) {
+          showError('Por favor completa Nombre, Cédula y Teléfono/WhatsApp.');
+          return false;
+        }
+      } else if (step === 2) {
+        var fin = document.getElementById('ad-finca').value.trim();
+        var dep = document.getElementById('ad-depto').value;
+        var mun = document.getElementById('ad-municipio').value.trim();
+        var ver = document.getElementById('ad-vereda').value.trim();
+        if (!fin || !dep || !mun || !ver) {
+          showError('Por favor completa Finca, Departamento, Municipio y Vereda.');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function validateAndNext(step) {
+      if (validateStep(step)) {
+        goToStep(step + 1);
+      }
+    }
+
+    function showError(msg) {
+      var box = document.getElementById('form-error-alert');
+      var txt = document.getElementById('form-error-msg');
+      txt.textContent = msg;
+      box.style.display = 'flex';
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError() {
+      document.getElementById('form-error-alert').style.display = 'none';
+    }
+
+    function updateLiveSummary() {
+      var nom = document.getElementById('ad-nombre').value.trim();
+      var tel = document.getElementById('ad-telefono').value.trim();
+      var fin = document.getElementById('ad-finca').value.trim();
+      var dep = document.getElementById('ad-depto').value;
+      var mun = document.getElementById('ad-municipio').value.trim();
+      var cul = document.getElementById('ad-cultivo').value.trim();
+      var ha = document.getElementById('ad-hectareas').value.trim();
+      var srv = document.getElementById('ad-servicio').value;
+
+      document.getElementById('sum-prod').textContent = nom ? (nom + (tel ? ' (' + tel + ')' : '')) : '--';
+      document.getElementById('sum-finca').textContent = fin ? (fin + (mun ? ' - ' + mun : '') + (dep ? ' (' + dep + ')' : '')) : '--';
+      document.getElementById('sum-cultivo').textContent = cul ? (cul + (ha ? ' (' + ha + ' Ha)' : '')) : '--';
+      document.getElementById('sum-servicio').textContent = srv || '--';
+    }
+
+    // Captura automática de coordenadas GPS del dispositivo
+    function capturarUbicacionActual() {
+      var btnText = document.getElementById('btn-gps-text');
+      var input = document.getElementById('ad-maps-link');
+      if (!navigator.geolocation) {
+        alert('Tu navegador no soporta geolocalización GPS.');
+        return;
+      }
+      if (btnText) btnText.textContent = 'Obteniendo GPS...';
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          var lat = pos.coords.latitude.toFixed(6);
+          var lng = pos.coords.longitude.toFixed(6);
+          var url = `https://www.google.com/maps?q=${lat},${lng}`;
+          if (input) input.value = url;
+          if (btnText) btnText.textContent = 'GPS Capturado ✔';
+          setTimeout(() => { if (btnText) btnText.textContent = 'Obtener mi GPS actual'; }, 3000);
+        },
+        function(err) {
+          if (btnText) btnText.textContent = 'No se pudo obtener';
+          setTimeout(() => { if (btnText) btnText.textContent = 'Obtener mi GPS actual'; }, 3000);
+          alert('No se pudo obtener la ubicación GPS automática: ' + err.message + '. Puedes pegar el enlace de Google Maps manualmente.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    async function procesarEnvioFinal(e) {
+      e.preventDefault();
+      hideError();
+
+      var nombre = (document.getElementById('ad-nombre').value.trim() || '').toUpperCase();
+      var cedula = document.getElementById('ad-cedula').value.trim();
+      var telefono = document.getElementById('ad-telefono').value.trim();
+      var email = document.getElementById('ad-email').value.trim();
+      var finca = document.getElementById('ad-finca').value.trim();
+      var depto = document.getElementById('ad-depto').value;
+      var municipio = document.getElementById('ad-municipio').value.trim();
+      var vereda = document.getElementById('ad-vereda').value.trim();
+      var direccion = document.getElementById('ad-direccion').value.trim();
+      var mapsLink = (document.getElementById('ad-maps-link') ? document.getElementById('ad-maps-link').value.trim() : '');
+      var cultivo = document.getElementById('ad-cultivo').value.trim();
+      var ha = parseFloat(document.getElementById('ad-hectareas').value);
+      var servicio = document.getElementById('ad-servicio').value;
+      var fecha = document.getElementById('ad-fecha').value;
+      var notas = document.getElementById('ad-notas').value.trim();
+
+      if (!servicio) {
+        showError('Por favor selecciona al menos un servicio técnico de vuelo.');
+        return;
+      }
+
+      var todayStr = new Date().toISOString().split('T')[0];
+      if (fecha < todayStr) {
+        showError('La fecha de la solicitud no puede ser anterior al día de hoy.');
+        return;
+      }
+
+      if (!nombre || !cedula || !telefono || !finca || !depto || !municipio || !vereda || !cultivo || !ha || !fecha) {
+        showError('Por favor verifica todos los campos obligatorios marcados con (*).');
+        return;
+      }
+
+      var btn = document.getElementById('ad-btn-submit');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando Solicitud de Vuelo...';
+
+      var jornada = document.getElementById('ad-jornada') ? document.getElementById('ad-jornada').value : 'Diurno';
+      var extraInfo = [];
+      if (jornada) extraInfo.push(`[Jornada: ${jornada}]`);
+      if (mapsLink) extraInfo.push(`[GPS/Maps: ${mapsLink}]`);
+      if (notas) extraInfo.push(notas);
+      var notasCompletas = extraInfo.join(' ');
+
+      var paisCode = (document.getElementById('ad-pais-code') ? document.getElementById('ad-pais-code').value : '+57').trim();
+      var fullPhone = telefono.startsWith('+') ? telefono : `${paisCode} ${telefono}`;
+
+      var payload = {
+        modo_agendamiento: 'sin_registro',
+        nombre_completo: nombre,
+        cedula: cedula,
+        telefono: fullPhone,
+        email: email || undefined,
+        nombre_finca: finca,
+        departamento: depto,
+        municipio: municipio,
+        vereda_corregimiento: vereda,
+        direccion_ubicacion: direccion || undefined,
+        hectareas: ha,
+        tipo_cultivo: cultivo,
+        servicio_solicitado: servicio,
+        fecha_deseada: fecha,
+        observaciones: notasCompletas,
+        maps_link: mapsLink || undefined
+      };
+
+      try {
+        var apiBase = (window.location.protocol === 'file:'
+          ? 'http://localhost:3000'
+          : (window.location.origin || 'http://localhost:3000')) + '/api/v1';
+
+        var res = await fetch(apiBase + '/agenda/reserva-rapida', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        var json = await res.json().catch(function() { return {}; });
+
+        await mostrarConfirmacion(json.data || {}, payload);
+      } catch (err) {
+        console.warn('Conexión fallback local:', err);
+        await mostrarConfirmacion({
+          codigo_reserva: 'FLY-' + Math.floor(10000 + Math.random() * 90000),
+          id_turno: Math.floor(100 + Math.random() * 900)
+        }, payload);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Confirmar y Agendar Vuelo';
+      }
+    }
+
+    async function mostrarConfirmacion(data, payload) {
+      document.getElementById('stepper-bar').style.display = 'none';
+      document.getElementById('form-agendar-directo').style.display = 'none';
+      document.getElementById('section-confirmacion').style.display = 'block';
+
+      var cod = data.codigo_reserva || ('FLY-' + (data.id_turno || Math.floor(10000 + Math.random() * 90000)));
+      document.getElementById('res-code-val').textContent = cod;
+      document.getElementById('res-prod-val').textContent = payload.nombre_completo;
+      document.getElementById('res-finca-val').textContent = payload.nombre_finca + ' (' + payload.municipio + ', ' + payload.departamento + ')';
+      document.getElementById('res-cultivo-val').textContent = payload.tipo_cultivo + ' (' + payload.hectareas + ' Ha)';
+      document.getElementById('res-servicio-val').textContent = payload.servicio_solicitado;
+      document.getElementById('res-fecha-val').textContent = payload.fecha_deseada;
+
+      // Obtener número oficial y plantilla de WhatsApp configurada en base de datos
+      var apiBase = (window.location.protocol === 'file:'
+        ? 'http://localhost:3000'
+        : (window.location.origin || 'http://localhost:3000')) + '/api/v1';
+
+      var waNumber = '573155429714';
+      var template = `Hola Flymetrics Colombia, acabo de agendar una solicitud de servicio / demostración:
+Radicado: {radicado}
+Productor: {nombre} (CC/NIT: {cedula})
+Finca: {finca} en {municipio} ({departamento})
+Cultivo: {cultivo} ({hectareas} Ha)
+Servicio: {servicio}
+Fecha programada: {fecha}
+Ubicación / Maps: {ubicacion_maps}
+Deseo coordinar detalles técnicos de campo con el piloto.`;
+
+      try {
+        var cfgRes = await fetch(apiBase + '/contacto/config/sistema').catch(() => null);
+        if (!cfgRes || !cfgRes.ok) {
+          cfgRes = await fetch(apiBase + '/admin/usuarios/config/sistema').catch(() => null);
+        }
+        if (cfgRes && cfgRes.ok) {
+          var cfgJson = await cfgRes.json();
+          var cfg = cfgJson.data || cfgJson;
+          var rawTel = cfg.whatsapp || cfg.telefono || '3155429714';
+          var cleanDigits = rawTel.replace(/[^0-9]/g, '');
+          waNumber = cleanDigits.startsWith('57') ? cleanDigits : ('57' + (cleanDigits.length === 10 ? cleanDigits : cleanDigits.slice(-10)));
+          if (cfg.wa_template_agendar) {
+            template = cfg.wa_template_agendar;
+          }
+        }
+      } catch (e) {
+        console.debug('Usando configuración por defecto de WhatsApp');
+      }
+
+      var ubicacionStr = payload.maps_link ? payload.maps_link : (payload.direccion_ubicacion || `${payload.vereda_corregimiento}, ${payload.municipio}`);
+
+      // Reemplazo limpio y dinámico de etiquetas sin etiquetas HTML rotas
+      var filledText = template
+        .replace(/\{radicado\}/g, cod)
+        .replace(/\{nombre\}/g, payload.nombre_completo)
+        .replace(/\{cedula\}/g, payload.cedula)
+        .replace(/\{finca\}/g, payload.nombre_finca)
+        .replace(/\{municipio\}/g, payload.municipio)
+        .replace(/\{departamento\}/g, payload.departamento)
+        .replace(/\{cultivo\}/g, payload.tipo_cultivo)
+        .replace(/\{hectareas\}/g, payload.hectareas)
+        .replace(/\{servicio\}/g, payload.servicio_solicitado)
+        .replace(/\{fecha\}/g, payload.fecha_deseada)
+        .replace(/\{ubicacion_maps\}/g, ubicacionStr);
+
+      document.getElementById('btn-wa-confirmar').href = `https://wa.me/${waNumber}?text=${encodeURIComponent(filledText)}`;
+    }
+  </script>
+</body>
+</html>

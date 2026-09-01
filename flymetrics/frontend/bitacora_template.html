@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitácora de Vuelo RPAS — Flymetrics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #003049;
+      --blue: #1C82AD;
+      --gold: #C8A96A;
+      --green: #059669;
+      --light-blue: #EBF5FB;
+      --border: #D1E8F5;
+      --text-main: #0F2033;
+      --text-muted: #64748b;
+      --white: #ffffff;
+      --page-bg: #F7FAFD;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Space Grotesk', 'Outfit', sans-serif;
+      background: var(--page-bg);
+      color: var(--text-main);
+      font-size: 10.5pt;
+      line-height: 1.5;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0,48,73,0.13);
+    }
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.03;
+      width: 340px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* ── HEADER ── */
+    .doc-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #0a4a6e 60%, var(--blue) 100%);
+      position: relative;
+    }
+    .header-top-stripe { background: var(--gold); height: 5px; }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px 16px;
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; }
+    .brand-logo-box {
+      width: 52px; height: 52px;
+      background: rgba(255,255,255,0.10);
+      border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.20);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .brand-logo-box img { height: 38px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900; font-size: 22pt; color: var(--white);
+      letter-spacing: -0.02em; line-height: 1;
+    }
+    .brand-name span { color: #38bdf8; }
+    .brand-tagline { font-size: 7.5pt; color: rgba(255,255,255,0.65); font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; margin-top: 3px; }
+    .header-doc-info { text-align: right; }
+    .doc-type-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.14); border: 1.5px solid rgba(255,255,255,0.28);
+      border-radius: 8px; padding: 6px 14px; font-size: 8pt; font-weight: 700;
+      color: var(--white); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .doc-number { font-family: 'Outfit', sans-serif; font-size: 18pt; font-weight: 900; color: var(--gold); line-height: 1; letter-spacing: -0.01em; }
+    .doc-date-label { font-size: 8pt; color: rgba(255,255,255,0.60); font-weight: 600; margin-top: 3px; }
+    .header-title-bar {
+      background: rgba(0,0,0,0.20); padding: 10px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .header-title-bar h1 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 12.5pt; color: var(--white); letter-spacing: 0.04em; text-transform: uppercase; }
+    .status-chip {
+      background: #10B981; color: var(--white); font-size: 7.5pt; font-weight: 800;
+      padding: 4px 12px; border-radius: 20px; letter-spacing: 0.08em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    /* ── BODY ── */
+    .doc-body { padding: 18px 28px 0; position: relative; z-index: 1; }
+    /* ── SECTION TITLE ── */
+    .section-title { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; margin-top: 15px; }
+    .section-icon {
+      width: 26px; height: 26px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 11px; flex-shrink: 0;
+    }
+    .section-title h2 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 9pt; color: var(--navy); text-transform: uppercase; letter-spacing: 0.12em; }
+    .section-title-line { flex: 1; height: 1.5px; background: linear-gradient(to right, var(--border), transparent); margin-left: 4px; }
+    /* ── DATA GRID ── */
+    .data-grid { display: grid; gap: 7px; margin-bottom: 4px; }
+    .data-grid-2 { grid-template-columns: 1fr 1fr; }
+    .data-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .data-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .data-cell { background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 11px; }
+    .data-cell.highlight { background: var(--light-blue); border-color: #93C5E8; }
+    .data-cell.navy-cell { background: var(--navy); border-color: var(--navy); }
+    .data-label { font-size: 6.8pt; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.10em; margin-bottom: 2px; }
+    .data-cell.navy-cell .data-label { color: rgba(255,255,255,0.55); }
+    .data-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 10pt; color: var(--text-main); word-break: break-word; }
+    .data-cell.navy-cell .data-value { color: var(--white); }
+    .data-cell.highlight .data-value { color: var(--navy); }
+    .data-value.big { font-size: 14pt; font-weight: 800; color: var(--navy); }
+    .data-value.accent { color: var(--blue); }
+    /* ── TIMELINE ── */
+    .timeline-row { display: flex; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 7px; }
+    .tl-node { flex: 1; padding: 9px 10px; border-right: 1px solid var(--border); text-align: center; }
+    .tl-node:last-child { border-right: none; }
+    .tl-node.active-node { background: var(--light-blue); }
+    .tl-node .tl-label { font-size: 6.3pt; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.10em; }
+    .tl-node .tl-val { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 10pt; color: var(--navy); margin-top: 2px; }
+    /* ── INSUMOS TABLE ── */
+    .insumos-table { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; margin-bottom: 4px; }
+    .insumos-table thead tr { background: linear-gradient(135deg, var(--navy), #0a4a6e); }
+    .insumos-table thead th { font-size: 7.5pt; font-weight: 700; color: rgba(255,255,255,0.85); text-align: left; padding: 8px 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .insumos-table tbody tr { border-bottom: 1px solid var(--border); }
+    .insumos-table tbody tr:nth-child(even) { background: #F8FAFC; }
+    .insumos-table tbody td { font-size: 9pt; padding: 8px 11px; font-weight: 600; color: var(--text-main); }
+    .insumos-table tfoot tr { background: var(--light-blue); border-top: 2px solid var(--border); }
+    .insumos-table tfoot td { font-size: 8.5pt; font-weight: 800; color: var(--navy); padding: 8px 11px; }
+    /* ── METRICAS ── */
+    .metric-highlight { background: linear-gradient(135deg, var(--navy) 0%, #0a4a6e 100%); border-radius: 10px; padding: 12px 10px; color: white; text-align: center; }
+    .metric-highlight .metric-val { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 16pt; color: var(--gold); line-height: 1; }
+    .metric-highlight .metric-unit { font-size: 8.5pt; color: rgba(255,255,255,0.65); font-weight: 600; margin-top: 2px; }
+    .metric-highlight .metric-label { font-size: 6.5pt; color: rgba(255,255,255,0.45); font-weight: 700; text-transform: uppercase; letter-spacing: 0.10em; margin-top: 3px; }
+    /* ── OBSERVACIONES ── */
+    .observaciones-box { background: #F8FAFC; border: 1.5px solid var(--border); border-left: 4px solid var(--blue); border-radius: 8px; padding: 11px 13px; min-height: 54px; font-size: 9.5pt; color: var(--text-main); line-height: 1.6; }
+    .observaciones-box.empty { color: #94a3b8; font-style: italic; }
+    /* ── COMPLIANCE ── */
+    .compliance-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .compliance-chip { background: rgba(5,150,105,0.08); border: 1.5px solid rgba(5,150,105,0.25); border-radius: 6px; padding: 4px 10px; font-size: 7.3pt; font-weight: 700; color: #065f46; display: inline-flex; align-items: center; gap: 4px; }
+    .compliance-chip::before { content: '✔'; color: #059669; font-size: 8pt; }
+    /* ── GPS BOX ── */
+    .gps-box { background: linear-gradient(135deg, rgba(28,130,173,0.06), rgba(0,48,73,0.04)); border: 1.5px solid #93C5E8; border-radius: 8px; padding: 9px 13px; display: flex; align-items: center; gap: 13px; margin-top: 7px; }
+    .gps-icon { font-size: 18px; flex-shrink: 0; }
+    .gps-coords { font-family: 'Outfit', sans-serif; font-size: 10.5pt; font-weight: 800; color: var(--navy); }
+    .gps-label { font-size: 7pt; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.10em; margin-bottom: 1px; }
+    /* ── FIRMAS ── */
+    .firmas-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 4px; }
+    .firma-box { border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .firma-header { background: var(--navy); padding: 7px 11px; font-size: 7.3pt; font-weight: 700; color: rgba(255,255,255,0.80); text-transform: uppercase; letter-spacing: 0.08em; }
+    .firma-body { padding: 12px 11px 9px; background: #FAFCFE; }
+    .firma-line { border-bottom: 2px solid #cbd5e1; margin-bottom: 6px; height: 34px; }
+    .firma-nombre { font-size: 8.5pt; font-weight: 700; color: var(--navy); }
+    .firma-cargo { font-size: 7pt; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .firma-cedula { font-size: 7pt; color: #94a3b8; margin-top: 3px; }
+    /* ── DIVIDER ── */
+    .section-divider { height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); margin: 11px 0; }
+    /* ── FOOTER ── */
+    .doc-footer { margin-top: 16px; background: linear-gradient(135deg, var(--navy) 0%, #0a4a6e 100%); padding: 13px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-brand-text { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 11pt; color: var(--white); }
+    .footer-brand-text span { color: #38bdf8; }
+    .footer-meta { font-size: 7.5pt; color: rgba(255,255,255,0.50); margin-top: 3px; letter-spacing: 0.06em; }
+    .footer-legal { font-size: 6.8pt; color: rgba(255,255,255,0.38); text-align: center; max-width: 270px; line-height: 1.5; }
+    .footer-seal-circle { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; flex-direction: column; margin-left: auto; }
+    .footer-seal-circle span:first-child { font-size: 8pt; font-weight: 900; color: var(--gold); font-family: 'Outfit', sans-serif; line-height: 1; }
+    .footer-seal-circle span:last-child { font-size: 5.5pt; color: rgba(255,255,255,0.55); font-weight: 700; letter-spacing: 0.05em; }
+    /* ── SCREEN ACTIONS ── */
+    .screen-actions { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
+    .btn-action { padding: 10px 20px; border-radius: 10px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 13px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+    .btn-print { background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: white; }
+    .btn-print:hover { transform: translateY(-2px); }
+    .btn-close { background: white; color: #64748b; border: 1.5px solid #e2e8f0; }
+    /* ── PRINT ── */
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { box-shadow: none; margin: 0; width: 100%; }
+      .no-print { display: none !important; }
+      @page { size: A4; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="screen-actions no-print">
+    <button class="btn-action btn-close" onclick="window.close()">✕ Cerrar</button>
+    <button class="btn-action btn-print" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+  </div>
+
+  <div class="page">
+    <img src="img/logo_bird_blue.png" class="watermark" alt="" aria-hidden="true" />
+
+    <!-- ── ENCABEZADO ── -->
+    <div class="doc-header">
+      <div class="header-top-stripe"></div>
+      <div class="header-inner">
+        <div class="header-brand">
+          <div class="brand-logo-box">
+            <img src="img/logo_bird_blue.png" alt="Flymetrics" />
+          </div>
+          <div>
+            <div class="brand-name">Fly<span>metrics</span></div>
+            <div class="brand-tagline">Servicios Aéreos RPAS &bull; Colombia</div>
+          </div>
+        </div>
+        <div class="header-doc-info">
+          <div class="doc-type-badge">📋 Bitácora Oficial</div>
+          <div class="doc-number" id="hdr-numero">#RAD-2025-001</div>
+          <div class="doc-date-label" id="hdr-fecha">Fecha de Vuelo: —</div>
+        </div>
+      </div>
+      <div class="header-title-bar">
+        <h1>Bitácora de Vuelo RPAS — Registro Oficial de Operación</h1>
+        <div class="status-chip">✔ Ejecutado</div>
+      </div>
+    </div>
+
+    <div class="doc-body">
+
+      <!-- 1. CLIENTE Y PREDIO -->
+      <div class="section-title">
+        <div class="section-icon">👤</div>
+        <h2>Datos del Cliente y Predio</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="data-grid data-grid-3">
+        <div class="data-cell highlight">
+          <div class="data-label">Nombre del Cliente</div>
+          <div class="data-value" id="cli-nombre">—</div>
+        </div>
+        <div class="data-cell highlight">
+          <div class="data-label">Cédula / NIT</div>
+          <div class="data-value" id="cli-cedula">—</div>
+        </div>
+        <div class="data-cell highlight">
+          <div class="data-label">Teléfono</div>
+          <div class="data-value" id="cli-tel">—</div>
+        </div>
+      </div>
+      <div class="data-grid data-grid-3" style="margin-top:7px;">
+        <div class="data-cell">
+          <div class="data-label">Nombre del Predio / Finca</div>
+          <div class="data-value" id="finca-nombre">—</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Municipio / Departamento</div>
+          <div class="data-value" id="finca-municipio">—</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Área Total del Predio</div>
+          <div class="data-value accent" id="finca-area">— ha</div>
+        </div>
+      </div>
+      <div class="gps-box">
+        <div class="gps-icon">📍</div>
+        <div>
+          <div class="gps-label">Coordenadas GPS del Predio</div>
+          <div class="gps-coords" id="finca-coords">Lat: — | Lng: —</div>
+        </div>
+        <div style="margin-left:auto; text-align:right;">
+          <div class="gps-label">Altitud de Operación</div>
+          <div class="gps-coords" id="vuelo-altitud">— m.s.n.m</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 2. OPERACIÓN DE VUELO -->
+      <div class="section-title">
+        <div class="section-icon">🚁</div>
+        <h2>Datos de la Operación de Vuelo</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="timeline-row">
+        <div class="tl-node">
+          <div class="tl-label">Fecha de Vuelo</div>
+          <div class="tl-val" id="vuelo-fecha">—</div>
+        </div>
+        <div class="tl-node active-node">
+          <div class="tl-label">Hora Inicio</div>
+          <div class="tl-val" id="vuelo-hora-ini">—</div>
+        </div>
+        <div class="tl-node active-node">
+          <div class="tl-label">Hora Fin</div>
+          <div class="tl-val" id="vuelo-hora-fin">—</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-label">Duración</div>
+          <div class="tl-val" id="vuelo-duracion">—</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-label">N° Vuelos</div>
+          <div class="tl-val" id="vuelo-numvuelos">—</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-label">Pases</div>
+          <div class="tl-val" id="vuelo-pases">—</div>
+        </div>
+      </div>
+      <div class="data-grid data-grid-4" style="margin-top:7px;">
+        <div class="data-cell">
+          <div class="data-label">Tipo de Servicio</div>
+          <div class="data-value" id="vuelo-servicio">—</div>
+        </div>
+        <div class="data-cell navy-cell">
+          <div class="data-label">Área Aplicada</div>
+          <div class="data-value big" id="vuelo-area">— ha</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Velocidad de Vuelo</div>
+          <div class="data-value accent" id="vuelo-velocidad">— km/h</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Altura de Trabajo</div>
+          <div class="data-value" id="vuelo-altura">— m</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 3. AERONAVE Y PILOTO -->
+      <div class="section-title">
+        <div class="section-icon">✈️</div>
+        <h2>Aeronave RPAS y Piloto Certificado</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="data-grid data-grid-3">
+        <div class="data-cell">
+          <div class="data-label">Modelo / Tipo de Drone</div>
+          <div class="data-value" id="drone-modelo">—</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">N° de Serie / Matrícula</div>
+          <div class="data-value" id="drone-serie">—</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Certificado Aerocivil</div>
+          <div class="data-value" id="drone-cert">—</div>
+        </div>
+      </div>
+      <div class="data-grid data-grid-3" style="margin-top:7px;">
+        <div class="data-cell highlight">
+          <div class="data-label">Nombre del Piloto</div>
+          <div class="data-value" id="piloto-nombre">—</div>
+        </div>
+        <div class="data-cell highlight">
+          <div class="data-label">Cédula del Piloto</div>
+          <div class="data-value" id="piloto-cedula">—</div>
+        </div>
+        <div class="data-cell highlight">
+          <div class="data-label">Licencia Aerocivil N°</div>
+          <div class="data-value" id="piloto-licencia">—</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 4. CLIMA -->
+      <div class="section-title">
+        <div class="section-icon">🌤</div>
+        <h2>Condiciones Climáticas durante la Operación</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="data-grid data-grid-4">
+        <div class="data-cell">
+          <div class="data-label">Temperatura</div>
+          <div class="data-value accent" id="clima-temp">— °C</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Viento</div>
+          <div class="data-value" id="clima-viento">— km/h</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Humedad Relativa</div>
+          <div class="data-value" id="clima-humedad">— %</div>
+        </div>
+        <div class="data-cell">
+          <div class="data-label">Condición General</div>
+          <div class="data-value" id="clima-cond">—</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 5. INSUMOS -->
+      <div class="section-title">
+        <div class="section-icon">🌱</div>
+        <h2>Insumos Aplicados y Mezcla</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <table class="insumos-table">
+        <thead>
+          <tr>
+            <th style="width:30%">Producto / Insumo</th>
+            <th>Tipo</th>
+            <th>Dosis (L/ha ó kg/ha)</th>
+            <th>Volumen Total</th>
+            <th>Registro ICA</th>
+          </tr>
+        </thead>
+        <tbody id="insumos-tbody">
+          <tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" style="font-size:8pt;color:#64748b;font-weight:700;">TOTALES DE APLICACIÓN</td>
+            <td>Agua: <strong id="total-agua">—</strong> L</td>
+            <td>Mezcla: <strong id="total-mezcla">—</strong> L</td>
+            <td>Tasa/ha: <strong id="tasa-ha">—</strong> L</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="section-divider"></div>
+
+      <!-- 6. MÉTRICAS -->
+      <div class="section-title">
+        <div class="section-icon">📊</div>
+        <h2>Resumen de Métricas de la Operación</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="data-grid" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr; gap:7px;">
+        <div class="metric-highlight">
+          <div class="metric-val" id="met-area">0</div>
+          <div class="metric-unit">Hectáreas</div>
+          <div class="metric-label">Área aplicada</div>
+        </div>
+        <div class="metric-highlight">
+          <div class="metric-val" id="met-litros">0</div>
+          <div class="metric-unit">Litros</div>
+          <div class="metric-label">Insumo total</div>
+        </div>
+        <div class="metric-highlight">
+          <div class="metric-val" id="met-agua">0</div>
+          <div class="metric-unit">Litros</div>
+          <div class="metric-label">Agua total</div>
+        </div>
+        <div class="metric-highlight">
+          <div class="metric-val" id="met-vuelos">0</div>
+          <div class="metric-unit">Vuelos</div>
+          <div class="metric-label">Realizados</div>
+        </div>
+        <div class="metric-highlight">
+          <div class="metric-val" id="met-efic">0%</div>
+          <div class="metric-unit">Cobertura</div>
+          <div class="metric-label">Eficiencia</div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 7. OBSERVACIONES -->
+      <div class="section-title">
+        <div class="section-icon">📝</div>
+        <h2>Observaciones y Notas Técnicas</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="observaciones-box empty" id="obs-text">Sin observaciones adicionales registradas para esta operación.</div>
+
+      <div class="section-divider"></div>
+
+      <!-- 8. CUMPLIMIENTO -->
+      <div class="section-title">
+        <div class="section-icon">⚖️</div>
+        <h2>Cumplimiento Regulatorio — Aerocivil Colombia</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="compliance-chips">
+        <div class="compliance-chip">RAC 91 Aerocivil</div>
+        <div class="compliance-chip">RPAS Habilitado</div>
+        <div class="compliance-chip">Seguro RC Vigente</div>
+        <div class="compliance-chip">Piloto Certificado</div>
+        <div class="compliance-chip">NOTAM Revisada</div>
+        <div class="compliance-chip">ICA Producto</div>
+        <div class="compliance-chip">EPP Completo</div>
+        <div class="compliance-chip">Pre-vuelo Ejecutado</div>
+        <div class="compliance-chip">Res. 3202/2018</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- 9. FIRMAS -->
+      <div class="section-title">
+        <div class="section-icon">✍️</div>
+        <h2>Firmas y Confirmaciones de la Operación</h2>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="firmas-grid">
+        <div class="firma-box">
+          <div class="firma-header">Piloto Responsable RPAS</div>
+          <div class="firma-body">
+            <div class="firma-line"></div>
+            <div class="firma-nombre" id="firma-piloto-nombre">—</div>
+            <div class="firma-cargo">Piloto Certificado Aerocivil</div>
+            <div class="firma-cedula" id="firma-piloto-ced">C.C. —</div>
+          </div>
+        </div>
+        <div class="firma-box">
+          <div class="firma-header">Supervisor Técnico Flymetrics</div>
+          <div class="firma-body">
+            <div class="firma-line"></div>
+            <div class="firma-nombre" id="firma-sup-nombre">—</div>
+            <div class="firma-cargo">Supervisor de Campo</div>
+            <div class="firma-cedula">C.C. —</div>
+          </div>
+        </div>
+        <div class="firma-box">
+          <div class="firma-header">Cliente / Propietario del Predio</div>
+          <div class="firma-body">
+            <div class="firma-line"></div>
+            <div class="firma-nombre" id="firma-cliente-nombre">—</div>
+            <div class="firma-cargo">Propietario / Representante</div>
+            <div class="firma-cedula" id="firma-cliente-ced">C.C. / NIT —</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:16px;"></div>
+    </div><!-- /doc-body -->
+
+    <!-- ── PIE DE PÁGINA ── -->
+    <div class="doc-footer">
+      <div>
+        <div class="footer-brand-text">Fly<span>metrics</span></div>
+        <div class="footer-meta">Servicios RPAS Certificados &bull; Colombia</div>
+        <div class="footer-meta" style="margin-top:4px;" id="footer-contacto">flymetrics.co &bull; soporte@flymetrics.co</div>
+      </div>
+      <div class="footer-legal">
+        Documento oficial de operación aérea. Modificación no autorizada es
+        delito — Ley 1437/2011. Cumple RAC 91 &amp; Res. 3202/2018 Aerocivil.
+        <br/><br/>
+        <span style="color:rgba(255,255,255,0.50);">Generado: <span id="footer-fecha-gen"></span></span>
+      </div>
+      <div>
+        <div class="footer-seal-circle">
+          <span>FM</span><span>OFICIAL</span>
+        </div>
+        <div class="footer-meta" style="margin-top:5px;font-size:6.5pt;text-align:right;">N° <span id="footer-doc-num">—</span></div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <script>
+    /**
+     * Rellena la plantilla con datos reales desde:
+     * 1. URL query params (?cliente_nombre=Juan&finca_nombre=...)
+     * 2. window.BITACORA_DATA (objeto JS inyectado por el servidor)
+     * 3. Valores por defecto (—)
+     *
+     * EJEMPLO DE USO DESDE cliente.html:
+     *   const url = new URL('bitacora_template.html', location.origin);
+     *   url.searchParams.set('cliente_nombre', _clientProfile.nombre);
+     *   url.searchParams.set('rad', 'RAD-2025-042');
+     *   window.open(url.toString(), '_blank');
+     */
+    function gp(name, fallback) {
+      const p = new URLSearchParams(window.location.search).get(name);
+      if (p) return p;
+      if (window.BITACORA_DATA && window.BITACORA_DATA[name] !== undefined) return window.BITACORA_DATA[name];
+      return fallback !== undefined ? fallback : '—';
+    }
+    function fill(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined && val !== null && String(val).trim() !== '' && val !== '—') {
+        el.textContent = val;
+        el.classList.remove('empty');
+      }
+    }
+    function init() {
+      const rad   = gp('rad', 'RAD-2025-001');
+      const fecha = gp('fecha_vuelo', new Date().toLocaleDateString('es-CO', {day:'2-digit',month:'long',year:'numeric'}));
+      fill('hdr-numero', '#' + rad);
+      fill('hdr-fecha', 'Fecha de Vuelo: ' + fecha);
+      fill('cli-nombre',   gp('cliente_nombre'));
+      fill('cli-cedula',   gp('cliente_cedula'));
+      fill('cli-tel',      gp('cliente_tel'));
+      fill('finca-nombre',    gp('finca_nombre'));
+      fill('finca-municipio', gp('finca_municipio'));
+      const area = gp('finca_area','');
+      if (area) fill('finca-area', area + ' ha');
+      const lat = gp('lat',''); const lng = gp('lng','');
+      if (lat && lng) fill('finca-coords', 'Lat: ' + lat + ' | Lng: ' + lng);
+      const alt = gp('altitud','');
+      if (alt) fill('vuelo-altitud', alt + ' m.s.n.m');
+      fill('vuelo-fecha',    fecha);
+      fill('vuelo-hora-ini', gp('hora_ini'));
+      fill('vuelo-hora-fin', gp('hora_fin'));
+      fill('vuelo-duracion', gp('duracion'));
+      fill('vuelo-numvuelos',gp('num_vuelos'));
+      fill('vuelo-pases',    gp('pases'));
+      fill('vuelo-servicio', gp('servicio', 'Aspersión Foliar'));
+      const areaAp = gp('area_aplicada','');
+      if (areaAp) fill('vuelo-area', areaAp + ' ha');
+      const vel = gp('velocidad','');
+      if (vel) fill('vuelo-velocidad', vel + ' km/h');
+      const alt2 = gp('altura_vuelo','');
+      if (alt2) fill('vuelo-altura', alt2 + ' m');
+      fill('drone-modelo',   gp('drone_modelo'));
+      fill('drone-serie',    gp('drone_serie'));
+      fill('drone-cert',     gp('drone_cert'));
+      const pilNom = gp('piloto_nombre','');
+      fill('piloto-nombre',  pilNom);
+      fill('piloto-cedula',  gp('piloto_cedula'));
+      fill('piloto-licencia',gp('piloto_licencia'));
+      fill('firma-piloto-nombre', pilNom || '—');
+      const pilCed = gp('piloto_cedula','');
+      if (pilCed) fill('firma-piloto-ced', 'C.C. ' + pilCed);
+      const cliT = gp('temperatura',''); if (cliT) fill('clima-temp', cliT + ' °C');
+      const cliV = gp('viento','');      if (cliV) fill('clima-viento', cliV + ' km/h');
+      const cliH = gp('humedad','');     if (cliH) fill('clima-humedad', cliH + ' %');
+      fill('clima-cond', gp('condicion_clima', 'Cielo despejado'));
+      // Insumos
+      const insumos = window.BITACORA_DATA && Array.isArray(window.BITACORA_DATA.insumos) ? window.BITACORA_DATA.insumos : null;
+      if (insumos && insumos.length > 0) {
+        const tbody = document.getElementById('insumos-tbody');
+        if (tbody) tbody.innerHTML = insumos.map(i =>
+          '<tr><td>'+(i.producto||'—')+'</td><td>'+(i.tipo||'—')+'</td><td>'+(i.dosis||'—')+'</td><td>'+(i.volumen||'—')+'</td><td>'+(i.registro||'—')+'</td></tr>'
+        ).join('');
+      }
+      fill('total-agua',   gp('total_agua'));
+      fill('total-mezcla', gp('total_mezcla'));
+      fill('tasa-ha',      gp('tasa_ha'));
+      fill('met-area',   gp('area_aplicada', '0'));
+      fill('met-litros', gp('litros_insumo', '0'));
+      fill('met-agua',   gp('total_agua',    '0'));
+      fill('met-vuelos', gp('num_vuelos',    '0'));
+      const ef = gp('eficiencia','');
+      if (ef) fill('met-efic', ef + '%');
+      const obs = gp('observaciones','');
+      if (obs) {
+        const obsEl = document.getElementById('obs-text');
+        if (obsEl) { obsEl.textContent = obs; obsEl.classList.remove('empty'); }
+      }
+      const cliNom = gp('cliente_nombre','');
+      fill('firma-cliente-nombre', cliNom || '—');
+      const cliCed = gp('cliente_cedula','');
+      if (cliCed) fill('firma-cliente-ced', 'C.C. / NIT ' + cliCed);
+      fill('firma-sup-nombre', gp('supervisor_nombre', 'Supervisor Flymetrics'));
+      document.getElementById('footer-fecha-gen').textContent = new Date().toLocaleString('es-CO');
+      document.getElementById('footer-doc-num').textContent = rad;
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

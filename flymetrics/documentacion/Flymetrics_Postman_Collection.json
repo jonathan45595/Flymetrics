@@ -1,0 +1,861 @@
+{
+  "info": {
+    "name": "Flymetrics Command Center OS",
+    "description": "Coleccion de endpoints para probar la API REST v1.0 de Flymetrics.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "MÓDULO 1 — AUTENTICACIÓN",
+      "item": [
+        {
+          "name": "1.1 Registrar Usuario",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"piloto@flymetrics.co\",\n  \"contraseña\": \"password123\",\n  \"rol\": \"tecnico\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "1.2 Iniciar Sesión (Login)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"piloto@flymetrics.co\",\n  \"contraseña\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "1.3 Login con Google (Mock)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"mock_google_token_admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/auth/google"
+          }
+        },
+        {
+          "name": "1.4 Obtener Usuario Autenticado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 2 — CLIENTES",
+      "item": [
+        {
+          "name": "2.1 Obtener Perfil Autenticado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/clientes/me"
+          }
+        },
+        {
+          "name": "2.2 Actualizar Datos de Cliente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"+573001234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/clientes/1"
+          }
+        },
+        {
+          "name": "2.3 Verificar Cédula con IA",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero_documento\": \"1075321654\",\n  \"ciudad_expedicion\": \"Neiva\",\n  \"fecha_expedicion\": \"2015-08-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/clientes/1/verificar-cc"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 3 — TÉCNICOS",
+      "item": [
+        {
+          "name": "3.1 Listar Técnicos (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tecnicos"
+          }
+        },
+        {
+          "name": "3.2 Obtener Técnico por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tecnicos/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 4 — FINCAS",
+      "item": [
+        {
+          "name": "4.1 Registrar Finca",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_cliente\": 1,\n  \"nombre_finca\": \"Finca El Porvenir\",\n  \"ubicacion_municipio\": \"Rivera\",\n  \"hectareas\": 12.5,\n  \"latitud\": 2.7753,\n  \"longitud\": -75.2536\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/fincas"
+          }
+        },
+        {
+          "name": "4.2 Listar Fincas del Cliente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fincas"
+          }
+        },
+        {
+          "name": "4.3 Detalle de una Finca",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/fincas/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 5 — SERVICIOS Y COTIZACIÓN",
+      "item": [
+        {
+          "name": "5.1 Listar Servicios Catalogados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/servicios"
+          }
+        },
+        {
+          "name": "5.2 Calcular Cotización (GPS)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_servicio\": 1,\n  \"id_finca\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/servicios/cotizar"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 6 — AGENDAMIENTO",
+      "item": [
+        {
+          "name": "6.1 Solicitar Turno de Reserva",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_finca\": 1,\n  \"id_servicio\": 1,\n  \"fecha_de_turno\": \"2026-06-20\",\n  \"hora_inicio_estimada\": \"08:00:00\",\n  \"tipo_turno\": \"Fumigación\",\n  \"cel\": \"+573054061764\",\n  \"observaciones_servicio\": \"Aplicar fungicida en cafetales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/agenda"
+          }
+        },
+        {
+          "name": "6.2 Listar Mis Reservas (Cliente)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/agenda/mis-turnos"
+          }
+        },
+        {
+          "name": "6.3 Consultar Estado (WhatsApp Bot)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/agenda/estado/1"
+          }
+        },
+        {
+          "name": "6.4 Asignar Técnico y Dron (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_tecnico\": 1,\n  \"id_drone\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/agenda/1/asignar"
+          }
+        },
+        {
+          "name": "6.5 Forzar Estado (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Confirmado\",\n  \"motivo_admin\": \"Cambio forzado por agenda de pilotos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/agenda/1/estado"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 7 — BITÁCORA DEL TÉCNICO",
+      "item": [
+        {
+          "name": "7.1 Obtener Agenda del Técnico",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/tecnico/agenda?fecha=2026-06-15"
+          }
+        },
+        {
+          "name": "7.2 Decisión (Aceptar/Rechazar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": true,\n  \"motivo_rechazo\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/tecnico/agenda/1/decision"
+          }
+        },
+        {
+          "name": "7.3 Check-in (Terreno)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitud_checkin\": 2.775312,\n  \"longitud_checkin\": -75.253645\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/tecnico/agenda/1/checkin"
+          }
+        },
+        {
+          "name": "7.4 Check-out + Reporte RAC 100",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"insumos_litros_aplicados\": 150.0,\n  \"agua_litros\": 450.0,\n  \"baterias_utilizadas\": 4,\n  \"cumple_rac100\": 1,\n  \"observaciones_campo\": \"Vuelo completado con éxito, control de plaga óptimo.\",\n  \"retraso_justificacion\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/tecnico/agenda/1/checkout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 8 — DRONES",
+      "item": [
+        {
+          "name": "8.1 Crear Dron (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"DJI Agras T25P\",\n  \"tipo\": \"aspersion\",\n  \"estado\": \"disponible\",\n  \"numero_serie\": \"AGRAST25P998877\",\n  \"ultima_revision\": \"2026-05-10\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/drones"
+          }
+        },
+        {
+          "name": "8.2 Listar Flota (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/drones"
+          }
+        },
+        {
+          "name": "8.3 Registrar Mantenimiento (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_mantenimiento\": \"Correctivo\",\n  \"descripcion_falla\": \"Cambio de hélice delantera derecha rota por impacto.\",\n  \"fecha_ingreso\": \"2026-06-09T14:45:00\",\n  \"costo_mantenimiento\": 180000.00,\n  \"responsable_tecnico\": \"Ing. Carlos Mendoza\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/drones/1/mantenimientos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 9 — ENTREGABLES",
+      "item": [
+        {
+          "name": "9.1 Subir Entregable (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_turno\": 1,\n  \"tipo_archivo\": \"ndvi\",\n  \"url_archivo\": \"https://s3.amazonaws.com/flymetrics-bucket/ortofotos/finca_el_porvenir_NDVI_1.tif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/entregables"
+          }
+        },
+        {
+          "name": "9.2 Ver Mis Entregables (Cliente)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/entregables/mis-archivos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 10 — PAGOS",
+      "item": [
+        {
+          "name": "10.1 Registrar Pago (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_turno\": 1,\n  \"monto\": 1250000.00,\n  \"metodo_pago\": \"Transferencia\",\n  \"referencia_transaccion\": \"TRX-99887766\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/pagos"
+          }
+        },
+        {
+          "name": "10.2 Ver Historial (Cliente)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/pagos/mis-pagos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 11 — NOTIFICACIONES",
+      "item": [
+        {
+          "name": "11.1 Listar Mis Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/notificaciones?leido=0"
+          }
+        },
+        {
+          "name": "11.2 Marcar Leída",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": "{{baseUrl}}/notificaciones/1/leer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 12 — CHATBOT WEBHOOK",
+      "item": [
+        {
+          "name": "12.1 Verificar Webhook (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/webhook/whatsapp?hub.mode=subscribe&hub.verify_token=flymetrics_whatsapp_verification_token_local&hub.challenge=12345"
+          }
+        },
+        {
+          "name": "12.2 Recepción Mensaje (POST)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"object\": \"whatsapp_business_account\",\n  \"entry\": [\n    {\n      \"id\": \"123456\",\n      \"changes\": [\n        {\n          \"value\": {\n            \"messaging_product\": \"whatsapp\",\n            \"messages\": [\n              {\n                \"from\": \"573054061764\",\n                \"text\": {\n                  \"body\": \"Hola bot, cuál es el estado de mi reserva 1?\"\n                },\n                \"type\": \"text\"\n              }\n            ]\n          },\n          \"field\": \"messages\"\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/webhook/whatsapp"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÓDULO 13 — ADMINISTRACIÓN DE USUARIOS",
+      "item": [
+        {
+          "name": "13.1 Listar Usuarios (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/admin/usuarios"
+          }
+        },
+        {
+          "name": "13.2 Crear Usuario por Admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nuevo_admin@flymetrics.co\",\n  \"contraseña\": \"adminsecurepwd\",\n  \"rol\": \"administrador\",\n  \"nombre\": \"Admin\",\n  \"apellido_1\": \"Dos\",\n  \"telefono\": \"+573151234567\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/admin/usuarios"
+          }
+        },
+        {
+          "name": "13.3 Modificar Usuario (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": "{{baseUrl}}/admin/usuarios/2?email=nuevo_email@flymetrics.co&rol=administrador"
+          }
+        },
+        {
+          "name": "13.4 Eliminar Usuario (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/admin/usuarios/2"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+=== Matches for 'verificado' ===
+  Line 1916: if (_clientProfile.verificado === 1) {
+  Line 1922: document.getElementById('topbarCertBadge').innerHTML = "<span>Cliente verificado</span> ?";
+  Line 1942: document.getElementById('topbarCertBadge').innerHTML = "<span>Cliente NO verificado</span> ?";
+  Line 1948: document.getElementById('profileCertBadge').innerHTML = "<span>No verificado ?</span>";
+  Line 1990: _clientProfile = { id_cliente: 1, nombre: mockName, apellido_1: '', telefono: '', verificado: 0 };
+  Line 1995: _clientProfile = { id_cliente: 1, nombre: email.split('@')[0], apellido_1: '', telefono: '', verificado: 0 };
+  Line 3846: addLog('? Aprobado: Registro verificado con ?xito.', true);
+  Line 3939: _clientProfile.verificado = 1;
+  Line 3953: document.getElementById('topbarCertBadge').innerHTML = "<span>Cliente verificado</span> ?";
+=== Matches for 'finishBlockingVerification' ===
+  Line 3479: <button class="btn btn-primary btn-sm" onclick="finishBlockingVerification()">
+  Line 3884: window.finishBlockingVerification = async function() {
+=== Matches for 'me' ===
+  Line 4: <meta charset="UTF-8">
+  Line 5: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  Line 27: @media (min-width: 768px) {
+  Line 84: .time-slot-btn {
+  Line 96: .time-slot-btn:hover:not(.slot-blocked) {
+  Line 196: .cp-user-name {
+  Line 401: @keyframes fadeIn {
+  Line 566: .badge-confirmed { background: rgba(30,144,255,0.08);  color: #1E90FF; border: 1px solid rgba(30,144,255,0.18); }
+  Line 574: @keyframes pulse-green {
+  Line 684: .finca-name {
+  Line 792: @keyframes modalSlide {
+  Line 796: @keyframes spin {
+  Line 835: /* Documents Grid */
+  Line 871: .doc-name {
+  Line 879: .doc-meta {
+  Line 990: /* Next Appointment Card */
+  Line 1019: /* Responsive adjustments */
+  Line 1020: @media (max-width: 1024px) {
+  Line 1025: @media (max-width: 768px) {
+  Line 1072: @keyframes scanEffect {
+  Line 1094: <div class="cp-user-name" id="sidebarUserName">Cargando...</div>
+  Line 1115: <div class="cp-nav-item" data-panel="documentos" onclick="showPanel('documentos')">
+  Line 1117: <span>Documentos</span>
+  Line 1172: <h1 class="panel-title">Bienvenido, <span id="dashGreetingName">Cliente</span></h1>
+  Line 1200: <!-- Left side: Next appointment + Recent Activity -->
+  ... more matches found, truncating ...
+=== Matches for '_clientProfile' ===
+  Line 1790: let _clientProfile = null;
+  Line 1816: if (_clientProfile) {
+  Line 1821: nomInput.value = _clientProfile.nombre || '';
+  Line 1822: apInput.value = _clientProfile.apellido_1 || '';
+  Line 1823: document.getElementById('block-form-apellido2').value = _clientProfile.apellido_2 || '';
+  Line 1824: document.getElementById('block-form-cedula').value = _clientProfile.numero_documento || '';
+  Line 1825: document.getElementById('block-form-lugar').value = _clientProfile.ciudad_expedicion || '';
+  Line 1826: telInput.value = _clientProfile.telefono || '';
+  Line 1829: if (_clientProfile.nombre && _clientProfile.nombre !== 'Usuario' && _clientProfile.nombre !== email.split('@')[0]) {
+  Line 1836: if (_clientProfile.apellido_1 && _clientProfile.apellido_1 !== 'Nuevo' && _clientProfile.apellido_1 !== 'Cliente') {
+  Line 1843: if (_clientProfile.telefono) {
+  Line 1903: _clientProfile = await res.json();
+  Line 1904: document.getElementById('sidebarUserName').textContent = `${_clientProfile.nombre} ${_clientProfile.apellido_1}`;
+  Line 1905: document.getElementById('sidebarAvatar').textContent = ((_clientProfile.nombre||'')[0] + (_clientProfile.apellido_1||'')[0]).toUpperCase();
+  Line 1908: document.getElementById('profileFullName').textContent = `${_clientProfile.nombre} ${_clientProfile.apellido_1}`;
+  Line 1910: document.getElementById('profNombre').value = _clientProfile.nombre || '';
+  Line 1911: document.getElementById('profApellido').value = _clientProfile.apellido_1 || '';
+  Line 1912: document.getElementById('profTel').value = _clientProfile.telefono || '';
+  Line 1916: if (_clientProfile.verificado === 1) {
+  Line 1980: _clientProfile = await createRes.json();
+  Line 1990: _clientProfile = { id_cliente: 1, nombre: mockName, apellido_1: '', telefono: '', verificado: 0 };
+  Line 1995: _clientProfile = { id_cliente: 1, nombre: email.split('@')[0], apellido_1: '', telefono: '', verificado: 0 };
+  Line 2015: if (!_clientProfile) return;
+  Line 2069: document.getElementById('dashGreetingName').textContent = _clientProfile?.nombre || 'Cliente';
+  Line 2369: id_cliente: _clientProfile ? _clientProfile.id_cliente : 1,
+  ... more matches found, truncating ...
+=== Matches for 'showBlockingVerificationUI' ===
+  Line 1803: function showBlockingVerificationUI() {
+  Line 1956: showBlockingVerificationUI();
+  Line 1981: showBlockingVerificationUI();
+  Line 1991: showBlockingVerificationUI();
+  Line 1996: showBlockingVerificationUI();
+=== Matches for 'loadProfileData' ===
+  Line 1875: await loadProfileData(email);
+  Line 1897: async function loadProfileData(email) {
+  Line 2464: await loadProfileData(localStorage.getItem('fm_email'));

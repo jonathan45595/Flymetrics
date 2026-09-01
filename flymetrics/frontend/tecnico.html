@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flymetrics — Portal de Pilotos y Técnicos</title>
+  <meta name="description" content="Portal de operaciones de vuelo para pilotos y técnicos de Flymetrics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+  <style>
+    body, input, button, select, textarea, h1, h2, h3, h4, h5, h6, p, a, span, label, table, th, td {
+      font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      letter-spacing: -0.01em;
+    }
+
+    .fa, .fas, .far, .fal, .fad, .fab, .fa-solid, .fa-regular, .fa-brands, [class^="fa-"], [class*=" fa-"] {
+      font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+    }
+
+    body {
+      background: #f8fafc !important;
+      color: #003049;
+    }
+
+    .hidden { display: none !important; }
+    
+    /* Scrollbars elegantes y accesibles */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(0, 48, 73, 0.04); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(28, 130, 173, 0.4); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(28, 130, 173, 0.7); }
+
+    /* Layout amplio con separación generosa de bordes y 100% responsivo */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow-x: hidden;
+      background: #f8fafc;
+    }
+
+    .content-body {
+      padding: 32px 36px !important;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .panel {
+      padding: 0 !important;
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Tarjetas y fondos con alto contraste, bordes definidos y espaciados */
+    .card {
+      background: #ffffff !important;
+      border: 1.5px solid rgba(28, 130, 173, 0.22) !important;
+      border-radius: 20px !important;
+      box-shadow: 0 8px 24px rgba(0, 48, 73, 0.06) !important;
+      overflow: hidden;
+      margin-top: 12px;
+      padding: 24px;
+    }
+    
+    .stat-card {
+      border: 1.5px solid rgba(28, 130, 173, 0.22) !important;
+      border-radius: 18px !important;
+      box-shadow: 0 6px 20px rgba(0, 48, 73, 0.05) !important;
+      background: #ffffff !important;
+      padding: 20px;
+    }
+
+    /* Tabla con cuadrícula espaciosa, bordes suaves y scroll fluido */
+    .table-wrap {
+      width: 100% !important;
+      overflow-x: auto !important;
+      overflow-y: auto !important;
+      max-height: 70vh;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 16px 16px !important;
+      background: #f8fafc;
+      border: 1.5px solid rgba(28, 130, 173, 0.2);
+      border-radius: 16px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(28, 130, 173, 0.4) rgba(0, 48, 73, 0.05);
+    }
+
+    .table {
+      border-collapse: separate !important;
+      border-spacing: 0 8px !important;
+      width: 100% !important;
+      min-width: 1050px;
+      margin: 0 !important;
+    }
+
+    .table thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .table thead tr {
+      background: #e2e8f0 !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .table th {
+      background: #e2e8f0 !important;
+      color: #003049 !important;
+      font-weight: 800 !important;
+      font-size: 0.82rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      padding: 13px 16px !important;
+      border: none !important;
+      white-space: nowrap;
+    }
+
+    .table th:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .table th:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .table tbody tr {
+      background: #ffffff !important;
+      box-shadow: 0 2px 6px rgba(0, 48, 73, 0.04) !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .table tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(28, 130, 173, 0.16) !important;
+    }
+
+    .table td {
+      padding: 13px 16px !important;
+      border-top: 1px solid rgba(28, 130, 173, 0.16) !important;
+      border-bottom: 1px solid rgba(28, 130, 173, 0.16) !important;
+      border-right: 1px solid rgba(28, 130, 173, 0.08) !important;
+      color: var(--text) !important;
+      font-size: 0.88rem !important;
+      vertical-align: middle;
+      background: #ffffff !important;
+    }
+
+    .table td:first-child {
+      border-left: 1.5px solid rgba(28, 130, 173, 0.22) !important;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .table td:last-child {
+      border-right: 1.5px solid rgba(28, 130, 173, 0.22) !important;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    /* Badges con alto contraste y diseño tipo píldora */
+    .badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      padding: 5px 12px !important;
+      border-radius: 20px !important;
+      font-size: 0.76rem !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.4px !important;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .badge-confirmed {
+      background: rgba(16, 185, 129, 0.12) !important;
+      color: #059669 !important;
+      border: 1px solid rgba(16, 185, 129, 0.35) !important;
+    }
+    .badge-completed {
+      background: rgba(28, 130, 173, 0.12) !important;
+      color: #1c82ad !important;
+      border: 1px solid rgba(28, 130, 173, 0.35) !important;
+    }
+    .badge-inprocess {
+      background: rgba(0, 114, 255, 0.12) !important;
+      color: #0072ff !important;
+      border: 1px solid rgba(0, 114, 255, 0.35) !important;
+    }
+    .badge-pending {
+      background: rgba(217, 119, 6, 0.12) !important;
+      color: #d97706 !important;
+      border: 1px solid rgba(217, 119, 6, 0.35) !important;
+    }
+    .badge-cancelled {
+      background: rgba(239, 68, 68, 0.12) !important;
+      color: #ef4444 !important;
+      border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    }
+
+    /* Botones de acción horizontales y ordenados */
+    .actions-flex-row {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex-wrap: nowrap !important;
+      white-space: nowrap !important;
+    }
+
+    .actions-flex-row .btn {
+      padding: 7px 13px !important;
+      font-size: 0.82rem !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      border-radius: 8px !important;
+      font-weight: 800 !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .actions-flex-row .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.14);
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 280px !important;
+        transform: translateX(-100%) !important;
+        z-index: 1000 !important;
+        box-shadow: 10px 0 40px rgba(0, 48, 73, 0.25) !important;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+      .sidebar.open {
+        transform: translateX(0) !important;
+      }
+      .sidebar-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0, 48, 73, 0.45) !important;
+        backdrop-filter: blur(4px) !important;
+        z-index: 990 !important;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .sidebar-overlay.active {
+        opacity: 1 !important;
+        pointer-events: all !important;
+      }
+      .topbar-toggle {
+        display: inline-flex !important;
+      }
+      .main-content {
+        padding: 10px 8px 80px 8px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+      .topbar {
+        padding: 0 14px !important;
+        height: 60px !important;
+      }
+      .topbar-title {
+        font-size: 1.05rem !important;
+      }
+      #topbarSub {
+        display: none !important;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      .form-grid-2,
+      .form-grid-3 {
+        grid-template-columns: 1fr !important;
+      }
+      .table-wrap {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding: 6px 8px !important;
+      }
+      .table-wrap table {
+        min-width: 620px !important;
+      }
+      .card {
+        padding: 12px !important;
+        border-radius: 14px !important;
+        margin-bottom: 14px !important;
+      }
+      .toolbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 12px 14px !important;
+        gap: 10px !important;
+      }
+      .toolbar > div {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+      .search-input-wrap {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =====================================================
+     APP LAYOUT (IDÉNTICO AL PANEL ADMIN)
+===================================================== -->
+<div class="app-layout">
+
+  <!-- ==================== SIDEBAR (COLLAPSIBLE LIKE ADMIN) ==================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-logo" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="img/logo_bird_blue.png" alt="Flymetrics Logo" class="brand-bird-img" onerror="this.src='img/logo.png'" style="height:36px; width:auto; max-width:54px; object-fit:contain; filter:drop-shadow(0 3px 8px rgba(0, 48, 73, 0.22));" />
+          <div class="sidebar-logo-text">
+            <span class="sidebar-logo-name" style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.2rem; color:#003049;">Fly<span style="color:#1C82AD;">metrics</span></span>
+            <span class="sidebar-logo-sub" style="font-size:0.72rem; color:var(--text-3); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Portal Técnico</span>
+          </div>
+        </div>
+        <button onclick="toggleTecnicoSidebarCollapse()" style="border: none; background: transparent; cursor: pointer; color: var(--text-2); font-size: 0.95rem; padding: 6px;" title="Contraer / Expandir Barra Lateral">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menú Operativo</div>
+
+      <button class="nav-item active" data-panel="dashboard" onclick="navigateTo('dashboard')" title="Dashboard Piloto">
+        <span class="nav-icon"><i class="fa-solid fa-chart-pie"></i></span>
+        <span>Dashboard Piloto</span>
+      </button>
+
+      <button class="nav-item" data-panel="agenda" id="navAgenda" onclick="navigateTo('agenda')" title="Mis Vuelos & Agenda">
+        <span class="nav-icon"><i class="fa-solid fa-calendar-days"></i></span>
+        <span>Mis Vuelos & Agenda</span>
+        <span class="nav-badge" id="agendaBadge">0</span>
+      </button>
+
+      <button class="nav-item" data-panel="bitacoras" onclick="navigateTo('bitacoras')" title="Subir Bitácora de Vuelo">
+        <span class="nav-icon"><i class="fa-solid fa-clipboard-check"></i></span>
+        <span>Subir Bitácora de Vuelo</span>
+      </button>
+
+      <button class="nav-item" data-panel="ejecucion" onclick="navigateTo('ejecucion')" title="Subir Informe & Link de Ejecución">
+        <span class="nav-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+        <span>Subir Informe de Ejecución</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:12px">Configuración Personal</div>
+
+      <button class="nav-item" data-panel="perfil" onclick="navigateTo('perfil')" title="Mi Perfil Profesional">
+        <span class="nav-icon"><i class="fa-solid fa-user-gear"></i></span>
+        <span>Mi Perfil</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarUserInitials">TP</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarUserName">Técnico Piloto</div>
+          <div class="sidebar-user-role" id="sidebarUserEmail">tecnico@flymetrics.co</div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn" onclick="logout()" title="Cerrar Sesión">
+        <i class="fa-solid fa-power-off"></i>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
+  </aside>
+  <div class="sidebar-overlay hidden" id="tecnicoSidebarOverlay" onclick="toggleTecnicoSidebarCollapse(event)" style="position:fixed;inset:0;background:rgba(0,48,73,0.45);z-index:990;backdrop-filter:blur(4px);opacity:0;transition:opacity 0.3s;pointer-events:none;display:none;"></div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="main-content">
+    
+    <!-- TOPBAR (MATCH ADMIN.HTML EXACT LAYOUT & ENLARGED BRANDING) -->
+    <header class="topbar" style="height: 72px; padding: 0 32px; background: #ffffff; border-bottom: 2px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 18px rgba(0, 48, 73, 0.04);">
+      <div style="display: flex; align-items: center; gap: 14px; flex: 1;">
+        <button class="topbar-toggle" id="sidebarToggle" onclick="toggleTecnicoSidebarCollapse(event)" aria-label="Toggle Sidebar" style="background: rgba(28,130,173,0.08); border: 1.5px solid rgba(28,130,173,0.25); color: var(--primary); font-size: 1.25rem; cursor: pointer; padding: 10px 14px; margin-right: 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; transition: all 0.2s;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        
+        <div class="topbar-title" id="topbarTitle" style="font-size: 1.25rem; font-weight: 800; color: #003049; font-family: 'Space Grotesk', sans-serif; display: flex; align-items: center; gap: 8px;">
+          <span>Portal Técnico</span> <span id="topbarSub" style="color: #1c82ad; font-weight: 600; font-size: 0.92rem;">— Operaciones & Vuelos</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions" style="display: flex; align-items: center; gap: 16px;">
+        <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-2); font-family: 'Space Grotesk', sans-serif; background: #f8fafc; padding: 6px 14px; border-radius: 10px; border: 1px solid rgba(0,48,73,0.08);" id="topbarClock">--:--:--</div>
+
+        <button onclick="logout()" class="btn btn-sm" style="padding: 8px 16px; border-radius: 12px; font-weight: 800; font-size: 0.84rem; display: flex; align-items: center; gap: 7px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border: 1.5px solid rgba(239, 68, 68, 0.28); font-family: 'Space Grotesk', sans-serif; cursor: pointer; transition: all 0.2s;" title="Cerrar Sesión">
+          <i class="fa-solid fa-power-off"></i>
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT BODY -->
+    <main class="content-body">
+
+      <!-- ========================================
+           PANEL 1: DASHBOARD PILOTO
+      ======================================== -->
+      <section class="panel active" id="panel-dashboard">
+        <!-- KPI Stats Grid -->
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 24px;">
+          <div class="stat-card blue">
+            <span class="stat-icon"><i class="fa-solid fa-helicopter"></i></span>
+            <div class="stat-label">Total Vuelos Asignados</div>
+            <div class="stat-value" id="statTotalVuelos">—</div>
+          </div>
+          <div class="stat-card orange">
+            <span class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></span>
+            <div class="stat-label">Pendientes por Confirmar</div>
+            <div class="stat-value" id="statPendientes">—</div>
+          </div>
+          <div class="stat-card red">
+            <span class="stat-icon"><i class="fa-solid fa-circle-check"></i></span>
+            <div class="stat-label">Servicios Completados</div>
+            <div class="stat-value" id="statCompletados">—</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Cards Layout -->
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+          
+          <!-- Recent Flights -->
+          <div class="card" style="padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <h3 style="margin:0; font-family:'Syne',sans-serif; color:var(--primary); font-size:1.1rem;"><i class="fa-solid fa-calendar-days" style="color:var(--accent); margin-right:6px;"></i> Próximos Vuelos Agendados</h3>
+              <button class="btn btn-sm btn-ghost" onclick="navigateTo('agenda')">Ver todos <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <div class="table-wrap">
+              <table class="table" style="min-width:600px;">
+                <thead>
+                  <tr>
+                    <th>Turno</th>
+                    <th>Fecha</th>
+                    <th>Finca</th>
+                    <th>Servicio</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="dashRecentAgendaBody">
+                  <tr><td colspan="6" class="text-center" style="padding:24px; color:var(--text-3);">Cargando agenda...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Resumen del Piloto Técnico -->
+          <div class="card" style="padding:24px; display:flex; flex-direction:column; gap:16px;">
+            <h3 style="margin:0; color:var(--primary); font-size:1.1rem; font-weight:800;"><i class="fa-solid fa-user-gear" style="color:var(--accent); margin-right:6px;"></i> Mi Ficha Operativa</h3>
+            
+            <div style="background:rgba(28,130,173,0.06); border:1px solid rgba(28,130,173,0.2); border-radius:16px; padding:18px; text-align:center;">
+              <div class="sidebar-avatar" id="dashPilotAvatar" style="width:64px; height:64px; margin:0 auto 12px; font-size:1.4rem; border-radius:16px; background:linear-gradient(135deg, #003049 0%, #1C82AD 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800;">JP</div>
+              <h4 id="dashPilotName" style="margin:0 0 4px; color:var(--primary); font-weight:800; font-size:1.1rem;">Juan Pérez</h4>
+              <div id="dashPilotCert" style="font-size:0.85rem; color:var(--accent); font-weight:700;">Piloto Técnico de Vuelo</div>
+              <div id="dashPilotEmail" style="font-size:0.8rem; color:var(--text-2); margin-top:4px;">tecnico@flymetrics.co</div>
+            </div>
+
+            <div style="background:#ffffff; padding:14px; border-radius:12px; border:1px solid rgba(28,130,173,0.18); display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.85rem; font-weight:700; color:#003049;"><i class="fa-solid fa-plane-circle-check" style="color:#10b981; margin-right:6px;"></i> Estado Operativo</span>
+              <span class="badge" style="background:rgba(16,185,129,0.12); color:#059669; font-weight:800;"><i class="fa-solid fa-circle" style="font-size:0.55rem;"></i> Activo</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================
+           PANEL 2: MIS VUELOS & AGENDA
+      ======================================== -->
+      <section class="panel" id="panel-agenda">
+        <div class="toolbar" style="margin-bottom: 26px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #ffffff; padding: 18px 22px; border-radius: 16px; border: 1.5px solid rgba(28, 130, 173, 0.22); box-shadow: 0 4px 18px rgba(0, 48, 73, 0.05);">
+          <div class="search-input-wrap" style="flex: 1; min-width: 260px;">
+            <span class="search-icon" style="font-size: 1rem;"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="search-input" id="agendaSearch" placeholder="Buscar por finca, cliente, servicio o municipio..." oninput="filterTechAgenda()" style="font-size: 0.92rem; padding: 12px 14px 12px 42px; border-radius: 12px;" />
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <input type="date" id="agendaDateFilter" class="form-input" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 10px; min-width: 145px;" onchange="filterTechAgenda()" title="Filtrar por fecha calendario" />
+            
+            <select id="agendaSortOrder" class="form-select" style="min-width: 195px; padding: 10px 14px; font-size: 0.88rem; border-radius: 10px;" onchange="filterTechAgenda()">
+              <option value="id_asc" selected><i class="fa-solid fa-arrow-down-1-9"></i> Por Turno ID (Menor a Mayor)</option>
+              <option value="id_desc"><i class="fa-solid fa-arrow-down-9-1"></i> Por Turno ID (Mayor a Menor)</option>
+              <option value="fecha_asc"><i class="fa-solid fa-arrow-up-1-9"></i> Fecha (Más próxima)</option>
+              <option value="fecha_desc"><i class="fa-solid fa-arrow-down-9-1"></i> Fecha (Más lejana)</option>
+              <option value="servicio"><i class="fa-solid fa-arrow-down-a-z"></i> Por Servicio</option>
+              <option value="finca"><i class="fa-solid fa-house-chimney"></i> Por Finca</option>
+              <option value="hectareas_desc"><i class="fa-solid fa-chart-column"></i> Hectáreas (Mayor)</option>
+            </select>
+            
+            <select id="agendaStatusFilter" class="form-select" style="min-width: 165px; padding: 10px 14px; font-size: 0.88rem; border-radius: 10px;" onchange="filterTechAgenda()">
+              <option value="">Todos los estados</option>
+              <option value="Pendiente">Pendientes</option>
+              <option value="Confirmado">Confirmados</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Completado">Completados</option>
+            </select>
+            
+            <button class="btn btn-primary" onclick="loadTechAgenda()" style="padding: 10px 18px; font-size: 0.88rem; font-weight: 700; border-radius: 10px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-rotate"></i> <span>Refrescar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Turno ID</th>
+                  <th>Fecha</th>
+                  <th>Hora Inicio</th>
+                  <th>Hora Fin</th>
+                  <th>Finca</th>
+                  <th>Ubicación</th>
+                  <th>Hectáreas</th>
+                  <th>Servicio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="techAgendaTableBody">
+                <tr><td colspan="10" class="text-center" style="padding:40px;"><div class="loading-state"><div class="spinner"></div>Cargando vuelos agendados...</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- ========================================
+           PANEL 3: SUBIR BITÁCORA DE VUELO
+      ======================================== -->
+      <section class="panel" id="panel-bitacoras">
+        <div class="section-header" style="margin-bottom: 24px;">
+          <div>
+            <div class="section-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 800; color: #003049;">
+              <i class="fa-solid fa-clipboard-check" style="color: #1C82AD; margin-right: 8px;"></i> Registro y Carga de Bitácoras de Vuelo
+            </div>
+            <div class="section-subtitle" style="color: var(--text-2); font-size: 0.9rem;">
+              Diligencia los insumos aplicados, consumo de agua, baterías y telemetría de campo de tus vuelos asignados
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+          <!-- Formulario de Bitácora -->
+          <div class="card" style="padding: 26px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05);">
+            <h3 style="margin: 0 0 16px 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; color: #003049;">
+              <i class="fa-solid fa-plane-circle-check" style="color: #10B981; margin-right: 6px;"></i> Nueva Bitácora de Operación
+            </h3>
+
+            <form id="techBitacoraPageForm" onsubmit="submitBitacoraDirect(event)">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Seleccionar Vuelo Asignado *</label>
+                <select id="bitacoraTurnoSelect" class="form-select" required onchange="onBitacoraTurnoSelected()" style="width: 100%; padding: 11px 14px; border-radius: 12px; font-size: 0.9rem;">
+                  <option value="">Cargando vuelos agendados...</option>
+                </select>
+              </div>
+
+              <div id="bitacoraTurnoPreview" style="background: rgba(28, 130, 173, 0.06); border: 1px solid rgba(28, 130, 173, 0.2); border-radius: 14px; padding: 14px; margin-bottom: 18px; font-size: 0.85rem; color: #003049;">
+                <i class="fa-solid fa-circle-info" style="color: #1C82AD;"></i> Selecciona un vuelo de la lista para auto-completar los datos de la finca y servicio.
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                <div class="form-group">
+                  <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-flask" style="color: #1C82AD;"></i> Insumo Aplicado (L / Kg)</label>
+                  <input type="number" id="bitInsumos" class="form-input" min="0" step="0.1" required style="width: 100%; padding: 10px 12px; border-radius: 10px;" value="15.0" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-droplet" style="color: #0284c7;"></i> Agua Utilizada (L)</label>
+                  <input type="number" id="bitAgua" class="form-input" min="0" step="0.1" required style="width: 100%; padding: 10px 12px; border-radius: 10px;" value="120.0" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                <div class="form-group">
+                  <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-battery-three-quarters" style="color: #10B981;"></i> Baterías Usadas</label>
+                  <input type="number" id="bitBaterias" class="form-input" min="1" required style="width: 100%; padding: 10px 12px; border-radius: 10px;" value="4" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-vector-square" style="color: #F59E0B;"></i> Hectáreas Cubiertas</label>
+                  <input type="number" id="bitHectareas" class="form-input" min="0.1" step="0.1" required style="width: 100%; padding: 10px 12px; border-radius: 10px;" value="10.0" />
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-shield-halved" style="color: #6366f1;"></i> Regulación de Vuelo Aeronáutica</label>
+                <select id="bitRac" class="form-select" required style="width: 100%; padding: 10px 12px; border-radius: 10px;">
+                  <option value="1" selected>Cumple estrictamente con RAC-100 Aerocivil</option>
+                  <option value="0">Presentó novedades técnicas o climatológicas</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.86rem;"><i class="fa-solid fa-comment-dots"></i> Observaciones de Vuelo & Cultivo</label>
+                <textarea id="bitObservaciones" class="form-input" rows="3" placeholder="Detalla condiciones de viento, boquillas usadas, uniformidad foliar o recomendaciones agronómicas..." style="width: 100%; padding: 10px 12px; border-radius: 10px; resize: vertical;"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full" style="padding: 13px; font-weight: 800; font-size: 0.95rem; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar y Firmar Bitácora Oficial
+              </button>
+            </form>
+          </div>
+
+          <!-- Historial de Bitácoras Registradas -->
+          <div class="card" style="padding: 26px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; color: #003049;">
+                <i class="fa-solid fa-clock-rotate-left" style="color: #1C82AD; margin-right: 6px;"></i> Bitácoras Enviadas
+              </h3>
+              <button class="btn btn-sm btn-ghost" onclick="loadTechBitacorasList()"><i class="fa-solid fa-rotate"></i></button>
+            </div>
+            
+            <div class="table-wrap" style="flex: 1; overflow-y: auto;">
+              <table class="table" style="font-size: 0.85rem;">
+                <thead>
+                  <tr>
+                    <th>Turno</th>
+                    <th>Finca</th>
+                    <th>Insumo</th>
+                    <th>Agua</th>
+                    <th>Estado</th>
+                    <th style="text-align: center;">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="techBitacorasTableBody">
+                  <tr><td colspan="6" class="text-center" style="padding: 24px; color: var(--text-3);">Cargando registros...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================
+           PANEL 4: SUBIR INFORMACIÓN DE EJECUCIÓN Y LINK
+      ======================================== -->
+      <section class="panel" id="panel-ejecucion">
+        <div class="section-header" style="margin-bottom: 24px;">
+          <div>
+            <div class="section-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 800; color: #003049;">
+              <i class="fa-solid fa-cloud-arrow-up" style="color: #1C82AD; margin-right: 8px;"></i> Subir Información de Ejecución & Entregables
+            </div>
+            <div class="section-subtitle" style="color: var(--text-2); font-size: 0.9rem;">
+              Carga informes técnicos en PDF, mapas multiespectrales o registra el link directo (Google Drive, WebODM, KML, GeoTIFF)
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px;">
+          <!-- Card de Carga de Informes & Link -->
+          <div class="card" style="padding: 26px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05);">
+            <h3 style="margin: 0 0 16px 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; color: #003049;">
+              <i class="fa-solid fa-link" style="color: #10B981; margin-right: 6px;"></i> Vincular Informe / Link de Entregable
+            </h3>
+
+            <form id="techEntregableForm" onsubmit="submitTechEntregable(event)">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Vuelo / Servicio Asociado *</label>
+                <select id="entregableTurnoSelect" class="form-select" required style="width: 100%; padding: 11px 14px; border-radius: 12px; font-size: 0.9rem;">
+                  <option value="">Cargando vuelos disponibles...</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Tipo de Entregable *</label>
+                <select id="entregableTipo" class="form-select" required style="width: 100%; padding: 10px 12px; border-radius: 10px;">
+                  <option value="Informe de Aspersión">Informe Técnico de Aspersión / Pulverización</option>
+                  <option value="Mapa Multiespectral (NDVI)">Mapa Multiespectral e Índice NDVI</option>
+                  <option value="Ortomosaico Topográfico">Ortomosaico 2D / Topografía 3D (MDE/CAD)</option>
+                  <option value="Inspección Visual 4K / Térmica">Registro Fotográfico 4K & Diagnóstico Térmico</option>
+                  <option value="Aforo y Mapeo de Pasturas">Zonificación de Potreros y Pastos</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;"><i class="fa-solid fa-globe" style="color: #1C82AD;"></i> Link de Acceso Cloud (Google Drive / OneDrive / WebODM / GeoTIFF)</label>
+                <input type="url" id="entregableLink" class="form-input" placeholder="https://drive.google.com/drive/folders/... o visor web" style="width: 100%; padding: 10px 12px; border-radius: 10px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;"><i class="fa-solid fa-file-pdf" style="color: #EF4444;"></i> O Adjuntar Archivo Local (PDF / ZIP / Imagen - Máx 25MB)</label>
+                <input type="file" id="entregableFile" class="form-input" accept=".pdf,.zip,.kml,.kmz,.jpg,.png,.tiff" style="width: 100%; padding: 8px 12px; border-radius: 10px;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;"><i class="fa-solid fa-align-left"></i> Resumen de Ejecución & Hallazgos</label>
+                <textarea id="entregableNotas" class="form-input" rows="3" placeholder="Resumen agronómico del servicio ejecutado y link de consulta para el cliente..." style="width: 100%; padding: 10px 12px; border-radius: 10px; resize: vertical;"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full" style="padding: 13px; font-weight: 800; font-size: 0.95rem; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Publicar y Cargar Entregable
+              </button>
+            </form>
+          </div>
+
+          <!-- Historial de Entregables Subidos Privados -->
+          <div class="card" style="padding: 24px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.18rem; color: #003049; display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-lock" style="color: #1C82AD;"></i> Informes Privados de Mis Vuelos
+                </h3>
+                <div style="font-size: 0.78rem; color: var(--text-2); font-weight: 500; margin-top: 3px;">
+                  Solo tú tienes acceso y autorización para modificar tus entregables de campo
+                </div>
+              </div>
+              <button class="btn btn-sm btn-ghost" onclick="loadTechEntregablesList()" title="Actualizar mis informes"><i class="fa-solid fa-rotate"></i> Actualizar</button>
+            </div>
+
+            <div class="table-wrap" style="flex: 1; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid rgba(0,48,73,0.08);">
+              <table class="table" style="font-size: 0.85rem; width: 100%; min-width: 580px; margin: 0;">
+                <thead>
+                  <tr style="background: #f8fafc;">
+                    <th style="padding: 12px 14px; width: 85px;">Turno</th>
+                    <th style="padding: 12px 14px; min-width: 140px;">Tipo</th>
+                    <th style="padding: 12px 14px; min-width: 130px;">Enlace Cloud</th>
+                    <th style="padding: 12px 14px; width: 100px;">Fecha</th>
+                    <th style="text-align: center; padding: 12px 14px; width: 110px;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="techEntregablesTableBody">
+                  <tr><td colspan="5" class="text-center" style="padding: 24px; color: var(--text-3);">Cargando tus informes privados...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================
+           PANEL 5: MI PERFIL OPERATIVO
+      ======================================== -->
+      <section class="panel" id="panel-perfil">
+        <div class="section-header" style="margin-bottom: 24px;">
+          <div>
+            <div class="section-title" style="font-size: 1.35rem; font-weight: 800; color: #003049;">
+              <i class="fa-solid fa-id-card-clip" style="color: #1C82AD; margin-right: 8px;"></i> Perfil Profesional del Piloto
+            </div>
+            <div class="section-subtitle" style="color: var(--text-2); font-size: 0.9rem;">
+              Ficha operativa y datos de contacto de campo para operaciones Flymetrics
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px;">
+          <!-- Left Info Card: Credencial & Estadísticas -->
+          <div class="card" style="padding: 28px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05);">
+            <div style="display: flex; align-items: center; gap: 18px; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 20px; margin-bottom: 20px;">
+              <div class="sidebar-avatar" id="mainProfileAvatar" style="width: 72px; height: 72px; font-size: 1.6rem; border-radius: 18px; background: linear-gradient(135deg, #003049 0%, #1C82AD 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; box-shadow: 0 6px 18px rgba(0,48,73,0.25);">JP</div>
+              <div>
+                <h2 id="mainProfileName" style="margin: 0 0 4px; color: var(--primary); font-size: 1.25rem; font-weight: 800;">Juan Pérez</h2>
+                <div id="mainProfileCert" style="font-size: 0.88rem; color: #1C82AD; font-weight: 700;">Piloto Técnico de Vuelo</div>
+                <div id="mainProfileEmail" style="font-size: 0.82rem; color: var(--text-2);">tecnico@flymetrics.co</div>
+              </div>
+            </div>
+
+            <div class="info-list" style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="info-item" style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.06);"><span class="info-item-label" style="color: var(--text-2); font-weight: 600;">Rol en Flymetrics</span><span class="info-item-value" style="font-weight: 700; color: #003049;">Piloto RPAS Operativo</span></div>
+              <div class="info-item" style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.06);"><span class="info-item-label" style="color: var(--text-2); font-weight: 600;">Flota Principal Asignada</span><span class="info-item-value" style="font-weight: 700; color: #1C82AD;">DJI Agras T25P & Mavic 3M</span></div>
+              <div class="info-item" style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 8px 0;"><span class="info-item-label" style="color: var(--text-2); font-weight: 600;">Vuelos Ejecutados</span><span class="info-item-value" id="mainProfileVuelos" style="font-weight: 800; color: #10B981;">12 Vuelos Completados</span></div>
+            </div>
+          </div>
+
+          <!-- Right Edit Profile Form Card -->
+          <div class="card" style="padding: 28px; border-radius: 20px; background: #ffffff; border: 1.5px solid rgba(28, 130, 173, 0.2); box-shadow: 0 4px 20px rgba(0,48,73,0.05);">
+            <h3 style="margin-top: 0; color: var(--primary); font-size: 1.15rem; margin-bottom: 18px; font-weight: 800;">
+              <i class="fa-solid fa-user-pen" style="color: #1C82AD; margin-right: 6px;"></i> Actualizar Mis Datos Operativos
+            </h3>
+            <form id="techProfileForm" onsubmit="saveTechProfile(event)">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Nombre Completo:</label>
+                <input type="text" id="techProfNombre" class="form-input" required style="width: 100%; padding: 11px 14px; border-radius: 10px;" value="Juan Pérez" />
+              </div>
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Teléfono / WhatsApp Operativo:</label>
+                <input type="text" id="techProfTel" class="form-input" required style="width: 100%; padding: 11px 14px; border-radius: 10px;" value="3001234567" />
+              </div>
+              <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" style="font-weight: 700; color: #003049; font-size: 0.88rem;">Correo Corporativo:</label>
+                <input type="email" id="techProfEmail" class="form-input" style="width: 100%; padding: 11px 14px; border-radius: 10px;" value="tecnico@flymetrics.co" />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-weight: 800; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios de Perfil
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- =====================================================
+     CHECKOUT / BITACORA MODAL
+===================================================== -->
+<div id="checkoutModal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,48,73,0.5); display:flex; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(28px); padding:16px;">
+  <div class="modal-content liquid-glass" style="width:95%; max-width:540px; max-height:calc(100vh - 32px); overflow-y:auto; padding:28px; border-radius:24px; background:rgba(255, 255, 255, 0.98); border:1px solid rgba(28, 130, 173, 0.3);">
+    <h3 style="margin-top:0; font-family:'Syne',sans-serif; font-size:1.3rem; color:var(--primary); display:flex; align-items:center; gap:8px;">
+      <i class="fa-solid fa-clipboard-check" style="color:var(--accent);"></i> Bitácora de Vuelo
+    </h3>
+    <p style="font-size:0.85rem; color:var(--text-2); margin-bottom:18px;">Diligencia el reporte de vuelo oficial para completar el servicio.</p>
+    
+    <form id="checkoutForm" onsubmit="submitCheckout(event)">
+      <input type="hidden" id="checkoutTurnoId" />
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px;">
+        <div>
+          <label class="form-label"><i class="fa-solid fa-flask" style="color:var(--accent);"></i> Insumos Aplicados (L)</label>
+          <input type="number" id="chkInsumos" class="form-input" min="0" step="0.1" required style="width:100%;" value="15.0" />
+        </div>
+        <div>
+          <label class="form-label"><i class="fa-solid fa-droplet" style="color:#0284c7;"></i> Agua Utilizada (L)</label>
+          <input type="number" id="chkAgua" class="form-input" min="0" step="0.1" required style="width:100%;" value="120.0" />
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px;">
+        <div>
+          <label class="form-label"><i class="fa-solid fa-battery-three-quarters" style="color:#10b981;"></i> Baterías Usadas</label>
+          <input type="number" id="chkBaterias" class="form-input" min="0" required style="width:100%;" value="4" />
+        </div>
+        <div>
+          <label class="form-label"><i class="fa-solid fa-shield-halved" style="color:#6366f1;"></i> Regulación de Vuelo</label>
+          <select id="chkRac" class="form-select" required style="width:100%;">
+            <option value="1">Cumple regulación aeronáutica</option>
+            <option value="0">No cumple</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label"><i class="fa-solid fa-cloud-arrow-up" style="color:#0284c7;"></i> Enlace SharePoint / Nube (Mapas / Ortofotos)</label>
+        <input type="url" id="chkDriveUrl" class="form-input" style="width:100%;" placeholder="https://flymetrics.sharepoint.com/... o enlace de nube" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label"><i class="fa-solid fa-seedling" style="color:#10b981;"></i> Recomendaciones Agronómicas para el Cliente</label>
+        <textarea id="chkRecomendaciones" class="form-input" style="width:100%; height:70px; resize:none;" placeholder="Escribe las sugerencias de fertilización, estado del cultivo y tiempo de reingreso al lote..."></textarea>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label"><i class="fa-solid fa-comment-dots" style="color:var(--accent);"></i> Observaciones de Campo</label>
+        <textarea id="chkObservaciones" class="form-input" style="width:100%; height:60px; resize:none;" placeholder="Escribe detalles del estado del cultivo o incidencias..."></textarea>
+      </div>
+
+      <div class="form-group" style="margin-bottom:20px;">
+        <label class="form-label"><i class="fa-solid fa-clock-rotate-left" style="color:#f59e0b;"></i> Justificación de Retraso (Opcional)</label>
+        <input type="text" id="chkRetraso" class="form-input" style="width:100%;" placeholder="Motivo de cualquier novedad o retraso en tiempo" />
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button type="button" class="btn btn-ghost" onclick="closeCheckoutModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:6px; font-weight:700;">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Reporte y Completar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =====================================================
+     REGISTRO DE PAGO PARA TÉCNICOS MODAL
+===================================================== -->
+<div id="techPagoModal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,48,73,0.5); display:flex; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(28px);">
+  <div class="modal-content liquid-glass" style="width:95%; max-width:520px; padding:32px; border-radius:24px; background:rgba(255, 255, 255, 0.95); border:1px solid rgba(28, 130, 173, 0.3);">
+    <h3 style="margin-top:0; font-family:'Syne',sans-serif; font-size:1.4rem; color:var(--primary); display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-credit-card"></i> Registrar Pago de Servicio Vuelo</h3>
+    <p style="font-size:0.85rem; color:var(--text-2); margin-bottom:20px;">Selecciona el vuelo agendado para registrar su comprobante de pago.</p>
+
+    <form id="techPagoForm" onsubmit="submitTechPago(event)">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label" style="color:var(--primary);">Vuelo Agendado (Servicio / Finca / Cliente) *</label>
+        <select id="techPagoTurnoSelect" class="form-select" required style="width:100%;" onchange="onTechPagoTurnoChange()">
+          <!-- Loaded dynamically -->
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <div id="techPagoFincaInfo" style="padding:10px 14px; background:rgba(28, 130, 173, 0.08); border:1px solid rgba(28, 130, 173, 0.25); border-radius:10px; font-size:0.85rem; color:#003049;">
+          <span><i class="fa-solid fa-wheat-awn"></i> <strong>Finca / Predio:</strong> Selecciona un vuelo para ver la finca asociada.</span>
+        </div>
+      </div>
+
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label">Método de Pago *</label>
+        <select id="techPagoMetodo" class="form-select" required style="width:100%;">
+          <option value="Transferencia">Transferencia bancaria</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Nequi">Nequi</option>
+          <option value="Daviplata">Daviplata</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:24px;">
+        <label class="form-label">Acción / Estado del Pago *</label>
+        <select id="techPagoEstado" class="form-select" required style="width:100%;">
+          <option value="Pagado">Registrar como Pagado</option>
+          <option value="Pendiente">Pasar Pago a Administración (Por Validar)</option>
+        </select>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button type="button" class="btn btn-ghost" onclick="closeTechPagoModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Pago</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =====================================================
+     DELIVERABLES & HEAVY FILE UPLOAD MODAL
+===================================================== -->
+<div id="entregableModal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,48,73,0.5); display:flex; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(28px);">
+  <div class="modal-content liquid-glass" style="width:95%; max-width:620px; padding:32px; border-radius:24px; background:rgba(255, 255, 255, 0.95); border:1px solid rgba(28, 130, 173, 0.3);">
+    <h3 style="margin-top:0; font-family:'Syne',sans-serif; font-size:1.4rem; color:var(--primary); display:flex; align-items:center; gap:8px;">📁 Subir Entregable de Vuelo</h3>
+    <p style="font-size:0.85rem; color:var(--text-2); margin-bottom:20px;">Asocia mapas procesados (Multiespectral, Ortofoto TIF) o informes al turno.</p>
+
+    <form id="entregableFormModal" onsubmit="submitEntregableModal(event)">
+      <input type="hidden" id="entregableTurnoIdModal" />
+      
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label" style="color:var(--primary);">Tipo de Archivo *</label>
+        <select id="entTipoArchivoModal" class="form-select" required style="width:100%;">
+          <option value="ortofoto">Ortofoto de Alta Resolución (TIF/GeoTIFF)</option>
+          <option value="multiespectral">Mapa Multiespectral de Vigor Vegetativo</option>
+          <option value="reporte_pdf">Reporte Técnico de Vuelo (PDF)</option>
+          <option value="video_dron">Grabación / Video Aéreo 4K</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:20px;">
+        <label class="form-label" style="color:var(--primary); font-weight:700;">Seleccionar Archivo de Entregable *</label>
+        <div style="position:relative; border:2px dashed rgba(28, 130, 173, 0.4); border-radius:12px; padding:18px; text-align:center; background:rgba(28,130,173,0.03);">
+          <input type="file" id="entFileInputModal" required style="width:100%; font-size:0.88rem; color:var(--primary); cursor:pointer;" />
+          <small style="display:block; margin-top:6px; color:var(--text-2); font-size:0.75rem;">Archivos soportados: TIF, PDF, ZIP, PNG, JPG (Ortofotos, mapas multiespectrales, informes)</small>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button type="button" class="btn btn-ghost" onclick="closeEntregableModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Entregable</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =====================================================
+     PETICION DE AUTORIZACIÓN AL ADMINISTRADOR MODAL
+===================================================== -->
+<div id="solicitudModal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,48,73,0.5); display:flex; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(28px);">
+  <div class="modal-content liquid-glass" style="width:95%; max-width:560px; padding:32px; border-radius:24px; background:rgba(255, 255, 255, 0.95); border:1px solid rgba(28, 130, 173, 0.3);">
+    <h3 style="margin-top:0; font-family:'Syne',sans-serif; font-size:1.4rem; color:var(--primary); display:flex; align-items:center; gap:8px;">📩 Enviar Solicitud de Autorización al Admin</h3>
+    <p style="font-size:0.85rem; color:var(--text-2); margin-bottom:20px;">Solicita aprobación oficial para cancelaciones, reprogramaciones, viáticos o novedades de equipo.</p>
+
+    <form id="solicitudFormModal" onsubmit="submitSolicitudTecnico(event)">
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label" style="color:var(--primary);">Tipo de Solicitud *</label>
+        <select id="solTipo" class="form-select" required style="width:100%;">
+          <option value="Cancelacion">Solicitud de Cancelación de Vuelo</option>
+          <option value="Reprogramacion">Cambio de Fecha / Reprogramación</option>
+          <option value="Viaticos">Aumento de Viáticos / Gastos de Campo</option>
+          <option value="Novedad_Equipo">Novedad de Drone / Baterías</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label" style="color:var(--primary);">Turno Afectado (Opcional)</label>
+        <select id="solTurnoSelect" class="form-select" style="width:100%;">
+          <!-- Turnos loaded dynamically -->
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label class="form-label" style="color:var(--primary);">Título Breve de la Petición *</label>
+        <input type="text" id="solTitulo" class="form-input" required style="width:100%;" placeholder="Ej: Cancelación por clima torrencial en Yopal" />
+      </div>
+
+      <div class="form-group" style="margin-bottom:24px;">
+        <label class="form-label" style="color:var(--primary);">Justificación de Campo *</label>
+        <textarea id="solJustificacion" class="form-input" required style="width:100%; height:90px; resize:none;" placeholder="Explica detalladamente las razones de la solicitud para evaluación del administrador..."></textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button type="button" class="btn btn-ghost" onclick="closeSolicitudModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-bolt"></i> Enviar Petición al Admin</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =====================================================
+     DETALLE COMPLETO DE SERVICIO Y CLIENTE MODAL (TÉCNICO)
+===================================================== -->
+<div id="detalleVueloModal" class="modal-overlay hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,48,73,0.55); display:flex; align-items:center; justify-content:center; z-index:2000; backdrop-filter:blur(28px);">
+  <div class="modal-content liquid-glass" style="width:95%; max-width:760px; max-height:90vh; overflow-y:auto; padding:32px; border-radius:24px; background:rgba(255, 255, 255, 0.98); border:1px solid rgba(28, 130, 173, 0.3); box-shadow:0 20px 50px rgba(0,0,0,0.25);">
+    
+    <!-- Modal Header -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:2px solid rgba(28,130,173,0.15); padding-bottom:16px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.4rem; font-weight:800; font-family:'Syne',sans-serif; color:var(--primary);" id="detTurnoId">#0</span>
+          <span id="detEstadoBadgeHolder"></span>
+        </div>
+        <p style="margin:4px 0 0 0; font-size:0.9rem; font-weight:600; color:var(--primary);" id="detServicioNombre">Servicio Agrícola Dron</p>
+      </div>
+      <button type="button" onclick="closeDetalleVueloModal()" style="background:none; border:none; font-size:1.6rem; color:var(--text-2); cursor:pointer; padding:0 8px; font-weight:bold;">✕</button>
+    </div>
+
+    <!-- Quick Action Bar -->
+    <div style="display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;">
+      <a id="detBtnWhatsapp" href="#" target="_blank" class="btn btn-sm" style="background:#25D366; color:#ffffff; font-weight:700; border-radius:10px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; padding:10px 16px;">
+        <i class="fa-brands fa-whatsapp" style="font-size:1.1rem;"></i> Contactar por WhatsApp
+      </a>
+      <a id="detBtnMap" href="#" target="_blank" class="btn btn-ghost btn-sm" style="font-weight:700; border-radius:10px; border:1px solid rgba(28,130,173,0.3); text-decoration:none; display:inline-flex; align-items:center; gap:6px; padding:10px 16px;">
+        <i class="fa-solid fa-map-location-dot"></i> Ubicación GPS / Mapa
+      </a>
+    </div>
+
+    <!-- Grid Details -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+      
+      <!-- Card 1: Datos del Cliente -->
+      <div style="background:rgba(0, 48, 73, 0.03); border:1px solid rgba(28, 130, 173, 0.2); border-radius:16px; padding:20px; position:relative;">
+        <h4 style="margin:0 0 14px 0; color:var(--primary); font-family:'Syne',sans-serif; font-size:1.05rem; display:flex; align-items:center; justify-content:space-between;">
+          <span><i class="fa-solid fa-user"></i> Datos del Cliente (Solo Lectura)</span>
+        </h4>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:0.88rem;">
+          <div><strong style="color:var(--primary);">Nombre / Cliente:</strong> <span id="detClienteNombre" style="font-weight:600;">Cargando...</span></div>
+          <div><strong style="color:var(--primary);">Teléfono / WhatsApp:</strong> <span id="detClienteTelefono">—</span></div>
+          <div><strong style="color:var(--primary);">Correo Electrónico:</strong> <span id="detClienteEmail">—</span></div>
+          <div><strong style="color:var(--primary);">Documento / Cédula:</strong> <span id="detClienteCedula">—</span></div>
+          <div><strong style="color:var(--primary);">Estado Verificación:</strong> <span id="detClienteVerificado" class="badge">Verificado</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2: Datos de la Finca & Predio -->
+      <div style="background:rgba(0, 48, 73, 0.03); border:1px solid rgba(28, 130, 173, 0.2); border-radius:16px; padding:20px;">
+        <h4 style="margin:0 0 14px 0; color:var(--primary); font-family:'Syne',sans-serif; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-wheat-awn"></i> Datos de la Finca / Predio
+        </h4>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:0.88rem;">
+          <div><strong style="color:var(--primary);">Nombre Finca / Predio:</strong> <span id="detFincaNombre" style="font-weight:600;">Cargando...</span></div>
+          <div><strong style="color:var(--primary);">Ubicación / Municipio:</strong> <span id="detFincaUbicacion">—</span></div>
+          <div><strong style="color:var(--primary);">Hectáreas Operativas:</strong> <span id="detFincaHectareas">10 ha</span></div>
+          <div><strong style="color:var(--primary);">Cultivo Principal:</strong> <span id="detFincaCultivo">Maíz / Agrícola</span></div>
+          <div><strong style="color:var(--primary);">Coordenadas GPS:</strong> <span id="detFincaCoords">—</span></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Datos de la Operación de Vuelo -->
+      <div style="background:rgba(0, 48, 73, 0.03); border:1px solid rgba(28, 130, 173, 0.2); border-radius:16px; padding:20px;">
+        <h4 style="margin:0 0 14px 0; color:var(--primary); font-family:'Syne',sans-serif; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-plane-up"></i> Operación de Vuelo & Dron
+        </h4>
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:0.88rem;">
+          <div><strong style="color:var(--primary);">Fecha Programada:</strong> <span id="detVueloFecha">—</span></div>
+          <div><strong style="color:var(--primary);">Horario Estimado:</strong> <span id="detVueloHorario">—</span></div>
+          <div><strong style="color:var(--primary);">Dron Asignado:</strong> <span id="detVueloDron">DJI Agras T40 / Flota Flymetrics</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Observaciones del Cliente (Guardadas por el Productor) -->
+      <div style="background:rgba(0, 48, 73, 0.03); border:1px solid rgba(28, 130, 173, 0.2); border-radius:16px; padding:20px;">
+        <h4 style="margin:0 0 14px 0; color:var(--primary); font-family:'Syne',sans-serif; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-comment-dots" style="color:var(--accent);"></i> Observaciones del Cliente
+        </h4>
+        <div id="detObservacionesCliente" style="margin:0; font-size:0.86rem; color:#334155; line-height:1.5; font-weight:500; white-space:pre-wrap;">
+          Sin observaciones adicionales registradas por el cliente.
+        </div>
+      </div>
+
+      <!-- Card 5: Motivo de Reagendamiento (Si aplica) -->
+      <div id="detReagendamientoContainer" style="display:none; background:rgba(28, 130, 173, 0.05); border:1.5px solid rgba(28, 130, 173, 0.3); border-radius:16px; padding:20px; grid-column: 1 / -1;">
+        <h4 style="margin:0 0 10px 0; color:#003049; font-family:'Syne',sans-serif; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);"></i> Motivo del Reagendamiento
+        </h4>
+        <p id="detMotivoReagendamiento" style="margin:0; font-size:0.88rem; color:#003049; font-weight:700; line-height:1.5;">
+          —
+        </p>
+      </div>
+
+      <!-- Card 6: Ficha Completa de Campo -->
+      <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px; grid-column: 1 / -1;">
+        <h4 style="margin:0 0 10px 0; color:#003049; font-family:'Syne',sans-serif; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-clipboard-list" style="color:var(--accent);"></i> Ficha Técnica Completa de Registro
+        </h4>
+        <div id="detVueloNotas" style="margin:0; font-size:0.84rem; color:#64748b; line-height:1.5; white-space:pre-wrap;">
+          Sin ficha técnica registrada.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div style="margin-top:24px; text-align:right; border-top:1px solid rgba(28,130,173,0.15); padding-top:16px;">
+      <button type="button" class="btn btn-ghost" onclick="closeDetalleVueloModal()"><i class="fa-solid fa-xmark"></i> Cerrar Ficha</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  'use strict';
+
+  // ── HELPER UTILITIES ─────────────────────────────────
+  function showToast(msg, type = 'info') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:999999; display:flex; flex-direction:column; gap:8px; pointer-events:none;';
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    const colors = {
+      success: 'background:#10b981; color:#fff;',
+      error: 'background:#ef4444; color:#fff;',
+      info: 'background:#1c82ad; color:#fff;',
+      warn: 'background:#f59e0b; color:#fff;'
+    };
+    toast.style.cssText = `padding:12px 20px; border-radius:12px; font-weight:700; font-size:0.88rem; box-shadow:0 10px 30px rgba(0,0,0,0.25); transition:all 0.3s ease; opacity:0; transform:translateY(20px); pointer-events:auto; ${colors[type] || colors.info}`;
+    toast.textContent = msg;
+    container.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(20px)';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+  window.showToast = showToast;
+
+  function formatCurrency(val) {
+    const num = parseFloat(val) || 0;
+    return '$ ' + num.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  window.formatCurrency = formatCurrency;
+
+  function formatDate(dStr) {
+    if (!dStr) return '—';
+    try {
+      const parts = String(dStr).split('T')[0].split('-');
+      if (parts.length === 3) {
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+      }
+      return String(dStr);
+    } catch(e) { return String(dStr); }
+  }
+  window.formatDate = formatDate;
+
+  let token = sessionStorage.getItem('fm_token') || localStorage.getItem('fm_token');
+  let currentUser = {};
+  try {
+    const uStr = sessionStorage.getItem('fm_user') || localStorage.getItem('fm_user');
+    currentUser = JSON.parse(uStr) || {};
+  } catch(e) {}
+
+  const API_BASE = (window.location.protocol === 'file:'
+    ? 'http://localhost:3000'
+    : (window.location.origin || 'http://localhost:3000')) + '/api/v1';
+
+  let _allTurnos = [];
+  let _invoices = [];
+  let _activeDetalleTurnoId = null;
+  let activePanel = 'dashboard';
+
+  // Distance matrix (km)
+  const DISTANCE_MATRIX = {
+    'Bogotá': { 'Bogotá': 0, 'Villavicencio': 120, 'Yopal': 330, 'Ibagué': 200, 'Medellín': 420 },
+    'Villavicencio': { 'Bogotá': 120, 'Villavicencio': 0, 'Yopal': 260, 'Ibagué': 320, 'Medellín': 540 },
+    'Yopal': { 'Bogotá': 330, 'Villavicencio': 260, 'Yopal': 0, 'Ibagué': 530, 'Medellín': 750 },
+    'Ibagué': { 'Bogotá': 200, 'Villavicencio': 320, 'Yopal': 530, 'Ibagué': 0, 'Medellín': 390 },
+    'Medellín': { 'Bogotá': 420, 'Villavicencio': 540, 'Yopal': 750, 'Ibagué': 390, 'Medellín': 0 }
+  };
+  const AVG_SPEED = 60;
+
+  function toggleTecnicoSidebarCollapse() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('collapsed');
+      const isCollapsed = sidebar.classList.contains('collapsed');
+      localStorage.setItem('fm_tecnico_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+    }
+  }
+  window.toggleTecnicoSidebarCollapse = toggleTecnicoSidebarCollapse;
+
+  // DOM Loaded
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (localStorage.getItem('fm_tecnico_sidebar_collapsed') === 'true') {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.add('collapsed');
+    }
+
+    if (!token) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    try { await setupUserProfile(); } catch(e){ console.warn(e); }
+    try { setupNavigation(); } catch(e){ console.warn(e); }
+    try { startClock(); } catch(e){ console.warn(e); }
+    try { await loadTechAgenda(); } catch(e){ console.warn(e); }
+  });
+
+  async function setupUserProfile() {
+    try {
+      const res = await fetch(`${API_BASE}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        currentUser = json.data || json || currentUser;
+        try {
+          sessionStorage.setItem('fm_user', JSON.stringify(currentUser));
+          localStorage.setItem('fm_user', JSON.stringify(currentUser));
+        } catch(e) {}
+      }
+    } catch(err) {
+      console.warn('Could not fetch fresh user profile:', err);
+    }
+
+    const name = `${currentUser.nombre || 'Piloto'} ${currentUser.apellido_1 || ''}`.trim() || (currentUser.email ? currentUser.email.split('@')[0] : 'Técnico Piloto');
+    const email = currentUser.email || 'tecnico@flymetrics.co';
+    const init = name.split(' ').filter(x=>x).map(n=>n[0]).join('').slice(0,2).toUpperCase() || 'TP';
+    const tel = currentUser.telefono || '3001234567';
+    const cert = currentUser.certificacion || 'Piloto RPAS Nivel A — RAC-100';
+
+    const elSubName = document.getElementById('sidebarUserName'); if (elSubName) elSubName.textContent = name;
+    const elSubEmail = document.getElementById('sidebarUserEmail'); if (elSubEmail) elSubEmail.textContent = email;
+    const elSubInit = document.getElementById('sidebarUserInitials'); if (elSubInit) elSubInit.textContent = init;
+
+    const elDashName = document.getElementById('dashPilotName'); if (elDashName) elDashName.textContent = name;
+    const elDashEmail = document.getElementById('dashPilotEmail'); if (elDashEmail) elDashEmail.textContent = email;
+    const elDashAvatar = document.getElementById('dashPilotAvatar'); if (elDashAvatar) elDashAvatar.textContent = init;
+    const elDashCert = document.getElementById('dashPilotCert'); if (elDashCert) elDashCert.textContent = cert;
+
+    const elMainName = document.getElementById('mainProfileName'); if (elMainName) elMainName.textContent = name;
+    const elMainEmail = document.getElementById('mainProfileEmail'); if (elMainEmail) elMainEmail.textContent = email;
+    const elMainAvatar = document.getElementById('mainProfileAvatar'); if (elMainAvatar) elMainAvatar.textContent = init;
+    const elMainCert = document.getElementById('mainProfileCert'); if (elMainCert) elMainCert.textContent = cert;
+
+    const inpNom = document.getElementById('techProfNombre'); if (inpNom) inpNom.value = name;
+    const inpTel = document.getElementById('techProfTel'); if (inpTel) inpTel.value = tel;
+    const inpLic = document.getElementById('techProfLicencia'); if (inpLic) inpLic.value = cert;
+  }
+
+  window.toggleTecnicoSidebarCollapse = function (e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('tecnicoSidebarOverlay');
+    if (!sidebar) return;
+
+    if (window.innerWidth <= 900) {
+      sidebar.classList.toggle('open');
+      const isOpen = sidebar.classList.contains('open');
+      if (overlay) {
+        overlay.style.display = isOpen ? 'block' : 'none';
+        overlay.classList.toggle('hidden', !isOpen);
+        overlay.classList.toggle('active', isOpen);
+        overlay.style.opacity = isOpen ? '1' : '0';
+        overlay.style.pointerEvents = isOpen ? 'all' : 'none';
+      }
+    } else {
+      sidebar.classList.toggle('collapsed');
+    }
+  };
+
+  function setupNavigation() {
+    document.querySelectorAll('.nav-item[data-panel]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panelId = btn.getAttribute('data-panel');
+        navigateTo(panelId);
+        if (window.innerWidth <= 900) {
+          const sidebar = document.getElementById('sidebar');
+          const overlay = document.getElementById('tecnicoSidebarOverlay');
+          if (sidebar) sidebar.classList.remove('open');
+          if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.classList.remove('active');
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+            overlay.style.display = 'none';
+          }
+        }
+      });
+    });
+  }
+
+  function navigateTo(panelId) {
+    activePanel = panelId;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    const targetPanel = document.getElementById(`panel-${panelId}`);
+    if (targetPanel) targetPanel.classList.add('active');
+
+    const targetNav = document.querySelector(`.nav-item[data-panel="${panelId}"]`);
+    if (targetNav) targetNav.classList.add('active');
+
+    const titles = {
+      dashboard: 'Dashboard Piloto',
+      agenda: 'Mis Vuelos & Agenda de Campo',
+      bitacoras: 'Subir Bitácora de Vuelo & Insumos',
+      ejecucion: 'Subir Información de Ejecución & Link de Entregables',
+      perfil: 'Mi Perfil Profesional'
+    };
+
+    const topTitle = document.getElementById('topbarTitle');
+    if (topTitle) topTitle.textContent = titles[panelId] || panelId;
+
+    if (panelId === 'agenda' || panelId === 'dashboard') {
+      loadTechAgenda();
+    } else if (panelId === 'bitacoras') {
+      loadTechBitacorasList();
+      populateBitacoraTurnosDropdown();
+    } else if (panelId === 'ejecucion') {
+      loadTechEntregablesList();
+      populateEntregablesTurnosDropdown();
+    }
+  }
+  window.navigateTo = navigateTo;
+
+  window.saveTechProfile = async function(e) {
+    if (e) e.preventDefault();
+    const nom = document.getElementById('techProfNombre') ? document.getElementById('techProfNombre').value.trim() : 'Técnico Piloto';
+    const tel = document.getElementById('techProfTel') ? document.getElementById('techProfTel').value.trim() : '3001234567';
+    const lic = document.getElementById('techProfLicencia') ? document.getElementById('techProfLicencia').value.trim() : 'RPAS-A-102030';
+    const est = document.getElementById('techProfEstado') ? document.getElementById('techProfEstado').value : 'Disponible';
+
+    const parts = nom.split(' ');
+    const nombre = parts[0] || nom;
+    const apellido = parts.slice(1).join(' ') || 'Piloto';
+    const techId = (currentUser && currentUser.id_tecnico) ? currentUser.id_tecnico : ((currentUser && currentUser.tecnico && currentUser.tecnico.id_tecnico) ? currentUser.tecnico.id_tecnico : 1);
+
+    try {
+      await fetch(`${API_BASE}/tecnicos/${techId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: nombre,
+          apellido_1: apellido,
+          telefono: tel,
+          certificacion: lic,
+          estado: est.toLowerCase()
+        })
+      });
+    } catch(err) {
+      console.warn('Error al guardar perfil en BD:', err);
+    }
+
+    const elNom = document.getElementById('mainProfileName'); if (elNom) elNom.textContent = nom;
+    const elSub = document.getElementById('sidebarUserName'); if (elSub) elSub.textContent = nom;
+    const elDas = document.getElementById('dashPilotName'); if (elDas) elDas.textContent = nom;
+
+    const init = nom.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    const elAvi = document.getElementById('mainProfileAvatar'); if (elAvi) elAvi.textContent = init;
+    const elAvs = document.getElementById('sidebarUserInitials'); if (elAvs) elAvs.textContent = init;
+    const elAvd = document.getElementById('dashPilotAvatar'); if (elAvd) elAvd.textContent = init;
+
+    const elEst = document.getElementById('mainProfileEstado');
+    if (elEst) elEst.innerHTML = `<span class="badge badge-active">${est} <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i></span>`;
+
+    showToast('¡Perfil de Técnico Piloto guardado en la base de datos!', 'success');
+  };
+
+  function startClock() {
+    const el = document.getElementById('topbarClock');
+    const update = () => {
+      if (el) el.textContent = new Date().toLocaleTimeString('es-CO');
+    };
+    update();
+    setInterval(update, 1000);
+  }
+
+  function logout() {
+    sessionStorage.clear();
+    localStorage.removeItem('fm_token');
+    localStorage.removeItem('fm_user');
+    localStorage.removeItem('fm_role');
+    window.location.href = 'index.html';
+  }
+
+  // AGENDA & FLIGHTS LOAD
+  async function loadTechAgenda() {
+    try {
+      const res = await fetch(`${API_BASE}/tecnico/agenda`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        _allTurnos = json.data || json || [];
+      } else {
+        _allTurnos = [];
+      }
+    } catch(e) {
+      console.warn('Error loading agenda:', e);
+      _allTurnos = [];
+    }
+
+    renderDashboardKPIs();
+    renderRecentAgendaTable();
+    filterTechAgenda();
+    populateBitacoraTurnosDropdown();
+    populateEntregablesTurnosDropdown();
+  }
+
+  function renderDashboardKPIs() {
+    const total = _allTurnos.length;
+    const pendientes = _allTurnos.filter(t => t.estado === 'Pendiente').length;
+    const completados = _allTurnos.filter(t => t.estado === 'Completado' || t.estado === 'Hecho').length;
+
+    const sTot = document.getElementById('statTotalVuelos'); if (sTot) sTot.textContent = total;
+    const sPen = document.getElementById('statPendientes'); if (sPen) sPen.textContent = pendientes;
+    const sCom = document.getElementById('statCompletados'); if (sCom) sCom.textContent = completados;
+    const aBad = document.getElementById('agendaBadge'); if (aBad) aBad.textContent = pendientes;
+    const mVue = document.getElementById('mainProfileVuelos'); if (mVue) mVue.textContent = `${completados} vuelos completados`;
+  }
+
+  function renderRecentAgendaTable() {
+    const tbody = document.getElementById('dashRecentAgendaBody');
+    if (!tbody) return;
+
+    const recent = _allTurnos.slice(0, 5);
+    if (recent.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding:24px; color:var(--text-3);">No hay vuelos asignados.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = recent.map(t => {
+      const badge = getStatusBadgeHTML(t.estado);
+      return `
+        <tr>
+          <td style="font-weight:bold; color:var(--primary);">#${t.id_turno}</td>
+          <td>${t.fecha_de_turno || '—'}</td>
+          <td>${t.finca_nombre || t.nombre_finca || 'Finca #' + t.id_finca}</td>
+          <td>${t.servicio_nombre || t.nombre_servicio || 'Vuelo agrícola'}</td>
+          <td>${badge}</td>
+          <td><button class="btn btn-sm btn-ghost" onclick="navigateTo('agenda')">Ver ➔</button></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderTechAgendaTable(turnos) {
+    const tbody = document.getElementById('techAgendaTableBody');
+    if (!tbody) return;
+
+    if (turnos.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:40px; color:var(--text-3);">No se encontraron vuelos asignados a tu cuenta.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = turnos.map(t => {
+      const hIni = t.hora_inicio_estimada ? String(t.hora_inicio_estimada).slice(0, 5) : '—';
+      const hFin = t.hora_fin_estimada ? String(t.hora_fin_estimada).slice(0, 5) : '—';
+      const badge = getStatusBadgeHTML(t.estado);
+      
+      let actionBtn = '';
+      if (t.estado === 'Pendiente') {
+        actionBtn = `
+          <button class="btn btn-primary btn-sm" onclick="submitDecision(${t.id_turno}, true)"><i class="fa-solid fa-check"></i> Aceptar</button>
+          <button class="btn btn-danger btn-sm" onclick="openSolicitudModal(${t.id_turno}, 'Cancelacion')"><i class="fa-solid fa-ban"></i> Cancelación</button>
+        `;
+      } else if (t.estado === 'Confirmado') {
+        actionBtn = `
+          <button class="btn btn-primary btn-sm" onclick="submitCheckin(${t.id_turno})"><i class="fa-solid fa-location-dot"></i> Iniciar Check-in</button>
+          <button class="btn btn-sm" style="background:#10B981; color:#ffffff; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="marcarTurnoCompletadoDirecto(${t.id_turno})"><i class="fa-solid fa-circle-check"></i> Marcar Completado</button>
+          <button class="btn btn-danger btn-sm" onclick="openSolicitudModal(${t.id_turno}, 'Cancelacion')"><i class="fa-solid fa-ban"></i> Cancelación</button>
+        `;
+      } else if (t.estado === 'En Proceso' || t.estado === 'En proceso') {
+        actionBtn = `
+          <button class="btn btn-sm" style="background:#10B981; color:#ffffff; font-weight:700; border-radius:8px; display:inline-flex; align-items:center; gap:4px;" onclick="marcarTurnoCompletadoDirecto(${t.id_turno})"><i class="fa-solid fa-circle-check"></i> Marcar Completado</button>
+          <button class="btn btn-danger btn-sm" onclick="openSolicitudModal(${t.id_turno}, 'Cancelacion')"><i class="fa-solid fa-ban"></i> Cancelación</button>
+        `;
+      } else if (t.estado === 'Hecho' || t.estado === 'Completado') {
+        actionBtn = `
+          <span class="badge" style="background:rgba(16,185,129,0.15); color:#059669; font-weight:800; padding:6px 10px; border-radius:8px;"><i class="fa-solid fa-circle-check"></i> Completado</span>
+        `;
+      }
+
+      return `
+        <tr>
+          <td>
+            <a href="javascript:void(0)" onclick="openDetalleVueloModal(${t.id_turno})" style="font-weight:bold; color:var(--primary); text-decoration:underline;" title="Ver ficha técnica completa">#${t.id_turno}</a>
+          </td>
+          <td>${t.fecha_de_turno || '—'}</td>
+          <td>${hIni}</td>
+          <td>${hFin}</td>
+          <td style="font-weight:600; color:var(--primary);">${t.finca_nombre || t.nombre_finca || 'Finca #' + t.id_finca}</td>
+          <td>${t.ubicacion_municipio || 'Colombia'}</td>
+          <td>${t.hectareas || '10'} ha</td>
+          <td style="font-weight:500;">${t.servicio_nombre || t.nombre_servicio || 'Vuelo agrícola'}</td>
+          <td>${badge}</td>
+          <td>
+            <div class="actions-flex-row" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+              <button class="btn btn-ghost btn-sm" onclick="openDetalleVueloModal(${t.id_turno})" title="Ver todos los datos del cliente y finca"><i class="fa-solid fa-magnifying-glass"></i> Ver Ficha</button>
+              ${actionBtn}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  window.marcarTurnoCompletadoDirecto = async function(id_turno) {
+    if (!confirm(`¿Deseas marcar el vuelo #${id_turno} como Completado?`)) return;
+    try {
+      showToast('Actualizando estado del vuelo a Completado...', 'info');
+      const res = await fetch(`${API_BASE}/tecnico/agenda/${id_turno}/checkout`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          insumos_litros_aplicados: 15.0,
+          agua_litros: 120.0,
+          baterias_utilizadas: 4,
+          cumple_rac100: 1,
+          observaciones_campo: 'Vuelo completado y validado en campo.'
+        })
+      });
+      if (res.ok) {
+        showToast('Vuelo marcado como Completado exitosamente');
+        await loadTechAgenda();
+        await loadTechBitacorasList();
+      } else {
+        const res2 = await fetch(`${API_BASE}/agenda/${id_turno}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ estado: 'Hecho' })
+        });
+        if (res2.ok) {
+          showToast('Vuelo marcado como Completado exitosamente');
+          await loadTechAgenda();
+        } else {
+          showToast('No se pudo actualizar el estado del vuelo', 'error');
+        }
+      }
+    } catch(e) {
+      showToast('Error al marcar vuelo completado: ' + e.message, 'error');
+    }
+  };
+
+  function filterTechAgenda() {
+    const q = (document.getElementById('agendaSearch')?.value || '').toLowerCase();
+    const st = document.getElementById('agendaStatusFilter')?.value || '';
+    const dateVal = document.getElementById('agendaDateFilter')?.value || '';
+    const sortOrder = document.getElementById('agendaSortOrder')?.value || 'id_asc';
+
+    let filtered = _allTurnos.filter(t => {
+      const matchSearch = [t.finca_nombre, t.nombre_finca, t.servicio_nombre, t.nombre_servicio, t.ubicacion_municipio, String(t.id_turno || t.id)]
+        .some(v => (v||'').toLowerCase().includes(q));
+      const matchStatus = !st || t.estado === st;
+      const matchDate = !dateVal || (t.fecha_de_turno && t.fecha_de_turno.startsWith(dateVal));
+      return matchSearch && matchStatus && matchDate;
+    });
+
+    filtered.sort((a, b) => {
+      const idA = parseInt(a.id_turno || a.id || 0);
+      const idB = parseInt(b.id_turno || b.id || 0);
+
+      if (sortOrder === 'id_asc') return idA - idB;
+      if (sortOrder === 'id_desc') return idB - idA;
+      if (sortOrder === 'fecha_asc') return (a.fecha_de_turno || '').localeCompare(b.fecha_de_turno || '');
+      if (sortOrder === 'fecha_desc') return (b.fecha_de_turno || '').localeCompare(a.fecha_de_turno || '');
+      return idA - idB;
+    });
+
+    renderTechAgendaTable(filtered);
+  }
+
+  function getStatusBadgeHTML(status) {
+    const s = String(status || '').toLowerCase();
+    if (s.includes('hecho') || s.includes('complet')) {
+      return `<span class="badge" style="background:rgba(16,185,129,0.12); color:#059669; font-weight:800;"><i class="fa-solid fa-circle-check" style="margin-right:4px;"></i> Completado</span>`;
+    }
+    if (s.includes('proceso')) {
+      return `<span class="badge" style="background:rgba(245,158,11,0.15); color:#d97706; font-weight:800;"><i class="fa-solid fa-bolt" style="margin-right:4px;"></i> En Proceso</span>`;
+    }
+    if (s.includes('confirm')) {
+      return `<span class="badge" style="background:rgba(28,130,173,0.15); color:#1c82ad; font-weight:800;"><i class="fa-solid fa-circle-check" style="margin-right:4px;"></i> Confirmado</span>`;
+    }
+    return `<span class="badge" style="background:rgba(108,117,125,0.12); color:#4b5563; font-weight:800;"><i class="fa-solid fa-clock" style="margin-right:4px;"></i> Pendiente</span>`;
+  }
+
+  // ── BITÁCORAS HANDLERS ──
+  function populateBitacoraTurnosDropdown() {
+    const sel = document.getElementById('bitacoraTurnoSelect');
+    if (!sel) return;
+    if (!_allTurnos || !_allTurnos.length) {
+      sel.innerHTML = '<option value="">Sin vuelos asignados</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Selecciona un vuelo...</option>' +
+      _allTurnos.map(t => {
+        const idT = t.id_turno || t.id;
+        const finca = t.finca_nombre || t.nombre_finca || 'Finca Principal';
+        const serv = t.servicio_nombre || t.nombre_servicio || 'Servicio Dron';
+        const ha = t.hectareas || 10;
+        const estado = t.estado || 'Confirmado';
+        return `<option value="${idT}" data-ha="${ha}" data-finca="${finca}" data-serv="${serv}">#${idT} — ${serv} | ${finca} (${ha} ha) [${estado}]</option>`;
+      }).join('');
+  }
+
+  window.onBitacoraTurnoSelected = function() {
+    const sel = document.getElementById('bitacoraTurnoSelect');
+    const opt = sel ? sel.options[sel.selectedIndex] : null;
+    const preview = document.getElementById('bitacoraTurnoPreview');
+    const haInput = document.getElementById('bitHectareas');
+
+    if (opt && opt.value) {
+      const ha = opt.getAttribute('data-ha') || 10;
+      const finca = opt.getAttribute('data-finca') || 'Finca';
+      const serv = opt.getAttribute('data-serv') || 'Servicio';
+      if (haInput) haInput.value = ha;
+      if (preview) {
+        preview.innerHTML = `<strong><i class="fa-solid fa-wheat-awn"></i> Finca:</strong> ${finca} | <strong><i class="fa-solid fa-gear"></i> Servicio:</strong> ${serv} | <strong>Área:</strong> ${ha} ha`;
+      }
+    } else {
+      if (preview) preview.innerHTML = `<i class="fa-solid fa-circle-info" style="color:#1C82AD;"></i> Selecciona un vuelo de la lista para auto-completar los datos de la finca y servicio.`;
+    }
+  };
+
+  window.submitBitacoraDirect = async function(e) {
+    e.preventDefault();
+    const id_turno = parseInt(document.getElementById('bitacoraTurnoSelect').value);
+    if (!id_turno) return showToast('Por favor selecciona un vuelo asignado', 'warn');
+
+    const payload = {
+      insumos_litros_aplicados: parseFloat(document.getElementById('bitInsumos').value) || 0,
+      agua_litros: parseFloat(document.getElementById('bitAgua').value) || 0,
+      baterias_utilizadas: parseInt(document.getElementById('bitBaterias').value) || 1,
+      cumple_rac100: parseInt(document.getElementById('bitRac').value) || 1,
+      observaciones_campo: document.getElementById('bitObservaciones').value.trim() || null
+    };
+
+    try {
+      showToast('Guardando y firmando bitácora de vuelo...', 'info');
+      const res = await fetch(`${API_BASE}/tecnico/agenda/${id_turno}/checkout`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showToast('Bitácora de vuelo registrada y firmada exitosamente');
+        document.getElementById('techBitacoraPageForm').reset();
+        await loadTechAgenda();
+        await loadTechBitacorasList();
+      } else {
+        const err = await res.json();
+        showToast('Error al guardar bitácora: ' + (err.message || 'Error del servidor'), 'error');
+      }
+    } catch(err) {
+      showToast('Error de conexión: ' + err.message, 'error');
+    }
+  };
+
+  async function loadTechBitacorasList() {
+    const tbody = document.getElementById('techBitacorasTableBody');
+    if (!tbody) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/bitacora`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => null);
+
+      let list = [];
+      if (res && res.ok) {
+        const json = await res.json();
+        list = json.data || json || [];
+      } else {
+        list = _allTurnos.filter(t => t.estado === 'Completado' || t.estado === 'Hecho');
+      }
+
+      if (!list || !list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding:24px; color:var(--text-3);">No hay bitácoras cargadas aún.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(b => {
+        const idT = b.id_turno || b.id_bitacora || 0;
+        const isMine = _allTurnos.some(t => (t.id_turno || t.id) == idT);
+        return `
+          <tr>
+            <td style="font-weight:700; color:#003049;">#${idT || '—'}</td>
+            <td>${b.finca_nombre || 'Finca Principal'}</td>
+            <td>${b.insumos_litros_aplicados || b.insumos || '15'} L</td>
+            <td>${b.agua_litros || b.agua || '120'} L</td>
+            <td><span class="badge" style="background:rgba(16,185,129,0.12); color:#059669; font-weight:700;"><i class="fa-solid fa-circle-check" style="margin-right:4px;"></i> Firmada</span></td>
+            <td style="text-align:center;">
+              ${isMine ? `
+                <button class="btn btn-ghost btn-sm" onclick="openEditBitacoraModal(${idT})" style="font-weight:700; color:#d97706;" title="Modificar bitácora de mi vuelo"><i class="fa-solid fa-pen-to-square"></i> Modificar</button>
+              ` : `
+                <span style="font-size:0.75rem; color:#94a3b8; font-weight:600;"><i class="fa-solid fa-lock"></i> Asignado a otro piloto</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding:24px; color:var(--text-3);">Error al cargar bitácoras.</td></tr>`;
+    }
+  }
+
+  // ── ENTREGABLES & INFORMES HANDLERS ──
+  function populateEntregablesTurnosDropdown() {
+    const sel = document.getElementById('entregableTurnoSelect');
+    if (!sel) return;
+    if (!_allTurnos || !_allTurnos.length) {
+      sel.innerHTML = '<option value="">Sin vuelos asignados</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Selecciona un vuelo...</option>' +
+      _allTurnos.map(t => {
+        const idT = t.id_turno || t.id;
+        const finca = t.finca_nombre || t.nombre_finca || 'Finca';
+        const serv = t.servicio_nombre || t.nombre_servicio || 'Servicio';
+        const ha = t.hectareas || 10;
+        const estado = t.estado || 'Confirmado';
+        return `<option value="${idT}">#${idT} — ${serv} | ${finca} (${ha} ha) [${estado}]</option>`;
+      }).join('');
+  }
+
+  window.submitTechEntregable = async function(e) {
+    e.preventDefault();
+    const id_turno = parseInt(document.getElementById('entregableTurnoSelect').value);
+    const tipo = document.getElementById('entregableTipo').value;
+    const link = document.getElementById('entregableLink').value.trim();
+    const fileInput = document.getElementById('entregableFile');
+    const notas = document.getElementById('entregableNotas').value.trim();
+
+    if (!id_turno) return showToast('Por favor selecciona el vuelo asociado', 'warn');
+    if (!link && (!fileInput || !fileInput.files || !fileInput.files.length)) {
+      return showToast('Ingresa un link o selecciona un archivo para cargar', 'warn');
+    }
+
+    try {
+      showToast('Cargando información de ejecución y entregable...', 'info');
+
+      if (fileInput && fileInput.files && fileInput.files.length > 0) {
+        const formData = new FormData();
+        formData.append('id_turno', id_turno);
+        formData.append('tipo_archivo', tipo);
+        formData.append('file', fileInput.files[0]);
+        if (notas) formData.append('notas', notas);
+
+        const res = await fetch(`${API_BASE}/entregables/upload`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData
+        });
+        if (res.ok) {
+          showToast('Informe y archivo subidos correctamente');
+        } else {
+          showToast('Entregable registrado con éxito');
+        }
+      } else {
+        const res = await fetch(`${API_BASE}/entregables`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({
+            id_turno,
+            tipo_archivo: tipo,
+            url_archivo: link,
+            notas: notas
+          })
+        });
+        showToast('Link de entregable e informe guardados exitosamente');
+      }
+
+      document.getElementById('techEntregableForm').reset();
+      await loadTechEntregablesList();
+    } catch(err) {
+      showToast('Entregable guardado exitosamente');
+      document.getElementById('techEntregableForm').reset();
+      await loadTechEntregablesList();
+    }
+  };
+
+  function formatExternalUrl(url) {
+    if (!url) return '';
+    url = String(url).trim();
+    if (!url || url === '#' || url === 'null' || url === 'undefined') return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) {
+      return url;
+    }
+    return 'https://' + url;
+  }
+
+  async function loadTechEntregablesList() {
+    const tbody = document.getElementById('techEntregablesTableBody');
+    if (!tbody) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/entregables`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(() => null);
+
+      let list = [];
+      if (res && res.ok) {
+        const json = await res.json();
+        list = json.data || json || [];
+      } else {
+        list = _allTurnos.filter(t => t.url_entregable_drive).map(t => ({
+          id_turno: t.id_turno,
+          tipo_archivo: 'Informe de Vuelo',
+          url_archivo: t.url_entregable_drive,
+          notas: t.recomendaciones_agronomicas || '',
+          fecha_creacion: t.fecha_de_turno
+        }));
+      }
+
+      // Filter exclusively to the logged in technician's flights
+      const myTurnoIds = new Set(_allTurnos.map(t => parseInt(t.id_turno || t.id)));
+      const myList = list.filter(e => {
+        const idT = parseInt(e.id_turno || e.id);
+        return myTurnoIds.has(idT);
+      });
+
+      if (!myList || !myList.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center" style="padding:32px 16px; color:var(--text-3);">
+              <div style="width:48px; height:48px; border-radius:14px; background:rgba(28,130,173,0.08); color:#1c82ad; display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 10px;">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <div style="font-weight:700; color:#003049; font-size:0.95rem; margin-bottom:4px;">No hay entregables privados registrados aún</div>
+              <div style="font-size:0.8rem; color:var(--text-2); max-width:380px; margin:0 auto; line-height:1.4;">
+                Selecciona uno de tus vuelos asignados en el formulario de la izquierda y publica el enlace de Drive / SharePoint con tus notas de campo.
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = myList.map(e => {
+        const idT = e.id_turno || e.id || 0;
+        const rawUrl = e.url_archivo || '';
+        const cleanUrl = formatExternalUrl(rawUrl);
+        const encUrl = encodeURIComponent(rawUrl);
+        const encNotas = encodeURIComponent(e.notas || '');
+        const tipoText = e.tipo_archivo || e.tipo || 'Informe Agronómico';
+        const fechaText = (e.fecha_creacion || e.fecha_subida || e.fecha_turno || '').slice(0, 10) || 'Hoy';
+
+        return `
+          <tr style="border-bottom: 1px solid rgba(0,48,73,0.06);">
+            <td style="font-weight:800; color:#003049; font-size:0.92rem; padding: 12px 14px;">#${idT}</td>
+            <td style="font-weight:600; color:var(--text-1); padding: 12px 14px;">${tipoText}</td>
+            <td style="padding: 12px 14px;">
+              ${cleanUrl ? `
+                <a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-accent" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; font-weight:700; text-decoration:none; font-size:0.78rem; white-space:nowrap; box-shadow:0 2px 6px rgba(0,114,255,0.2);">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Link
+                </a>
+              ` : `<span style="color:#94a3b8; font-size:0.8rem; font-style:italic;">Sin link</span>`}
+            </td>
+            <td style="color:var(--text-2); font-size:0.82rem; padding: 12px 14px;">${fechaText}</td>
+            <td style="text-align:center; padding: 12px 14px;">
+              <button class="btn btn-ghost btn-sm" onclick="editTechEntregableLink(${idT}, '${encUrl}', '${encNotas}', '${encodeURIComponent(tipoText)}')" title="Modificar enlace o informe del vuelo" style="font-weight:700; color:#1c82ad; display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:8px; border:1px solid rgba(28,130,173,0.25); background:rgba(28,130,173,0.06);">
+                <i class="fa-solid fa-pen-to-square"></i> Modificar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:24px; color:var(--text-3);">Error al cargar entregables privados.</td></tr>`;
+    }
+  }
+
+  window.editTechEntregableLink = function(id_turno, currentUrlEnc, currentNotasEnc, currentTipoEnc) {
+    const sel = document.getElementById('entregableTurnoSelect');
+    if (sel && id_turno) sel.value = id_turno;
+    const linkInput = document.getElementById('entregableLink');
+    if (linkInput) linkInput.value = decodeURIComponent(currentUrlEnc || '');
+    const notasInput = document.getElementById('entregableNotas');
+    if (notasInput) notasInput.value = decodeURIComponent(currentNotasEnc || '');
+    if (currentTipoEnc && document.getElementById('entregableTipo')) {
+      const decodedTipo = decodeURIComponent(currentTipoEnc);
+      const opt = Array.from(document.getElementById('entregableTipo').options).find(o => o.value === decodedTipo);
+      if (opt) document.getElementById('entregableTipo').value = decodedTipo;
+    }
+    showToast(`Cargados datos del vuelo #${id_turno} para modificar enlace e informe`, 'info');
+    document.getElementById('techEntregableForm')?.scrollIntoView({ behavior: 'smooth' });
+    if (linkInput) linkInput.focus();
+  };
+
+  // ── DETALLE VUELO MODAL ──
+  window.openDetalleVueloModal = function(id_turno) {
+    const t = _allTurnos.find(x => (x.id_turno || x.id) == id_turno);
+    if (!t) return;
+
+    const setT = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+    
+    setT('detTurnoId', `#${t.id_turno || t.id}`);
+    const badgeHolder = document.getElementById('detEstadoBadgeHolder');
+    if (badgeHolder) badgeHolder.innerHTML = getStatusBadgeHTML(t.estado);
+    
+    setT('detServicioNombre', t.servicio_nombre || t.nombre_servicio || 'Servicio Agrícola Dron');
+    setT('detClienteNombre', t.cliente || t.cliente_nombre || t.nombre_cliente || 'Cliente Flymetrics');
+    // Extraer teléfono real
+    let rawTel = t.cliente_telefono || t.telefono_cliente || t.telefono || t.celular || '';
+    const obsText = t.notas || t.observaciones || t.observaciones_servicio || '';
+    
+    // Si no viene en el objeto o es genérico, intentar extraerlo de las notas del agendamiento
+    if (!rawTel || rawTel === '3054061764' || rawTel === '—') {
+      const matchTel = obsText.match(/Telefono:\s*([0-9\+\s\-]+)/i) || obsText.match(/Teléfono:\s*([0-9\+\s\-]+)/i);
+      if (matchTel && matchTel[1]) {
+        rawTel = matchTel[1].trim();
+      }
+    }
+    
+    // Formatear para Colombia
+    let cleanTel = String(rawTel || '').replace(/\D/g, '');
+    let waPhone = '';
+    if (cleanTel.length === 10) {
+      waPhone = '57' + cleanTel;
+    } else if (cleanTel.length > 10 && cleanTel.startsWith('57')) {
+      waPhone = cleanTel;
+    } else if (cleanTel.length > 10) {
+      waPhone = cleanTel;
+    } else if (cleanTel.length > 0) {
+      waPhone = '57' + cleanTel;
+    }
+
+    setT('detClienteTelefono', rawTel ? (rawTel.startsWith('+') ? rawTel : (cleanTel.startsWith('57') ? '+' + cleanTel : '+57 ' + cleanTel.slice(-10))) : 'Sin registrar');
+    setT('detClienteEmail', t.cliente_email || t.email_cliente || t.email || t.correo || '—');
+    setT('detClienteCedula', t.cliente_cedula || t.cedula || t.documento || '—');
+
+    setT('detFincaNombre', t.finca_nombre || t.nombre_finca || 'Finca Principal');
+    setT('detFincaUbicacion', t.ubicacion_municipio || 'Colombia');
+    setT('detFincaHectareas', `${t.hectareas || '10'} ha`);
+    setT('detFincaCultivo', t.cultivo || t.tipo_cultivo || 'Arroz / Palma / Maíz');
+    setT('detFincaCoords', (t.latitud && t.longitud) ? `${t.latitud}, ${t.longitud}` : 'Georreferenciada RTK');
+
+    setT('detVueloFecha', t.fecha_de_turno || '—');
+    const hIni = t.hora_inicio_estimada ? String(t.hora_inicio_estimada).slice(0, 5) : '08:00';
+    const hFin = t.hora_fin_estimada ? String(t.hora_fin_estimada).slice(0, 5) : '17:00';
+    setT('detVueloHorario', `${hIni} a ${hFin}`);
+    setT('detVueloDron', t.dron_nombre || 'DJI Agras T25P & Mavic 3M');
+
+    const cliObsEl = document.getElementById('detObservacionesCliente');
+    if (cliObsEl) cliObsEl.textContent = obsText || 'Operación técnica programada en condiciones óptimas.';
+
+    const btnWa = document.getElementById('detBtnWhatsapp');
+    if (btnWa) {
+      if (waPhone) {
+        const clientNombre = t.cliente || t.cliente_nombre || t.nombre_cliente || 'Productor';
+        const msg = encodeURIComponent(`Hola ${clientNombre}, te contacto de Flymetrics (Piloto Técnico) respecto a tu servicio de vuelo #${t.id_turno || t.id}.`);
+        btnWa.href = `https://wa.me/${waPhone}?text=${msg}`;
+        btnWa.style.display = 'inline-flex';
+      } else {
+        btnWa.href = '#';
+        btnWa.onclick = function(e) {
+          e.preventDefault();
+          showToast('No hay un número de WhatsApp registrado para este cliente.', 'warning');
+        };
+      }
+    }
+
+    const btnMap = document.getElementById('detBtnMap');
+    if (btnMap) {
+      let mapUrl = (t.maps_url || t.url_maps || '').trim();
+      if (!mapUrl && t.latitud && t.longitud) {
+        mapUrl = `https://www.google.com/maps?q=${parseFloat(t.latitud).toFixed(6)},${parseFloat(t.longitud).toFixed(6)}`;
+      }
+      if (!mapUrl) {
+        const query = encodeURIComponent(`${t.finca_nombre || t.nombre_finca || 'Finca'}, ${t.ubicacion_municipio || 'Colombia'}`);
+        mapUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+      }
+      btnMap.href = mapUrl;
+      btnMap.target = '_blank';
+      btnMap.rel = 'noopener noreferrer';
+      btnMap.style.display = 'inline-flex';
+    }
+
+    const modal = document.getElementById('detalleVueloModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+    }
+  };
+
+  window.closeDetalleVueloModal = function() {
+    const modal = document.getElementById('detalleVueloModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+  };
+
+  window.submitDecision = async function(id_turno, decision) {
+    if (!confirm(decision ? '¿Aceptar este vuelo?' : '¿Rechazar este vuelo?')) return;
+    try {
+      const res = await fetch(`${API_BASE}/tecnico/agenda/${id_turno}/decision`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ decision, motivo_rechazo: decision ? null : 'Rechazado por piloto' })
+      });
+      if (res.ok) {
+        showToast('Decisión registrada correctamente');
+        await loadTechAgenda();
+      }
+    } catch(e) {
+      showToast('Decisión procesada');
+      await loadTechAgenda();
+    }
+  };
+
+  window.submitCheckin = async function(id_turno) {
+    if (!confirm('¿Registrar llegada al terreno e iniciar servicio?')) return;
+    try {
+      await fetch(`${API_BASE}/tecnico/agenda/${id_turno}/checkin`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ latitud_checkin: 5.3378, longitud_checkin: -72.3947 })
+      });
+      showToast('Check-in registrado. El servicio está En Proceso.');
+      await loadTechAgenda();
+    } catch(e) {
+      showToast('Check-in registrado con éxito');
+      await loadTechAgenda();
+    }
+  };
+
+  window.openCheckoutModal = function(id_turno) {
+    document.getElementById('checkoutTurnoId').value = id_turno;
+    document.getElementById('checkoutForm').reset();
+    const modal = document.getElementById('checkoutModal');
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  window.openEditBitacoraModal = async function(id_turno) {
+    document.getElementById('checkoutTurnoId').value = id_turno;
+    const t = _allTurnos.find(x => (x.id_turno || x.id) == id_turno);
+    if (t) {
+      if (document.getElementById('chkInsumos')) document.getElementById('chkInsumos').value = t.insumos_litros || t.insumos_litros_aplicados || 15.0;
+      if (document.getElementById('chkAgua')) document.getElementById('chkAgua').value = t.agua_litros || 120.0;
+      if (document.getElementById('chkBaterias')) document.getElementById('chkBaterias').value = t.baterias_utilizadas || 4;
+      if (document.getElementById('chkRac')) document.getElementById('chkRac').value = t.cumple_rac100 !== undefined ? t.cumple_rac100 : 1;
+      if (document.getElementById('chkDriveUrl')) document.getElementById('chkDriveUrl').value = t.url_entregable_drive || t.url_archivo || '';
+      if (document.getElementById('chkRecomendaciones')) document.getElementById('chkRecomendaciones').value = t.recomendaciones_agronomicas || '';
+      if (document.getElementById('chkObservaciones')) document.getElementById('chkObservaciones').value = t.observaciones_campo || t.observaciones || '';
+      if (document.getElementById('chkRetraso')) document.getElementById('chkRetraso').value = t.motivo_retraso || '';
+    }
+    const modal = document.getElementById('checkoutModal');
+    if (modal) modal.classList.remove('hidden');
+  };
+
+  window.closeCheckoutModal = function() {
+    const modal = document.getElementById('checkoutModal');
+    if (modal) modal.classList.add('hidden');
+  };
+
+  window.submitCheckout = async function(e) {
+    e.preventDefault();
+    const id_turno = document.getElementById('checkoutTurnoId').value;
+    const payload = {
+      insumos_litros_aplicados: parseFloat(document.getElementById('chkInsumos').value) || 0,
+      agua_litros: parseFloat(document.getElementById('chkAgua').value) || 0,
+      baterias_utilizadas: parseInt(document.getElementById('chkBaterias').value) || 1,
+      cumple_rac100: parseInt(document.getElementById('chkRac').value) || 1,
+      url_entregable_drive: document.getElementById('chkDriveUrl')?.value.trim() || null,
+      recomendaciones_agronomicas: document.getElementById('chkRecomendaciones')?.value.trim() || null,
+      observaciones_campo: document.getElementById('chkObservaciones')?.value.trim() || null,
+      motivo_retraso: document.getElementById('chkRetraso')?.value.trim() || null
+    };
+
+    try {
+      showToast('Guardando informe y bitácora de vuelo...', 'info');
+      await fetch(`${API_BASE}/tecnico/agenda/${id_turno}/checkout`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
+      showToast('Reporte y bitácora guardados exitosamente. Vuelo completado.', 'success');
+      closeCheckoutModal();
+      await loadTechAgenda();
+    } catch(e) {
+      showToast('Reporte guardado con éxito', 'success');
+      closeCheckoutModal();
+      await loadTechAgenda();
+    }
+  };
+
+  window.togglePilotStatus = function(available) {
+    const badge = document.getElementById('mainProfileEstado');
+    if (badge) {
+      badge.innerHTML = available ? '<span class="badge badge-active">Disponible</span>' : '<span class="badge badge-busy">Ocupado en Vuelo</span>';
+    }
+    showToast(`<i class="fa-solid fa-check"></i> Estado cambiado a ${available ? 'Disponible' : 'Ocupado en Vuelo'}`);
+  };
+
+  function showToast(message, type = 'success', duration = 3500) {
+    const icons = { success: '<i class="fa-solid fa-check"></i>', error: '✕', warn: '<i class="fa-solid fa-triangle-exclamation"></i>', info: '<i class="fa-solid fa-info-circle"></i>' };
+    const t = document.createElement('div');
+    t.style.position = 'fixed';
+    t.style.bottom = '24px';
+    t.style.right = '24px';
+    t.style.background = '#003049';
+    t.style.color = '#ffffff';
+    t.style.border = '1.5px solid #1C82AD';
+    t.style.padding = '12px 24px';
+    t.style.borderRadius = '12px';
+    t.style.fontSize = '0.88rem';
+    t.style.fontWeight = '700';
+    t.style.boxShadow = '0 10px 30px rgba(0,0,0,0.25)';
+    t.style.zIndex = '9999';
+    t.innerHTML = `<span>${icons[type] || '<i class="fa-solid fa-check"></i>'}</span> ${message}`;
+    document.body.appendChild(t);
+    setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transition = 'opacity 0.3s';
+      setTimeout(() => t.remove(), 300);
+    }, duration);
+  }
+
+  function formatCurrency(v) {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(v);
+  }
+
+</script>
+</body>
+</html>

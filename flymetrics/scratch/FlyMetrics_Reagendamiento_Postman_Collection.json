@@ -1,0 +1,203 @@
+{
+  "info": {
+    "name": "FlyMetrics - Colección Reagendamiento y Agenda",
+    "_postman_id": "flymetrics-agenda-v1",
+    "description": "Colección de Postman para crear, consultar y reagendar turnos modificando fecha, hora y observaciones.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@flymetrics.co",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "FlyMetrics123!",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "turnoId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Iniciar Sesión (Login) - Obtener Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "var token = (jsonData.data && (jsonData.data.token || jsonData.data.access_token)) || jsonData.token || jsonData.access_token;",
+              "if (token) {",
+              "    pm.collectionVariables.set('authToken', token);",
+              "    console.log('Token guardado en colección:', token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"contraseña\": \"{{adminPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Inicia sesión como Administrador o Cliente para obtener el Bearer Token JWT."
+      }
+    },
+    {
+      "name": "2. Crear Turno en Agenda (Con Observaciones)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "var id = (jsonData.data && jsonData.data.id_turno) || jsonData.id_turno;",
+              "if (id) {",
+              "    pm.collectionVariables.set('turnoId', id.toString());",
+              "    console.log('Turno ID guardado:', id);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id_finca\": 1,\n  \"id_servicio\": 1,\n  \"fecha_de_turno\": \"2026-10-20\",\n  \"hora_inicio_estimada\": \"08:30:00\",\n  \"tipo_turno\": \"Fumigación\",\n  \"cel\": \"3001234567\",\n  \"observaciones_servicio\": \"Cultivo de Arroz - Aplicación foliar temprana lote 4. Acceso por portería norte.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/agenda",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "agenda"
+          ]
+        },
+        "description": "Crea una nueva solicitud de agenda guardando las observaciones directamente en la base de datos."
+      }
+    },
+    {
+      "name": "3. REAGENDAR TURNO (Modificar Fecha, Hora y Motivo)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fecha_de_turno\": \"2026-11-05\",\n  \"hora_inicio_estimada\": \"19:00:00\",\n  \"estado\": \"Confirmado\",\n  \"motivo_reagendamiento\": \"Reagendado para el 5 de noviembre a las 7:00 PM por solicitud del productor debido a condiciones climáticas de viento en la tarde.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/agenda/{{turnoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "agenda",
+            "{{turnoId}}"
+          ]
+        },
+        "description": "Endpoint clave para reprogramar turnos. Actualiza fecha, hora y motivo de reagendamiento en un campo separado sin sobrescribir las notas u observaciones de la finca."
+      }
+    },
+    {
+      "name": "4. Consultar Detalle del Turno Reagendado",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/agenda/{{turnoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "agenda",
+            "{{turnoId}}"
+          ]
+        },
+        "description": "Permite verificar que la fecha, hora y observaciones quedaron persistidas."
+      }
+    },
+    {
+      "name": "5. Listar Agenda Completa (Admin con Observaciones)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/agenda",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "agenda"
+          ]
+        },
+        "description": "Lista el historial y estado de todos los turnos del sistema con cliente, finca, técnico y notas."
+      }
+    }
+  ]
+}
